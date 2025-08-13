@@ -1,0 +1,759 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Added proper @layer cascade architecture */
+@layer reset, base, tokens, components, utilities;
+
+@layer reset {
+  /* Modern CSS reset */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    line-height: var(--line-height-normal);
+  }
+
+  /* Enhanced form element spacing */
+  input, textarea, select {
+    padding: 0.75rem 1rem;
+    letter-spacing: 0.01em;
+  }
+
+  button {
+    letter-spacing: 0.025em;
+    line-height: var(--line-height-normal);
+  }
+
+  label {
+    line-height: var(--line-height-relaxed);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  /* Improved text spacing for all elements */
+  p {
+    line-height: var(--line-height-relaxed);
+    margin-bottom: 0.75em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: var(--line-height-snug);
+    letter-spacing: -0.025em;
+  }
+
+  ul, ol {
+    line-height: var(--line-height-relaxed);
+  }
+
+  li {
+    margin-bottom: 0.25em;
+  }
+}
+
+@layer tokens {
+  :root {
+    /* Gradient Grey Theme - Sophisticated neutral palette */
+    --color-primary-base: oklch(0.3 0 0); /* Dark charcoal */
+    --color-neutral-base: oklch(0.2 0 0); /* Deep grey */
+    --color-surface-base: oklch(0.85 0 0); /* Light grey */
+    --color-gradient-start: oklch(0.9 0 0); /* Very light grey */
+    --color-gradient-end: oklch(0.7 0 0); /* Medium grey */
+    
+    /* Light mode only */
+    color-scheme: light;
+
+    /* Gradient grey semantic tokens */
+    --background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+    --background-solid: var(--color-surface-base);
+    --foreground: var(--color-neutral-base);
+    --card: oklch(0.88 0 0);
+    --card-foreground: var(--color-neutral-base);
+    --popover: oklch(0.92 0 0);
+    --popover-foreground: var(--color-neutral-base);
+    --primary: var(--color-primary-base);
+    --primary-foreground: oklch(0.95 0 0);
+    --primary-dark: oklch(0.15 0 0);
+    --secondary: oklch(0.8 0 0);
+    --secondary-foreground: oklch(0.25 0 0);
+    --secondary-dark: oklch(0.6 0 0);
+    --muted: oklch(0.82 0 0);
+    --muted-foreground: oklch(0.45 0 0);
+    --muted-dark: oklch(0.65 0 0);
+    --accent: oklch(0.75 0 0);
+    --accent-foreground: oklch(0.25 0 0);
+    --accent-dark: oklch(0.55 0 0);
+    --destructive: oklch(0.5 0.15 15);
+    --destructive-foreground: oklch(0.95 0 0);
+    --border: oklch(0.78 0 0);
+    --input: oklch(0.85 0 0);
+    --ring: oklch(0.4 0 0);
+
+    /* Chart colors */
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+  }
+  
+  /* Dark theme removed - light mode only */
+
+  :root {
+    /* Fluid typography using clamp() functions */
+    --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+    --font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+    --font-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+    --font-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+    --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --font-size-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.5rem);
+    --font-size-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3rem);
+    --font-size-5xl: clamp(3rem, 2.5rem + 2.5vw, 4rem);
+    --font-size-6xl: clamp(3.75rem, 3rem + 3.75vw, 5rem);
+
+    /* Fluid line heights for better text spacing */
+    --line-height-tight: 1.25;
+    --line-height-snug: 1.375;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 1.75;
+    --line-height-extra-loose: 2;
+
+    /* Dynamic text spacing configuration */
+    --text-spacing-multiplier: 1;
+    --letter-spacing-base: 0.01em;
+    --letter-spacing-comfortable: calc(var(--letter-spacing-base) * var(--text-spacing-multiplier) * 2.5);
+    --letter-spacing-loose: calc(var(--letter-spacing-base) * var(--text-spacing-multiplier) * 5);
+    --letter-spacing-tight: calc(var(--letter-spacing-base) * var(--text-spacing-multiplier) * -2.5);
+    --word-spacing-base: 0.1em;
+    --word-spacing-comfortable: calc(var(--word-spacing-base) * var(--text-spacing-multiplier));
+    --word-spacing-loose: calc(var(--word-spacing-base) * var(--text-spacing-multiplier) * 2);
+
+    /* Dynamic border configuration */
+    --border-width-thin: 1px;
+    --border-width-normal: 2px;
+    --border-width-thick: 3px;
+    --border-radius-dynamic: calc(var(--radius) * var(--text-spacing-multiplier));
+    --border-opacity: 0.2;
+    --border-hover-opacity: 0.4;
+
+    /* Fluid spacing */
+    --space-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem);
+    --space-sm: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+    --space-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+    --space-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+    --space-xl: clamp(2rem, 1.6rem + 2vw, 3rem);
+    --space-2xl: clamp(3rem, 2.4rem + 3vw, 4.5rem);
+    --space-3xl: clamp(4rem, 3.2rem + 4vw, 6rem);
+
+    /* Design tokens */
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  /* Old dark mode CSS removed - light mode only */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-dark: var(--muted-dark);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-dark: var(--accent-dark);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-outfit);
+  --font-serif: var(--font-poppins);
+  --font-display: var(--font-outfit);
+  --font-body: var(--font-inter);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    /* Using fluid typography */
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    min-height: 100vh;
+    letter-spacing: 0.01em;
+  }
+
+  /* Fluid typography classes */
+  .text-fluid-xs {
+    font-size: var(--font-size-xs);
+  }
+  .text-fluid-sm {
+    font-size: var(--font-size-sm);
+  }
+  .text-fluid-base {
+    font-size: var(--font-size-base);
+  }
+  .text-fluid-lg {
+    font-size: var(--font-size-lg);
+  }
+  .text-fluid-xl {
+    font-size: var(--font-size-xl);
+  }
+  .text-fluid-2xl {
+    font-size: var(--font-size-2xl);
+  }
+  .text-fluid-3xl {
+    font-size: var(--font-size-3xl);
+  }
+  .text-fluid-4xl {
+    font-size: var(--font-size-4xl);
+  }
+  .text-fluid-5xl {
+    font-size: var(--font-size-5xl);
+  }
+  .text-fluid-6xl {
+    font-size: var(--font-size-6xl);
+  }
+
+  /* Fluid line height utilities */
+  .leading-fluid-tight {
+    line-height: var(--line-height-tight);
+  }
+  .leading-fluid-snug {
+    line-height: var(--line-height-snug);
+  }
+  .leading-fluid-normal {
+    line-height: var(--line-height-normal);
+  }
+  .leading-fluid-relaxed {
+    line-height: var(--line-height-relaxed);
+  }
+  .leading-fluid-loose {
+    line-height: var(--line-height-loose);
+  }
+  .leading-fluid-extra-loose {
+    line-height: var(--line-height-extra-loose);
+  }
+
+  /* Enhanced typography spacing with dynamic configuration */
+  .text-spacing-comfortable {
+    line-height: var(--line-height-relaxed);
+    letter-spacing: var(--letter-spacing-comfortable);
+    word-spacing: var(--word-spacing-comfortable);
+  }
+  .text-spacing-loose {
+    line-height: var(--line-height-loose);
+    letter-spacing: var(--letter-spacing-loose);
+    word-spacing: var(--word-spacing-loose);
+  }
+  .text-spacing-tight {
+    line-height: var(--line-height-snug);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+  .text-spacing-extra-comfortable {
+    line-height: var(--line-height-extra-loose);
+    letter-spacing: var(--letter-spacing-loose);
+    word-spacing: var(--word-spacing-loose);
+  }
+
+  /* Dynamic text spacing utility classes */
+  .dynamic-text-spacing {
+    letter-spacing: var(--letter-spacing-comfortable);
+    word-spacing: var(--word-spacing-comfortable);
+    line-height: var(--line-height-relaxed);
+  }
+  .dynamic-text-spacing-loose {
+    letter-spacing: var(--letter-spacing-loose);
+    word-spacing: var(--word-spacing-loose);
+    line-height: var(--line-height-loose);
+  }
+
+  /* Enhanced fluid spacing classes with margin and padding utilities */
+  .space-fluid-xs {
+    gap: var(--space-xs);
+  }
+  .space-fluid-sm {
+    gap: var(--space-sm);
+  }
+  .space-fluid-md {
+    gap: var(--space-md);
+  }
+  .space-fluid-lg {
+    gap: var(--space-lg);
+  }
+  .space-fluid-xl {
+    gap: var(--space-xl);
+  }
+  .space-fluid-2xl {
+    gap: var(--space-2xl);
+  }
+  .space-fluid-3xl {
+    gap: var(--space-3xl);
+  }
+
+  /* Fluid margin utilities */
+  .m-fluid-xs {
+    margin: var(--space-xs);
+  }
+  .m-fluid-sm {
+    margin: var(--space-sm);
+  }
+  .m-fluid-md {
+    margin: var(--space-md);
+  }
+  .m-fluid-lg {
+    margin: var(--space-lg);
+  }
+  .m-fluid-xl {
+    margin: var(--space-xl);
+  }
+  .m-fluid-2xl {
+    margin: var(--space-2xl);
+  }
+  .m-fluid-3xl {
+    margin: var(--space-3xl);
+  }
+
+  /* Fluid padding utilities */
+  .p-fluid-xs {
+    padding: var(--space-xs);
+  }
+  .p-fluid-sm {
+    padding: var(--space-sm);
+  }
+  .p-fluid-md {
+    padding: var(--space-md);
+  }
+  .p-fluid-lg {
+    padding: var(--space-lg);
+  }
+  .p-fluid-xl {
+    padding: var(--space-xl);
+  }
+  .p-fluid-2xl {
+    padding: var(--space-2xl);
+  }
+  .p-fluid-3xl {
+    padding: var(--space-3xl);
+  }
+
+  /* Fluid vertical spacing utilities */
+  .py-fluid-xs {
+    padding-top: var(--space-xs);
+    padding-bottom: var(--space-xs);
+  }
+  .py-fluid-sm {
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-sm);
+  }
+  .py-fluid-md {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+  }
+  .py-fluid-lg {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-lg);
+  }
+  .py-fluid-xl {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+  .py-fluid-2xl {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+  .py-fluid-3xl {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+  }
+
+  /* Fluid horizontal spacing utilities */
+  .px-fluid-xs {
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
+  }
+  .px-fluid-sm {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+  .px-fluid-md {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+  .px-fluid-lg {
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+  .px-fluid-xl {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+  .px-fluid-2xl {
+    padding-left: var(--space-2xl);
+    padding-right: var(--space-2xl);
+  }
+  .px-fluid-3xl {
+    padding-left: var(--space-3xl);
+    padding-right: var(--space-3xl);
+  }
+
+  /* Desktop-specific generous spacing */
+  .desktop-spacious {
+    padding: var(--space-md) var(--space-lg);
+  }
+  .desktop-comfortable {
+    padding: var(--space-sm) var(--space-md);
+  }
+  .desktop-generous {
+    padding: var(--space-lg) var(--space-xl);
+  }
+
+  /* Dynamic border utility classes */
+  .border-dynamic {
+    border: var(--border-width-normal) solid;
+    border-color: color-mix(in srgb, var(--foreground) calc(var(--border-opacity) * 100%), transparent);
+    border-radius: var(--border-radius-dynamic);
+  }
+  .border-dynamic-thin {
+    border: var(--border-width-thin) solid;
+    border-color: color-mix(in srgb, var(--foreground) calc(var(--border-opacity) * 100%), transparent);
+    border-radius: var(--border-radius-dynamic);
+  }
+  .border-dynamic-thick {
+    border: var(--border-width-thick) solid;
+    border-color: color-mix(in srgb, var(--foreground) calc(var(--border-opacity) * 100%), transparent);
+    border-radius: var(--border-radius-dynamic);
+  }
+  .border-dynamic-hover:hover {
+    border-color: color-mix(in srgb, var(--foreground) calc(var(--border-hover-opacity) * 100%), transparent);
+  }
+  .border-dynamic-primary {
+    border: var(--border-width-normal) solid;
+    border-color: color-mix(in srgb, var(--primary) calc(var(--border-opacity) * 100%), transparent);
+    border-radius: var(--border-radius-dynamic);
+  }
+  .border-dynamic-primary-hover:hover {
+    border-color: color-mix(in srgb, var(--primary) calc(var(--border-hover-opacity) * 100%), transparent);
+  }
+  .py-fluid-2xl {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+  .py-fluid-3xl {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+  }
+}
+
+@layer components {
+  /* Skip to content link removed */
+  
+  /* Focus management for sticky headers */
+  html {
+    scroll-padding-top: 5rem;
+  }
+  
+  /* Enhanced glassmorphism with better backdrop effects */
+  .glassmorphism {
+    background: color-mix(in srgb, white 10%, transparent 90%);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid color-mix(in srgb, white 20%, transparent 80%);
+    box-shadow: 0 8px 32px color-mix(in srgb, black 10%, transparent 90%), inset 0 1px 0
+      color-mix(in srgb, white 40%, transparent 60%);
+  }
+
+  /* Dark glassmorphism removed - light mode only */
+
+  /* Simplified button styles with press feedback */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: 1px solid color-mix(in oklch, var(--primary) 80%, transparent 20%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 24px;
+    min-height: 24px;
+  }
+
+  .btn-primary:hover {
+    background: color-mix(in oklch, var(--primary) 110%, white 10%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 40%, transparent 60%);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 4px color-mix(in oklch, var(--primary) 30%, transparent 70%);
+  }
+  
+  /* Enhanced focus states for accessibility */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  
+  /* Minimum target sizes for WCAG 2.2 compliance */
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-width: 24px;
+    min-height: 24px;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Note: GSAP animations are handled in JavaScript via matchMedia check */
+  /* CSS animations and transitions are disabled above */
+}
+
+/* Container queries for component-responsive design */
+@container (min-width: 400px) {
+  .service-card {
+    container-type: inline-size;
+  }
+  
+  .service-card-horizontal {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    text-align: left;
+  }
+}
+
+@container (min-width: 600px) {
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-rows: subgrid;
+    gap: 1.5rem;
+  }
+}
+
+/* Layout stability for CLS prevention */
+.async-content {
+  contain: layout;
+  contain-intrinsic-size: 200px;
+}
+
+/* Content-aware card styling using :has() */
+.card:has(img) {
+  grid-template-rows: auto auto 1fr auto;
+}
+
+.card:has(.pricing) {
+  border: 2px solid var(--primary);
+}
+
+/* Form validation with :user-invalid */
+input:user-invalid,
+textarea:user-invalid,
+select:user-invalid {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 1px var(--destructive);
+}
+
+.form-group:has(input:user-invalid) label,
+.form-group:has(textarea:user-invalid) label,
+.form-group:has(select:user-invalid) label {
+  color: var(--destructive);
+}
+
+.form-group:has(input:user-invalid) .error-message,
+.form-group:has(textarea:user-invalid) .error-message,
+.form-group:has(select:user-invalid) .error-message {
+  display: block;
+  color: var(--destructive);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.error-message {
+  display: none;
+}
+
+/* Accent color for native form controls */
+input[type="checkbox"],
+input[type="radio"],
+progress {
+  accent-color: var(--primary);
+}
+
+@layer utilities {
+  /* Custom font utilities */
+  .font-poppins {
+    font-family: var(--font-poppins);
+    font-weight: 200;
+  }
+
+  .font-inter {
+    font-family: var(--font-inter);
+    font-weight: 200;
+  }
+
+  .font-outfit {
+    font-family: var(--font-outfit);
+    font-weight: 200;
+  }
+
+  /* Elegant thin font variants */
+  .font-thin {
+    font-weight: 100;
+  }
+
+  .font-extralight {
+    font-weight: 200;
+  }
+
+  .font-light {
+    font-weight: 300;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Added new microinteraction utilities */
+  .bg-size-200 {
+    background-size: 200% 100%;
+  }
+
+  .bg-pos-0 {
+    background-position: 0% 50%;
+  }
+
+  .bg-pos-100 {
+    background-position: 100% 50%;
+  }
+
+  /* Enhanced button hover effects */
+  .btn-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Pulse animation variants */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-fast {
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Glow effect */
+  .glow {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .glow:hover {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+  }
+}

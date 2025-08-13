@@ -1,0 +1,396 @@
+"use client"
+
+import type React from "react"
+
+import { useState, useEffect, useRef } from "react"
+import { useRouter } from "next/navigation"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
+
+declare global {
+  interface Window {
+    gsap: any
+    ScrollTrigger: any
+  }
+}
+
+interface ContactForm {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  subject: string
+  inquiryType: string
+  message: string
+}
+
+const initialFormData: ContactForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  subject: "",
+  inquiryType: "",
+  message: "",
+}
+
+const contactInfo = [
+  {
+    icon: MapPin,
+    title: "Office Location",
+    details: ["123 Sandton City", "Johannesburg, 2196", "South Africa"],
+  },
+  {
+    icon: Phone,
+    title: "Phone Numbers",
+    details: ["Main: (555) 123-4567", "Toll Free: (800) 123-4567", "Fax: (555) 123-4568"],
+  },
+  {
+    icon: Mail,
+    title: "Email Addresses",
+    details: ["info@financialservices.com", "support@financialservices.com", "careers@financialservices.com"],
+  },
+  {
+    icon: Clock,
+    title: "Business Hours",
+    details: ["Monday - Friday: 8:00 AM - 6:00 PM", "Saturday: 9:00 AM - 2:00 PM", "Sunday: Closed"],
+  },
+]
+
+export default function ContactContent() {
+  const [formData, setFormData] = useState<ContactForm>(initialFormData)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
+
+  const heroRef = useRef<HTMLDivElement>(null)
+  const formRef = useRef<HTMLDivElement>(null)
+  const infoRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
+      const gsap = window.gsap
+      const ScrollTrigger = window.ScrollTrigger
+
+      gsap.registerPlugin(ScrollTrigger)
+
+      // Hero animation
+      gsap.fromTo(
+        heroRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      )
+
+      // Form animation
+      gsap.fromTo(
+        formRef.current,
+        { opacity: 0, x: -50 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      )
+
+      // Info cards animation
+      gsap.fromTo(
+        ".contact-info-card",
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: infoRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        },
+      )
+
+      return () => {
+        ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill())
+      }
+    }
+  }, [])
+
+  const updateFormData = (field: keyof ContactForm, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }))
+    }
+  }
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {}
+
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
+    if (!formData.email.trim()) newErrors.email = "Email is required"
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid"
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required"
+    if (!formData.subject.trim()) newErrors.subject = "Subject is required"
+    if (!formData.inquiryType) newErrors.inquiryType = "Please select an inquiry type"
+    if (!formData.message.trim()) newErrors.message = "Message is required"
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) return
+
+    setIsSubmitting(true)
+
+    // Simulate form submission
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    console.log("Contact form submitted:", formData)
+
+    router.push("/confirmation?type=contact")
+  }
+
+  return (
+    <div className="bg-white">
+      {/* Hero Section */}
+      <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
+        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl text-center">
+          <h1 className="font-poppins font-thin text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+            Contact <span className="text-primary">Us</span>
+          </h1>
+          <p className="font-inter text-fluid-xl text-gray-600 leading-fluid-relaxed text-spacing-comfortable">
+            Ready to take control of your financial future? Get in touch with our expert team today. We&apos;re here to
+            answer your questions and help you achieve your goals.
+          </p>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="py-fluid-2xl">
+        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl">
+            {/* Contact Form */}
+            <div ref={formRef}>
+              <Card className="shadow-xl border-0">
+                <CardHeader>
+                  <CardTitle className="font-poppins font-light text-fluid-2xl text-gray-900">Send Us a Message</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmit} className="space-y-fluid-md">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-md">
+                      <div>
+                        <Label htmlFor="firstName" className="font-inter font-light">
+                          First Name *
+                        </Label>
+                        <Input
+                          id="firstName"
+                          value={formData.firstName}
+                          onChange={(e) => updateFormData("firstName", e.target.value)}
+                          className={`mt-fluid-xs ${errors.firstName ? "border-red-500" : ""}`}
+                          placeholder="Enter your first name"
+                        />
+                        {errors.firstName && <p className="text-red-500 text-sm mt-fluid-xs">{errors.firstName}</p>}
+                      </div>
+                      <div>
+                        <Label htmlFor="lastName" className="font-inter font-light">
+                          Last Name *
+                        </Label>
+                        <Input
+                          id="lastName"
+                          value={formData.lastName}
+                          onChange={(e) => updateFormData("lastName", e.target.value)}
+                          className={`mt-fluid-xs ${errors.lastName ? "border-red-500" : ""}`}
+                          placeholder="Enter your last name"
+                        />
+                        {errors.lastName && <p className="text-red-500 text-sm mt-fluid-xs">{errors.lastName}</p>}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="email" className="font-inter font-light">
+                          Email Address *
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => updateFormData("email", e.target.value)}
+                          className={`mt-fluid-xs ${errors.email ? "border-red-500" : ""}`}
+                          placeholder="Enter your email"
+                        />
+                        {errors.email && <p className="text-red-500 text-sm mt-fluid-xs">{errors.email}</p>}
+                      </div>
+                      <div>
+                        <Label htmlFor="phone" className="font-inter font-light">
+                          Phone Number *
+                        </Label>
+                        <Input
+                          id="phone"
+                          value={formData.phone}
+                          onChange={(e) => updateFormData("phone", e.target.value)}
+                          className={`mt-fluid-xs ${errors.phone ? "border-red-500" : ""}`}
+                          placeholder="Enter your phone number"
+                        />
+                        {errors.phone && <p className="text-red-500 text-sm mt-fluid-xs">{errors.phone}</p>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="subject" className="font-inter font-light">
+                        Subject *
+                      </Label>
+                      <Input
+                        id="subject"
+                        value={formData.subject}
+                        onChange={(e) => updateFormData("subject", e.target.value)}
+                        className={`mt-fluid-xs ${errors.subject ? "border-red-500" : ""}`}
+                        placeholder="What's this about?"
+                      />
+                      {errors.subject && <p className="text-red-500 text-sm mt-fluid-xs">{errors.subject}</p>}
+                    </div>
+
+                    <div>
+                      <Label className="font-inter font-light">Inquiry Type *</Label>
+                      <RadioGroup
+                        value={formData.inquiryType}
+                        onValueChange={(value) => updateFormData("inquiryType", value)}
+                        className="mt-fluid-sm"
+                      >
+                        {[
+                          "General Information",
+                          "Schedule Consultation",
+                          "Investment Advisory",
+                          "Financial Planning",
+                          "Tax Consulting",
+                          "Business Consulting",
+                        ].map((type) => (
+                          <div key={type} className="flex items-center space-x-fluid-xs">
+                            <RadioGroupItem value={type} id={type} />
+                            <Label htmlFor={type} className="font-inter">
+                              {type}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                      {errors.inquiryType && <p className="text-red-500 text-sm mt-fluid-xs">{errors.inquiryType}</p>}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="message" className="font-inter font-light">
+                        Message *
+                      </Label>
+                      <Textarea
+                        id="message"
+                        value={formData.message}
+                        onChange={(e) => updateFormData("message", e.target.value)}
+                        className={`mt-fluid-xs ${errors.message ? "border-red-500" : ""}`}
+                        placeholder="Tell us more about how we can help you..."
+                        rows={6}
+                      />
+                      {errors.message && <p className="text-red-500 text-sm mt-fluid-xs">{errors.message}</p>}
+                    </div>
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      size="comfortable"
+                      className="w-full font-inter font-light text-fluid-lg bg-primary hover:bg-primary/90 transition-all duration-300"
+                    >
+                      {isSubmitting ? (
+                        "Sending..."
+                      ) : (
+                        <>
+                          Send Message
+                          <Send className="ml-fluid-xs h-5 w-5" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Contact Information */}
+            <div ref={infoRef} className="space-y-fluid-lg">
+              <div>
+                <h2 className="font-poppins font-thin text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Get in Touch</h2>
+                <p className="font-inter text-fluid-lg text-gray-600 leading-fluid-relaxed text-spacing-comfortable mb-fluid-lg">
+                  We&apos;re here to help you achieve your financial goals. Reach out to us through any of the following
+                  methods, and we&apos;ll get back to you promptly.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-fluid-md">
+                {contactInfo.map((info, index) => {
+                  const IconComponent = info.icon
+                  return (
+                    <Card
+                      key={index}
+                      className="contact-info-card border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <CardContent className="p-fluid-md">
+                        <div className="flex items-start">
+                          <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mr-fluid-sm flex-shrink-0">
+                            <IconComponent className="h-6 w-6 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-poppins font-light text-fluid-lg text-gray-900 mb-fluid-xs leading-fluid-relaxed text-spacing-comfortable">{info.title}</h3>
+                            <div className="space-y-fluid-xs">
+                              {info.details.map((detail, detailIndex) => (
+                                <p key={detailIndex} className="font-inter text-gray-600 text-sm">
+                                  {detail}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
+
+              {/* Map Placeholder */}
+              <Card className="border-0 shadow-lg overflow-hidden">
+                <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-fluid-sm" />
+                    <p className="font-inter text-gray-500">Interactive Map Coming Soon</p>
+                    <p className="font-inter text-sm text-gray-400">123 Sandton City, Johannesburg, 2196</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

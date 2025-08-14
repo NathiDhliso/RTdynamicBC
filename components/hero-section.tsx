@@ -20,18 +20,15 @@ const HeroSection = () => {
   const isMobile = useIsMobile()
 
   useEffect(() => {
-    const initializeAnimations = () => {
-      console.log('Hero section useEffect triggered')
-      console.log('GSAP available:', typeof window !== "undefined" && !!window.gsap)
-      console.log('ScrollTrigger available:', typeof window !== "undefined" && !!window.ScrollTrigger)
-      
-      if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-        console.log('Initializing GSAP animations...')
-        setupAnimations()
-      } else {
-        console.log('GSAP not ready, retrying in 100ms...')
-        setTimeout(initializeAnimations, 100)
+    const waitForGsap = (callback: () => void) => {
+      const check = () => {
+        if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
+          callback()
+        } else {
+          requestAnimationFrame(check)
+        }
       }
+      check()
     }
     
     const setupAnimations = () => {
@@ -229,7 +226,10 @@ const HeroSection = () => {
     }
     
     // Start the initialization process
-    initializeAnimations()
+    waitForGsap(() => {
+      console.log('GSAP libraries loaded, initializing animations...')
+      setupAnimations()
+    })
   }, [isMobile])
 
   return (

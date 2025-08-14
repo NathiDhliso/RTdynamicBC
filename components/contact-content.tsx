@@ -197,10 +197,10 @@ export default function ContactContent() {
       {/* Hero Section */}
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl text-center">
-          <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+          <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
             Contact <span className="text-primary">Us</span>
           </h1>
-          <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
+          <p className="font-inter text-fluid-lg md:text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
             Ready to take control of your financial future? Get in touch with our expert team today. We&apos;re here to
             answer your questions and help you achieve your goals.
           </p>

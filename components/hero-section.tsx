@@ -1,13 +1,19 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 
-
+// Extend window interface for GSAP
+declare global {
+  interface Window {
+    gsap: any
+    ScrollTrigger: any
+  }
+}
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null)
@@ -18,219 +24,312 @@ const HeroSection = () => {
   const backgroundRef = useRef<HTMLDivElement>(null)
 
   const isMobile = useIsMobile()
+  const [animationsReady, setAnimationsReady] = useState(false)
+  const [isStaticFallback, setIsStaticFallback] = useState(false)
+  const [gsapLoaded, setGsapLoaded] = useState(false)
 
-  useEffect(() => {
-    const waitForGsap = (callback: () => void) => {
-      const check = () => {
-        if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-          callback()
-        } else {
-          requestAnimationFrame(check)
-        }
-      }
-      check()
-    }
+  // Detect only truly low-end devices or explicit reduced motion preference
+  const shouldUseStaticFallback = () => {
+    if (typeof window === 'undefined') return false
     
-    const setupAnimations = () => {
-    if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-      const gsap = window.gsap
-      const ScrollTrigger = window.ScrollTrigger
-      
-      // Check for reduced motion preference
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      console.log('Reduced motion preference:', prefersReducedMotion)
-      
-      // Temporarily disable reduced motion check for testing
-      if (false && prefersReducedMotion) {
-        // Set elements to final state without animation
-        if (titleRef.current && subtitleRef.current && ctaRef.current) {
-          gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], { opacity: 1, y: 0 })
+    // Always respect user's explicit reduced motion preference
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) return true
+    
+    // Only target very old/low-end devices
+    const veryLowEndDevice = (
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency === 1) || // Single core only
+      (navigator.deviceMemory && navigator.deviceMemory < 1) || // Less than 1GB RAM
+      /Android.*[1-4]\./i.test(navigator.userAgent) || // Very old Android
+      /iPhone.*OS [1-9]_/i.test(navigator.userAgent) // Very old iOS
+    )
+    
+    return veryLowEndDevice
+  }
+
+  // Load GSAP dynamically
+  useEffect(() => {
+    const loadGSAP = async () => {
+      try {
+        // Check if GSAP is already loaded
+        if (window.gsap && window.ScrollTrigger) {
+          setGsapLoaded(true)
+          return
         }
-        if (logoRef.current) {
-          gsap.set(logoRef.current, { opacity: 1, scale: 1, x: 0, y: 0 })
+
+        // Load GSAP from CDN
+        const gsapScript = document.createElement('script')
+        gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'
+        gsapScript.async = true
+        
+        const scrollTriggerScript = document.createElement('script')
+        scrollTriggerScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js'
+        scrollTriggerScript.async = true
+
+        // Load GSAP first
+        gsapScript.onload = () => {
+          // Then load ScrollTrigger
+          scrollTriggerScript.onload = () => {
+            if (window.gsap && window.ScrollTrigger) {
+              window.gsap.registerPlugin(window.ScrollTrigger)
+              setGsapLoaded(true)
+            }
+          }
+          scrollTriggerScript.onerror = () => {
+            console.error('Failed to load ScrollTrigger')
+            setIsStaticFallback(true)
+          }
+          document.head.appendChild(scrollTriggerScript)
         }
-        console.log('Reduced motion detected - animations disabled')
-        return
+        
+        gsapScript.onerror = () => {
+          console.error('Failed to load GSAP')
+          setIsStaticFallback(true)
+        }
+        
+        document.head.appendChild(gsapScript)
+      } catch (error) {
+        console.error('Error loading GSAP:', error)
+        setIsStaticFallback(true)
       }
-      
-      console.log('GSAP animations enabled - no reduced motion preference')
-      console.log('Elements found:', {
-        heroRef: !!heroRef.current,
-        logoRef: !!logoRef.current,
-        titleRef: !!titleRef.current,
-        subtitleRef: !!subtitleRef.current,
-        ctaRef: !!ctaRef.current
-      })
+    }
 
-      gsap.registerPlugin(ScrollTrigger)
-      console.log('ScrollTrigger registered successfully')
+    // Check for static fallback conditions first
+    if (shouldUseStaticFallback()) {
+      setIsStaticFallback(true)
+      return
+    }
 
-      if (isMobile) {
-        console.log('Setting up mobile animations')
-        // Mobile: Simple fade-in animations only
-        gsap.set([logoRef.current, titleRef.current, subtitleRef.current, ctaRef.current], {
-          opacity: 0,
-          y: 30,
-        })
-        console.log('Mobile initial states set')
+    loadGSAP()
+  }, [])
 
-        const mobileTimeline = gsap.timeline({
-          scrollTrigger: {
+  // Setup animations when GSAP is loaded
+  useEffect(() => {
+    if (!gsapLoaded || isStaticFallback || !heroRef.current) return
+
+    let cleanup: (() => void) | undefined
+
+    const setupAnimations = () => {
+      try {
+        const { gsap, ScrollTrigger } = window
+        
+        // Clear any existing animations
+        gsap.killTweensOf([titleRef.current, subtitleRef.current, ctaRef.current, logoRef.current])
+        ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill())
+
+        if (isMobile) {
+          // Mobile animations - simpler approach
+          gsap.set([titleRef.current, subtitleRef.current, ctaRef.current, logoRef.current], {
+            opacity: 0,
+            y: 50
+          })
+
+          const mobileTimeline = gsap.timeline({
+            delay: 0.2,
+            onComplete: () => setAnimationsReady(true)
+          })
+
+          mobileTimeline
+            .to(logoRef.current, { 
+              opacity: 1, 
+              y: 0, 
+              duration: 1.2, 
+              ease: "power2.out" 
+            })
+            .to(titleRef.current, { 
+              opacity: 1, 
+              y: 0, 
+              duration: 1, 
+              ease: "power2.out" 
+            }, "-=0.8")
+            .to(subtitleRef.current, { 
+              opacity: 1, 
+              y: 0, 
+              duration: 1, 
+              ease: "power2.out" 
+            }, "-=0.6")
+            .to(ctaRef.current, { 
+              opacity: 1, 
+              y: 0, 
+              duration: 1, 
+              ease: "power2.out" 
+            }, "-=0.4")
+
+          // Add subtle scroll-based logo glow
+          ScrollTrigger.create({
             trigger: heroRef.current,
             start: "top top",
-            end: "+=80%",
-            scrub: 0.5,
-            pin: true,
-            pinSpacing: false,
-          },
-        }) as { to: (target: unknown, vars: unknown, position?: unknown) => unknown }
+            end: "bottom top",
+            scrub: 1,
+            onUpdate: (self: any) => {
+              const progress = self.progress
+              const glowIntensity = 0.3 + (progress * 0.5)
+              gsap.to(logoRef.current, {
+                boxShadow: `0 0 ${20 + progress * 30}px rgba(255, 255, 255, ${glowIntensity}), 0 0 ${40 + progress * 40}px rgba(255, 255, 255, ${glowIntensity * 0.5})`,
+                duration: 0.3
+              })
+            }
+          })
 
-        mobileTimeline
-          .to([titleRef.current, subtitleRef.current, ctaRef.current], { opacity: 1, y: 0, duration: 1 }, 0)
-          .to(logoRef.current, { opacity: 1, y: 0, duration: 1 }, "<0.3")
-      } else {
-        console.log('Setting up desktop animations')
-        const masterTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top top",
-            end: "+=100%",
-            scrub: 0.5,
-            pin: true,
-            pinSpacing: false,
-            anticipatePin: 1,
-          },
-        }) as { to: (target: unknown, vars: unknown, position?: unknown) => unknown }
-        console.log('Desktop timeline created')
+        } else {
+          // Desktop animations - full scroll-driven experience
+          gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
+            opacity: 1,
+            y: 0
+          })
 
-        // Initial states
-        gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
-          opacity: 1,
-          y: 0,
-        })
+          gsap.set(logoRef.current, {
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            y: 0,
+            rotation: 0
+          })
 
-        gsap.set(logoRef.current, {
-          opacity: 1,
-          scale: 1,
-          x: 0,
-          y: 0,
-          rotate: 0,
-        })
+          // Create the main scroll timeline
+          const masterTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: "top top",
+              end: "+=100%",
+              scrub: 1,
+              pin: true,
+              pinSpacing: true,
+              anticipatePin: 1,
+              refreshPriority: -1,
+              onUpdate: (self: any) => {
+                // Fix logo position when timeline progresses past 70%
+                if (self.progress >= 0.7 && logoRef.current) {
+                  gsap.set(logoRef.current, { 
+                    position: "fixed", 
+                    top: "2rem", 
+                    left: "2rem", 
+                    zIndex: 1000,
+                    transformOrigin: "center center"
+                  })
+                }
+              }
+            }
+          })
 
-        // Gentle neon background pulse effect
-        gsap.to(logoRef.current, { 
-          boxShadow: "0 0 25px rgba(255, 255, 255, 0.4), 0 0 50px rgba(255, 255, 255, 0.25), 0 0 75px rgba(255, 255, 255, 0.15)", 
-          duration: 8, 
-          ease: "power1.inOut", 
-          yoyo: true, 
-          repeat: -1 
-        })
+          // Phase 1: Fade out text elements (0% - 40%)
+          masterTimeline
+            .to(titleRef.current, {
+              opacity: 0,
+              y: -100,
+              scale: 0.8,
+              duration: 2,
+              ease: "power2.inOut"
+            }, 0)
+            .to(subtitleRef.current, {
+              opacity: 0,
+              y: -80,
+              scale: 0.9,
+              duration: 2,
+              ease: "power2.inOut"
+            }, 0.2)
+            .to(ctaRef.current, {
+              opacity: 0,
+              y: -60,
+              scale: 0.9,
+              duration: 2,
+              ease: "power2.inOut"
+            }, 0.4)
 
-        // Part 1: Fade out headline, sub-headline, and CTA buttons with stagger
-        masterTimeline.to(
-          titleRef.current,
-          {
-            opacity: 0,
-            y: -80,
-            scale: 0.9,
-            duration: 1.2,
-            ease: "power2.inOut",
-          },
-          0,
-        )
-        .to(
-          subtitleRef.current,
-          {
-            opacity: 0,
-            y: -60,
-            scale: 0.95,
-            duration: 1.1,
-            ease: "power2.inOut",
-          },
-          0.15,
-        )
-        .to(
-          ctaRef.current,
-          {
-            opacity: 0,
-            y: -40,
-            scale: 0.9,
-            duration: 1.0,
-            ease: "power2.inOut",
-          },
-          0.3,
-        )
-
-        // Part 2: Scale down logo and move to top-left corner with enhanced animation
-        masterTimeline.to(
-          logoRef.current,
-          {
-            scale: 0.12,
+          // Phase 2: Logo transformation (20% - 80%)
+          masterTimeline.to(logoRef.current, {
+            scale: 0.15,
             x: () => {
               const heroWidth = heroRef.current?.offsetWidth || window.innerWidth
-              return -(heroWidth / 2) + 32 + 48 // Move to left edge + 2rem padding + half logo width
+              return -(heroWidth / 2) + 64 // Move to left edge with padding
             },
             y: () => {
               const heroHeight = heroRef.current?.offsetHeight || window.innerHeight
-              return -(heroHeight / 2) + 32 + 48 // Move to top edge + 2rem padding + half logo height
+              return -(heroHeight / 2) + 64 // Move to top edge with padding
             },
-            rotation: 360,
-            duration: 1.8,
-            ease: "back.inOut(1.2)",
-          },
-          0.2,
-        )
+            rotation: 720,
+            duration: 3,
+            ease: "power2.inOut"
+          }, 1)
 
-        // As timeline progresses past midpoint, fix the logo to viewport top-left
-        ScrollTrigger.create({
-          trigger: heroRef.current,
-          start: "top top",
-          end: "+=100%",
-          onUpdate: (self: { progress: number }) => {
-            if (self.progress >= 0.6) {
-              gsap.set(logoRef.current, { position: "fixed", top: 32, left: 32, zIndex: 1000 })
-            } else {
-              gsap.set(logoRef.current, { position: "relative", top: "", left: "", zIndex: "" })
-            }
-          },
-        })
+          // Continuous logo glow effect
+          gsap.to(logoRef.current, {
+            boxShadow: "0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.2), 0 0 90px rgba(255, 255, 255, 0.1)",
+            duration: 4,
+            ease: "power1.inOut",
+            yoyo: true,
+            repeat: -1
+          })
 
-        // Reveal services section heading and cards while logo is shrinking (only if they exist)
-        const servicesHeading = document.querySelector(".services-heading")
-        const servicesCards = document.querySelectorAll(".service-card")
-        
-        if (servicesHeading) {
-          gsap.set(servicesHeading, { opacity: 0, y: 60, scale: 0.9 })
-          masterTimeline.to(
-            servicesHeading,
-            { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power2.out" },
-            0.8,
-          )
+          // Animate services section if it exists
+          const servicesHeading = document.querySelector(".services-heading")
+          const servicesCards = document.querySelectorAll(".service-card")
+          
+          if (servicesHeading) {
+            gsap.set(servicesHeading, { opacity: 0, y: 80, scale: 0.8 })
+            masterTimeline.to(servicesHeading, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 1.5,
+              ease: "back.out(1.7)"
+            }, 2)
+          }
+          
+          if (servicesCards.length > 0) {
+            gsap.set(servicesCards, { opacity: 0, y: 80, scale: 0.8 })
+            masterTimeline.to(servicesCards, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 1.2,
+              ease: "back.out(1.7)",
+              stagger: 0.15
+            }, 2.5)
+          }
         }
-        
-        if (servicesCards.length > 0) {
-          gsap.set(servicesCards, { opacity: 0, y: 60, scale: 0.9 })
-          masterTimeline.to(
-            servicesCards,
-            { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: "power2.out", stagger: 0.2 },
-            1.0,
-          )
-        }
-      }
 
-      // Cleanup
-      return () => {
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+        setAnimationsReady(true)
+
+        // Cleanup function
+        cleanup = () => {
+          try {
+            ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill())
+            gsap.killTweensOf([titleRef.current, subtitleRef.current, ctaRef.current, logoRef.current])
+          } catch (error) {
+            console.warn('Error during cleanup:', error)
+          }
+        }
+
+      } catch (error) {
+        console.error('Animation setup failed:', error)
+        setIsStaticFallback(true)
       }
     }
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(setupAnimations, 100)
+
+    return () => {
+      clearTimeout(timeoutId)
+      if (cleanup) cleanup()
     }
-    
-    // Start the initialization process
-    waitForGsap(() => {
-      console.log('GSAP libraries loaded, initializing animations...')
-      setupAnimations()
-    })
-  }, [isMobile])
+  }, [gsapLoaded, isMobile, isStaticFallback])
+
+  // Fallback effect for static display
+  useEffect(() => {
+    if (isStaticFallback) {
+      // Ensure all elements are visible without animations
+      const elements = [titleRef.current, subtitleRef.current, ctaRef.current, logoRef.current]
+      elements.forEach(el => {
+        if (el) {
+          el.style.opacity = '1'
+          el.style.transform = 'none'
+        }
+      })
+      setAnimationsReady(true)
+    }
+  }, [isStaticFallback])
 
   return (
     <section ref={heroRef} className="relative h-screen overflow-hidden" suppressHydrationWarning>
@@ -304,17 +403,26 @@ const HeroSection = () => {
             <div>
               <h1
                 ref={titleRef}
-                className="gsap-animation font-outfit font-extralight text-fluid-4xl md:text-fluid-6xl text-white leading-fluid-snug mb-fluid-lg dynamic-text-spacing-loose"
+                className={`font-outfit font-extralight text-fluid-4xl md:text-fluid-6xl text-white leading-fluid-snug mb-fluid-lg dynamic-text-spacing-loose ${
+                  isStaticFallback || !animationsReady ? 'opacity-100' : 'opacity-0'
+                }`}
               >
                 Unlock Your Business&apos;s Financial Potential
               </h1>
               <p
                 ref={subtitleRef}
-                className="gsap-animation font-inter font-light text-fluid-lg md:text-fluid-2xl text-white/90 max-w-xl leading-fluid-loose mb-fluid-xl dynamic-text-spacing"
+                className={`font-inter font-light text-fluid-lg md:text-fluid-2xl text-white/90 max-w-xl leading-fluid-loose mb-fluid-xl dynamic-text-spacing ${
+                  isStaticFallback || !animationsReady ? 'opacity-100' : 'opacity-0'
+                }`}
               >
                 Expert consulting to optimize cash flow, ensure compliance, and fuel sustainable growth.
               </p>
-              <div ref={ctaRef} className="gsap-animation flex flex-col sm:flex-row gap-fluid-lg">
+              <div 
+                ref={ctaRef} 
+                className={`flex flex-col sm:flex-row gap-fluid-lg ${
+                  isStaticFallback || !animationsReady ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
                 <Button asChild size="spacious" className="btn-primary font-inter font-light">
                   <Link href="/questionnaire">
                     Business Health Check
@@ -329,11 +437,21 @@ const HeroSection = () => {
 
             {/* Right column: rotating logo */}
             <div className="flex justify-center md:justify-end">
-              <div ref={logoRef} className="gsap-animation w-40 h-40 relative rounded-full flex items-center justify-center transition-all duration-500" style={{boxShadow: '0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.1)'}}>
+              <div 
+                ref={logoRef} 
+                className={`w-40 h-40 relative rounded-full flex items-center justify-center transition-all duration-500 ${
+                  isStaticFallback || !animationsReady ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{
+                  boxShadow: isStaticFallback ? '0 0 20px rgba(255, 255, 255, 0.3)' : undefined
+                }}
+              >
                 <Image
                   src="/Logo.png"
                   alt="RT Dynamic Business Consulting Logo"
                   fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-contain p-6 rounded-full"
                 />
               </div>

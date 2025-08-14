@@ -181,7 +181,7 @@ export default function AboutContent() {
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-2xl">
-            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+            <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               About <span className="text-primary">RTDynamicBC</span>
             </h1>
             <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
@@ -192,8 +192,8 @@ export default function AboutContent() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl items-center">
             <div>
-              <h2 className="font-poppins font-light text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Our Mission</h2>
-               <p className="font-inter text-fluid-lg text-gray-700 leading-fluid-relaxed text-spacing-comfortable mb-fluid-md">
+              <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Our Mission</h2>
+               <p className="font-inter text-fluid-base md:text-fluid-lg text-gray-700 leading-fluid-relaxed text-spacing-comfortable mb-fluid-md">
                  To provide exceptional chartered accounting services that ensure our clients&apos; financial compliance,
                  business growth, and operational excellence. We deliver professional accounting, auditing, taxation,
                  and business consulting services with integrity, accuracy, and expertise.
@@ -260,7 +260,7 @@ export default function AboutContent() {
       <section ref={valuesRef} className="py-fluid-2xl bg-gradient-to-b from-white to-gray-50">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-2xl">
-            <h2 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+            <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Our <span className="text-primary">Values</span>
             </h2>
             <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
@@ -294,7 +294,7 @@ export default function AboutContent() {
       <section ref={teamRef} className="py-fluid-2xl bg-gradient-to-br from-gray-50 to-white">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-xl">
-            <h2 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+            <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Meet Our <span className="text-primary">Founders</span>
             </h2>
             <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-fluid-relaxed text-spacing-comfortable">

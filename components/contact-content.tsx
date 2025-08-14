@@ -49,7 +49,7 @@ const contactInfo = [
   {
     icon: Mail,
     title: "Email Address",
-    details: ["info@rtdynamic.co.za"],
+    details: ["info@rtdynamicbc.co.za  "],
   },
   {
     icon: Clock,
@@ -197,7 +197,7 @@ export default function ContactContent() {
       {/* Hero Section */}
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl text-center">
-          <h1 className="font-poppins font-thin text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+          <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
             Contact <span className="text-primary">Us</span>
           </h1>
           <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
@@ -356,7 +356,7 @@ export default function ContactContent() {
             {/* Contact Information */}
             <div ref={infoRef} className="space-y-fluid-lg">
               <div>
-                <h2 className="font-poppins font-thin text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Get in Touch</h2>
+                <h2 className="font-poppins font-bold text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Get in Touch</h2>
                 <p className="font-inter text-fluid-lg text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable mb-fluid-lg">
                   We&apos;re here to help you achieve your financial goals. Reach out to us through any of the following
                   methods, and we&apos;ll get back to you promptly.

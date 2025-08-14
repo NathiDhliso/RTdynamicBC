@@ -96,12 +96,12 @@ export default function ServiceDetailsModal({ service, isOpen, onClose }: Servic
       onClick={(e) => e.target === modalRef.current && onClose()}
     >
       {/* Backdrop */}
-      <div ref={overlayRef} className="absolute inset-0 bg-background backdrop-blur-md" />
+      <div ref={overlayRef} className="absolute inset-0 bg-background backdrop-blur-md" onClick={onClose} />
 
       {/* Modal Content */}
       <div
         ref={contentRef}
-        className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-background border border-border rounded-2xl shadow-2xl"
+        className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto bg-background border border-border rounded-2xl shadow-2xl"
       >
         {/* Header */}
         <div
@@ -209,44 +209,7 @@ export default function ServiceDetailsModal({ service, isOpen, onClose }: Servic
             </div>
           </div>
 
-          {/* Call to Action */}
-          <div className="bg-gradient-to-r from-muted to-secondary rounded-xl p-fluid-lg text-center">
-            <h3 className="font-poppins font-light text-fluid-2xl text-foreground mb-fluid-sm">Ready to Get Started?</h3>
-            <p className="font-inter text-muted-foreground mb-fluid-lg max-w-2xl mx-auto">
-              Schedule a consultation to discuss how our {service.title.toLowerCase()} service can help you achieve your
-              financial goals.
-            </p>
 
-            <div className="flex flex-col sm:flex-row gap-fluid-sm justify-center items-center">
-              <Button
-                size="spacious"
-               className="font-inter font-light text-fluid-lg bg-primary hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
-              >
-                Schedule Consultation
-                <ArrowRight className="ml-fluid-md h-5 w-5" />
-              </Button>
-
-              <div className="flex gap-fluid-sm">
-                <Button
-                  variant="outline"
-                  size="comfortable"
-                   className="font-inter font-light border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 bg-transparent"
-                >
-                  <Phone className="mr-fluid-md h-5 w-5" />
-                  Call Us
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="comfortable"
-                   className="font-inter font-light border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 bg-transparent"
-                >
-                  <Mail className="mr-fluid-md h-5 w-5" />
-                  Email
-                </Button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

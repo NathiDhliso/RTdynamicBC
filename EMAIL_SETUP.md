@@ -4,7 +4,7 @@ This document explains how to set up and configure the email functionality for t
 
 ## Overview
 
-The application uses a Node.js/Express server with Nodemailer to send emails from both the contact form and business health check questionnaire to `info@rtdynamic.co.za`.
+The application uses a Node.js/Express server with Nodemailer to send emails from both the contact form and business health check questionnaire to `info@rtdynamicbc.co.za  `.
 
 ## Setup Instructions
 
@@ -28,13 +28,13 @@ PORT=3001
 SMTP_HOST=mail.privateemail.com
 SMTP_PORT=587
 SMTP_SECURE=false
-SMTP_USER=info@rtdynamic.co.za
+SMTP_USER=info@rtdynamicbc.co.za  
 SMTP_PASS=your_actual_password_here
-MAIL_FROM=info@rtdynamic.co.za
-MAIL_TO=info@rtdynamic.co.za
+MAIL_FROM=info@rtdynamicbc.co.za  
+MAIL_TO=info@rtdynamicbc.co.za  
 ```
 
-**Important:** Replace `your_actual_password_here` with the actual password for the `info@rtdynamic.co.za` email account.
+**Important:** Replace `your_actual_password_here` with the actual password for the `info@rtdynamicbc.co.za  ` email account.
 
 ### 3. DNS Configuration (if not already set up)
 

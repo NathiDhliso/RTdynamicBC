@@ -239,7 +239,7 @@ export default function ConfirmationContent() {
             </div>
 
             {/* Main Message */}
-            <h1 className="font-poppins font-thin text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-6 bg-gradient-to-r from-gray-900 via-primary to-gray-900 bg-clip-text text-transparent">
+            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-6 bg-gradient-to-r from-gray-900 via-primary to-gray-900 bg-clip-text text-transparent">
               {formDetails.title}
             </h1>
             <h2 className="font-poppins font-light text-fluid-2xl text-primary mb-8">{formDetails.subtitle}</h2>
@@ -276,7 +276,7 @@ export default function ConfirmationContent() {
 
           {/* Next Steps */}
           <div ref={stepsRef} className="mb-20">
-            <h3 className="font-poppins font-thin text-fluid-4xl text-gray-900 text-center mb-4">What Happens Next?</h3>
+            <h3 className="font-poppins font-light text-fluid-4xl text-gray-900 text-center mb-4">What Happens Next?</h3>
             <p className="font-inter text-fluid-lg text-gray-600 text-center mb-16 max-w-3xl mx-auto">
               Our proven process ensures you receive the highest quality service and results. Here&apos;s your personalized
               roadmap:
@@ -321,7 +321,7 @@ export default function ConfirmationContent() {
 
           {/* Estimate Summary Card */}
           <div className="mb-20">
-            <h3 className="font-poppins font-thin text-fluid-3xl text-gray-900 text-center mb-6">Your Price Estimate</h3>
+            <h3 className="font-poppins font-light text-fluid-3xl text-gray-900 text-center mb-6">Your Price Estimate</h3>
             <div className="max-w-3xl mx-auto">
               <Card className="border-0 shadow-2xl">
                 <CardContent className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">

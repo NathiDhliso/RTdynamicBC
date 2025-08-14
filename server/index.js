@@ -130,8 +130,8 @@ app.post('/api/contact', async (req, res) => {
     ].filter(Boolean).join('\n');
 
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || 'info@rtdynamic.co.za',
-      to: process.env.MAIL_TO || 'info@rtdynamic.co.za',
+      from: process.env.MAIL_FROM || 'info@rtdynamicbc.co.za  ',
+      to: process.env.MAIL_TO || 'info@rtdynamicbc.co.za  ',
       subject: `New contact from ${fullName}`,
       text,
       html,
@@ -169,8 +169,8 @@ app.post('/api/business-health-check', async (req, res) => {
     ].filter(Boolean).join('\n');
 
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || 'info@rtdynamic.co.za',
-      to: process.env.MAIL_TO || 'info@rtdynamic.co.za',
+      from: process.env.MAIL_FROM || 'info@rtdynamicbc.co.za  ',
+      to: process.env.MAIL_TO || 'info@rtdynamicbc.co.za  ',
       subject: `Business Health Check - ${formData.companyName || contactName}`,
       text,
       html,

@@ -17,8 +17,8 @@ export default function Footer() {
     {
       icon: Mail,
       label: "Email",
-      value: "info@rtdynamic.co.za",
-      href: "mailto:info@rtdynamic.co.za",
+      value: "info@rtdynamicbc.co.za  ",
+      href: "mailto:info@rtdynamicbc.co.za  ",
     },
     {
       icon: MapPin,
@@ -93,30 +93,10 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-border mt-fluid-lg pt-fluid-lg">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="font-inter text-gray-400 text-fluid-sm mb-fluid-sm md:mb-0">
-              © {currentYear} RTDynamicBC. All rights reserved. 
+          <div className="flex justify-center">
+            <p className="font-inter text-gray-400 text-fluid-sm">
+              © {currentYear} RTDynamicBC. All rights reserved.
             </p>
-            <div className="flex space-x-fluid-lg">
-              <Link
-                href="/privacy"
-                className="font-inter text-gray-400 hover:text-white transition-colors duration-300 text-fluid-sm"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="font-inter text-gray-400 hover:text-white transition-colors duration-300 text-fluid-sm"
-              >
-                Terms of Service
-              </Link>
-              <Link
-                href="/accessibility"
-                className="font-inter text-gray-400 hover:text-white transition-colors duration-300 text-fluid-sm"
-              >
-                Accessibility
-              </Link>
-            </div>
           </div>
         </div>
       </div>

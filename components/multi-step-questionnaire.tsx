@@ -519,7 +519,7 @@ const MultiStepQuestionnaire = () => {
       <div className="w-full max-w-4xl mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
         {/* Header */}
         <div className="text-center mb-fluid-xl">
-          <h1 className="font-poppins font-thin text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+          <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
             Business Health <span className="text-primary">Check</span>
           </h1>
           <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">

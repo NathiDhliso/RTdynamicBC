@@ -5,6 +5,8 @@ import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Users, Target, Award, TrendingUp, ArrowRight, CheckCircle } from "lucide-react"
+import RabelaniProfileCard from "@/components/rabelani-profile-card"
+import TshephishoProfileCard from "@/components/tshephisho-profile-card"
 
 
 
@@ -49,33 +51,36 @@ const team = [
 ]
 
 const stats: Array<{ number: string; label: string }> = [
-  // Add your company statistics here
-  // Example:
-  // { number: "100+", label: "Clients Served" },
-  // { number: "5+", label: "Years of Experience" },
-  // { number: "95%", label: "Client Satisfaction" },
+  { number: "6+", label: "Years of Experience" },
+  { number: "50+", label: "Clients Served" },
+  { number: "98%", label: "Client Satisfaction" },
+  { number: "3", label: "Major Firms" },
 ]
 
 const affiliations = [
   {
     name: "CIPC",
-    image: "/cipc-logo.png",
-    alt: "Companies and Intellectual Property Commission"
+    image: "/CIPC.jpg",
+    alt: "Companies and Intellectual Property Commission",
+    url: "https://www.cipc.co.za"
   },
   {
     name: "QuickBooks",
-    image: "/quickbooks-logo.png",
-    alt: "QuickBooks Certified ProAdvisor"
+    image: "/Quickbooks.png",
+    alt: "QuickBooks Certified ProAdvisor",
+    url: "https://quickbooks.intuit.com"
   },
   {
     name: "SARS",
-    image: "/sars-logo.png",
-    alt: "South African Revenue Service"
+    image: "/SARS.jpg",
+    alt: "South African Revenue Service",
+    url: "https://www.sars.gov.za"
   },
   {
     name: "SAICA",
-    image: "/saica-logo.png",
-    alt: "South African Institute of Chartered Accountants"
+    image: "/SAICA.png",
+    alt: "South African Institute of Chartered Accountants",
+    url: "https://www.saica.co.za"
   },
 ]
 
@@ -176,7 +181,7 @@ export default function AboutContent() {
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-2xl">
-            <h1 className="font-poppins font-thin text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               About <span className="text-primary">RTDynamicBC</span>
             </h1>
             <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
@@ -187,7 +192,7 @@ export default function AboutContent() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl items-center">
             <div>
-              <h2 className="font-poppins font-thin text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Our Mission</h2>
+              <h2 className="font-poppins font-light text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Our Mission</h2>
                <p className="font-inter text-fluid-lg text-gray-700 leading-fluid-relaxed text-spacing-comfortable mb-fluid-md">
                  To provide exceptional chartered accounting services that ensure our clients&apos; financial compliance,
                  business growth, and operational excellence. We deliver professional accounting, auditing, taxation,
@@ -209,9 +214,15 @@ export default function AboutContent() {
               </div>
             </div>
             <div className="relative">
-              {/* Add your company image here */}
-              <div className="w-full h-96 bg-gray-100 rounded-2xl shadow-2xl flex items-center justify-center">
-                <p className="font-inter text-gray-500 italic">Add your company image here</p>
+              <div className="w-full h-96 rounded-2xl shadow-2xl overflow-hidden">
+                <Image
+                  src="/RTcompanyimage.png"
+                  alt="RT Dynamic Business Consulting Office"
+                  width={600}
+                  height={384}
+                  className="w-full h-full object-cover"
+                  priority
+                />
               </div>
               {/* Uncomment and customize this badge when you add your image */}
               {/* <div className="absolute -bottom-6 -left-6 bg-primary text-white p-fluid-md rounded-xl shadow-lg">
@@ -249,7 +260,7 @@ export default function AboutContent() {
       <section ref={valuesRef} className="py-fluid-2xl bg-gradient-to-b from-white to-gray-50">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-2xl">
-            <h2 className="font-poppins font-thin text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+            <h2 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Our <span className="text-primary">Values</span>
             </h2>
             <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
@@ -279,60 +290,20 @@ export default function AboutContent() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section ref={teamRef} className="py-fluid-2xl bg-white">
-          <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
-          <div className="text-center mb-fluid-2xl">
-            <h2 className="font-poppins font-thin text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
-              Meet Our <span className="text-primary">Team</span>
+      {/* Founders Profile Section */}
+      <section ref={teamRef} className="py-fluid-2xl bg-gradient-to-br from-gray-50 to-white">
+        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+          <div className="text-center mb-fluid-xl">
+            <h2 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+              Meet Our <span className="text-primary">Founders</span>
             </h2>
-            <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
-              Our qualified chartered accountants are dedicated to providing you with the highest level of professional
-              accounting, auditing, and business consulting services.
+            <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
+              With over 6 years of professional accounting experience each, our founders bring combined expertise in auditing, financial reporting, and business consulting to every client engagement.
             </p>
           </div>
-
-          <div className="team-grid-dynamic">
-            {team.length > 0 ? (
-              team.map((member, index) => (
-                <Card
-                  key={index}
-                  className="team-card text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden w-full sm:w-80 md:w-96 lg:w-80 xl:w-96 flex-shrink-0 mx-auto"
-                >
-                  <div className="relative">
-                    {member.image ? (
-                       <Image
-                         src={member.image}
-                         alt={member.name}
-                         width={400}
-                         height={256}
-                         className="w-full h-64 object-cover"
-                       />
-                     ) : (
-                       <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                         <p className="font-inter text-gray-500 text-sm">Add team member photo</p>
-                       </div>
-                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                  </div>
-                  <CardContent className="p-fluid-md">
-                    <h3 className="font-poppins font-light text-fluid-xl text-gray-900 mb-fluid-xs leading-fluid-relaxed text-spacing-comfortable">{member.name}</h3>
-                    <p className="font-inter text-primary font-light mb-fluid-xs">{member.role}</p>
-                    <p className="font-inter text-sm text-gray-500 mb-fluid-sm">{member.credentials}</p>
-                    <p className="font-inter text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">{member.description}</p>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <div className="w-full text-center py-fluid-2xl">
-                <p className="font-inter text-gray-500 italic text-fluid-lg">
-                  Add your team members in the team array
-                </p>
-                <p className="font-inter text-gray-400 text-fluid-sm mt-fluid-sm">
-                  Include name, role, credentials, description, and image
-                </p>
-              </div>
-            )}
+          <div className="flex flex-col lg:flex-row justify-center items-center gap-8 max-w-6xl mx-auto">
+            <RabelaniProfileCard />
+            <TshephishoProfileCard />
           </div>
         </div>
       </section>
@@ -341,10 +312,10 @@ export default function AboutContent() {
       <section className="py-fluid-xl bg-gray-50">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl mb-fluid-lg">
           <div className="text-center">
-            <h2 className="font-poppins font-thin text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-sm leading-fluid-snug text-spacing-comfortable">
+            <h2 className="font-poppins font-thin text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-sm leading-fluid-snug text-spacing-comfortable text-center">
               Professional <span className="text-primary">Affiliations</span>
             </h2>
-            <p className="font-inter text-gray-600 max-w-2xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
+            <p className="font-inter text-gray-600 leading-fluid-relaxed text-spacing-comfortable description-center-dynamic">
               Trusted partnerships and certifications that ensure professional excellence
             </p>
           </div>
@@ -354,66 +325,63 @@ export default function AboutContent() {
           <div className="affiliation-track">
             {/* First set of affiliations */}
             {affiliations.map((affiliation, index) => (
-              <Image
+              <a
                 key={`first-${index}`}
-                src={affiliation.image}
-                alt={affiliation.alt}
-                width={150}
-                height={60}
-                className="affiliation-item"
-              />
+                href={affiliation.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="affiliation-link"
+              >
+                <Image
+                  src={affiliation.image}
+                  alt={affiliation.alt}
+                  width={150}
+                  height={60}
+                  className="affiliation-item"
+                />
+              </a>
             ))}
             {/* Duplicate set for seamless loop */}
             {affiliations.map((affiliation, index) => (
-              <Image
+              <a
                 key={`second-${index}`}
-                src={affiliation.image}
-                alt={affiliation.alt}
-                width={150}
-                height={60}
-                className="affiliation-item"
-              />
+                href={affiliation.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="affiliation-link"
+              >
+                <Image
+                  src={affiliation.image}
+                  alt={affiliation.alt}
+                  width={150}
+                  height={60}
+                  className="affiliation-item"
+                />
+              </a>
             ))}
             {/* Third set for extra smoothness */}
             {affiliations.map((affiliation, index) => (
-              <Image
+              <a
                 key={`third-${index}`}
-                src={affiliation.image}
-                alt={affiliation.alt}
-                width={150}
-                height={60}
-                className="affiliation-item"
-              />
+                href={affiliation.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="affiliation-link"
+              >
+                <Image
+                  src={affiliation.image}
+                  alt={affiliation.alt}
+                  width={150}
+                  height={60}
+                  className="affiliation-item"
+                />
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-fluid-2xl bg-gradient-to-r from-primary to-blue-600 text-white">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl text-center">
-          <h2 className="font-poppins font-thin text-fluid-4xl md:text-fluid-5xl mb-fluid-md leading-fluid-snug text-spacing-comfortable">Ready to Get Started?</h2>
-           <p className="font-inter text-fluid-xl mb-fluid-lg opacity-90 leading-fluid-relaxed text-spacing-comfortable">
-             Take the first step towards professional accounting excellence. Schedule a consultation with our qualified CA team today.
-           </p>
-          <div className="flex flex-col sm:flex-row gap-fluid-sm justify-center">
-            <Button
-               size="spacious"
-               className="font-inter font-light text-fluid-lg bg-white text-primary hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
-             >
-              Schedule Consultation
-              <ArrowRight className="ml-fluid-md h-5 w-5" />
-            </Button>
-            <Button
-               variant="outline"
-               size="spacious"
-               className="font-inter font-light text-fluid-lg border-white text-white hover:bg-white hover:text-primary transition-all duration-300 transform hover:scale-105 bg-transparent"
-             >
-              Take Assessment
-            </Button>
-          </div>
-        </div>
-      </section>
+
     </div>
   )
 }

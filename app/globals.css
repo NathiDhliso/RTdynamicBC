@@ -602,8 +602,10 @@
 
   .affiliation-track {
     display: flex;
-    animation: scroll-left 30s linear infinite;
+    animation: scroll-right 20s linear infinite;
     gap: var(--space-2xl);
+    will-change: transform;
+    width: max-content;
   }
 
   .affiliation-item {
@@ -621,12 +623,23 @@
     transform: scale(1.1);
   }
 
-  @keyframes scroll-left {
+  .affiliation-link {
+    display: inline-block;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+
+  .affiliation-link:hover .affiliation-item {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.1);
+  }
+
+  @keyframes scroll-right {
     0% {
-      transform: translateX(100%);
+      transform: translateX(-100%);
     }
     100% {
-      transform: translateX(-100%);
+      transform: translateX(0%);
     }
   }
 
@@ -986,5 +999,23 @@ progress {
 
   .glow:hover {
     box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+  }
+
+  /* Infinite scroll animation */
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll-left {
+    animation: scroll-left 20s linear infinite;
+  }
+
+  .animate-scroll-left:hover {
+    animation-play-state: paused;
   }
 }

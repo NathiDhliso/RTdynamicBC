@@ -44,6 +44,7 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-fluid-md">
             {navigation.map((item) => {
               const isActive = pathname === item.href
+              const isContact = item.name === "Contact"
               return (
                 <Link
                   key={item.name}
@@ -52,7 +53,9 @@ export default function Header() {
                   className={`font-inter px-fluid-md py-fluid-sm rounded-lg transition-all duration-300 relative group whitespace-nowrap dynamic-text-spacing ${
                     isActive
                       ? "text-primary font-light bg-primary/10"
-                : "text-foreground font-light hover:text-primary hover:bg-primary/5"
+                      : isContact
+                      ? "text-white font-light bg-primary hover:bg-primary/90"
+                      : "text-foreground font-light hover:text-primary hover:bg-primary/5"
                   }`}
                 >
                   {item.name}
@@ -63,10 +66,6 @@ export default function Header() {
                 </Link>
               )
             })}
-            <Button size="comfortable" className="btn-primary font-inter font-light ml-fluid-lg group">
-              Get a Quote
-              <ArrowRight className="ml-fluid-md h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-            </Button>
           </nav>
 
           {/* Mobile menu button */}
@@ -99,6 +98,7 @@ export default function Header() {
             <nav className="flex flex-col space-y-fluid-xs">
               {navigation.map((item, index) => {
                 const isActive = pathname === item.href
+                const isContact = item.name === "Contact"
                 return (
                   <Link
                     key={item.name}
@@ -107,7 +107,9 @@ export default function Header() {
                     className={`font-inter px-fluid-sm py-fluid-sm rounded-lg transition-all duration-300 transform ${
                       isActive
                         ? "text-primary font-light bg-primary/10 translate-x-2"
-                  : "text-foreground font-light hover:text-primary hover:bg-primary/5 hover:translate-x-1"
+                        : isContact
+                        ? "text-white font-light bg-primary hover:bg-primary/90 hover:translate-x-1"
+                        : "text-foreground font-light hover:text-primary hover:bg-primary/5 hover:translate-x-1"
                     }`}
                     style={{
                       transitionDelay: `${index * 50}ms`,
@@ -118,13 +120,6 @@ export default function Header() {
                   </Link>
                 )
               })}
-              <Button
-                className="btn-primary font-inter font-light w-auto mt-fluid-sm mx-fluid-sm group"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Get a Quote
-                <ArrowRight className="ml-fluid-md h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-              </Button>
             </nav>
           </div>
         </div>

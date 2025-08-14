@@ -1,0 +1,61 @@
+name: rtdynamicbc
+services:
+- name: server
+  source_dir: /server
+  github:
+    repo: your-github-username/rtdynamicbizconsulting
+    branch: main
+    deploy_on_push: true
+  run_command: npm start
+  build_command: npm install
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 3001
+  routes:
+  - path: /api
+  envs:
+  - key: PORT
+    value: "3001"
+  - key: SMTP_HOST
+    value: mail.privateemail.com
+  - key: SMTP_PORT
+    value: "587"
+  - key: SMTP_SECURE
+    value: "false"
+  - key: SMTP_USER
+    value: contact@rtdynamicbc.co.za
+  - key: SMTP_PASS
+    value: RabeTshepi@1
+  - key: MAIL_FROM
+    value: contact@rtdynamicbc.co.za
+  - key: MAIL_TO
+    value: contact@rtdynamicbc.co.za
+  - key: ALLOW_EMAIL_FALLBACK
+    value: "false"
+  - key: NODE_VERSION
+    value: "22"
+
+- name: frontend
+  source_dir: /
+  github:
+    repo: your-github-username/rtdynamicbizconsulting
+    branch: main
+    deploy_on_push: true
+  run_command: npm start
+  build_command: npm run build
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 3000
+  routes:
+  - path: /
+  envs:
+  - key: NODE_VERSION
+    value: "22"
+  - key: NEXT_PUBLIC_API_URL
+    value: ${server.PUBLIC_URL}
+
+static_sites: []
+databases: []
+jobs: []

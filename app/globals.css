@@ -258,6 +258,9 @@
     line-height: var(--line-height-relaxed);
     min-height: 100vh;
     letter-spacing: 0.01em;
+    /* Ensure smooth scrolling for GSAP ScrollTrigger */
+    overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 
   /* Fluid typography classes */
@@ -602,7 +605,7 @@
 
   .affiliation-track {
     display: flex;
-    animation: scroll-right 20s linear infinite;
+    /* animation: scroll-right 20s linear infinite; */
     gap: var(--space-2xl);
     will-change: transform;
     width: max-content;
@@ -771,7 +774,8 @@
   
   /* Focus management for sticky headers */
   html {
-    scroll-padding-top: 5rem;
+    /* Align anchor jumps and ScrollTrigger with fixed header height */
+    scroll-padding-top: 4rem; /* 64px header (h-16) */
   }
   
   /* Enhanced glassmorphism with better backdrop effects */

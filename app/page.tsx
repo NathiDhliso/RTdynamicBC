@@ -8,11 +8,17 @@ export default function HomePage() {
     <div className="min-h-screen">
       <Header />
 
-      <main id="main-content" className="pt-16">
-        <HeroSection />
-        <div id="services">
+      {/* Let the fixed header sit above without additional padding here; the hero will be pinned */}
+      <main id="main-content">
+        {/* Dedicated container to ensure proper pin spacing for the hero */}
+        <section aria-label="Hero">
+          <HeroSection />
+        </section>
+
+        {/* Anchor to ensure scroll target works correctly with fixed header */}
+        <section id="services" aria-label="Services">
           <ServicesSection />
-        </div>
+        </section>
 
         {/* Additional sections will be added in future iterations */}
       </main>

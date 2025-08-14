@@ -17,20 +17,29 @@ app.use(cors());
 app.use(express.json());
 
 async function getTransporter() {
-  if (process.env.SMTP_HOST) {
-    return nodemailer.createTransporter({
+  if (process.env.SMTP_HOST && !process.env.ALLOW_EMAIL_FALLBACK) {
+    console.log('SMTP Configuration:', {
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: String(process.env.SMTP_SECURE).toLowerCase() === 'true',
+      user: process.env.SMTP_USER,
+      hasPassword: !!process.env.SMTP_PASS
+    });
+    return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
       secure: String(process.env.SMTP_SECURE).toLowerCase() === 'true',
       auth: process.env.SMTP_USER && process.env.SMTP_PASS
         ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
         : undefined,
-      // logger: true, debug: true,
+      logger: true,
+      debug: true,
     });
   }
   // Dev fallback: Ethereal test inbox
+  console.log('Using Ethereal Email fallback for testing...');
   const testAccount = await nodemailer.createTestAccount();
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     secure: false,
@@ -130,8 +139,8 @@ app.post('/api/contact', async (req, res) => {
     ].filter(Boolean).join('\n');
 
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || 'info@rtdynamicbc.co.za  ',
-      to: process.env.MAIL_TO || 'info@rtdynamicbc.co.za  ',
+      from: process.env.MAIL_FROM || 'contact@rtdynamicbc.co.za',
+      to: process.env.MAIL_TO || 'contact@rtdynamicbc.co.za',
       subject: `New contact from ${fullName}`,
       text,
       html,
@@ -169,8 +178,8 @@ app.post('/api/business-health-check', async (req, res) => {
     ].filter(Boolean).join('\n');
 
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || 'info@rtdynamicbc.co.za  ',
-      to: process.env.MAIL_TO || 'info@rtdynamicbc.co.za  ',
+      from: process.env.MAIL_FROM || 'contact@rtdynamicbc.co.za',
+      to: process.env.MAIL_TO || 'contact@rtdynamicbc.co.za',
       subject: `Business Health Check - ${formData.companyName || contactName}`,
       text,
       html,

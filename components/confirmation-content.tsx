@@ -19,11 +19,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-declare global {
-  interface Window {
-    gsap: any
-  }
-}
+
 
 const nextSteps = [
   {

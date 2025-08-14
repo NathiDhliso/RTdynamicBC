@@ -4,11 +4,7 @@ import { useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { X, Check, Clock, Banknote, ArrowRight, Phone, Mail } from "lucide-react"
 
-declare global {
-  interface Window {
-    gsap: any
-  }
-}
+
 
 interface Service {
   id: string
@@ -223,32 +219,29 @@ export default function ServiceDetailsModal({ service, isOpen, onClose }: Servic
 
             <div className="flex flex-col sm:flex-row gap-fluid-sm justify-center items-center">
               <Button
-                size="lg"
                 size="spacious"
                className="font-inter font-light text-fluid-lg bg-primary hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
               >
                 Schedule Consultation
-                <ArrowRight className="ml-fluid-xs h-5 w-5" />
+                <ArrowRight className="ml-fluid-md h-5 w-5" />
               </Button>
 
               <div className="flex gap-fluid-sm">
                 <Button
                   variant="outline"
-                  size="lg"
                   size="comfortable"
                    className="font-inter font-light border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 bg-transparent"
                 >
-                  <Phone className="mr-fluid-xs h-5 w-5" />
+                  <Phone className="mr-fluid-md h-5 w-5" />
                   Call Us
                 </Button>
 
                 <Button
                   variant="outline"
-                  size="lg"
                   size="comfortable"
                    className="font-inter font-light border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 bg-transparent"
                 >
-                  <Mail className="mr-fluid-xs h-5 w-5" />
+                  <Mail className="mr-fluid-md h-5 w-5" />
                   Email
                 </Button>
               </div>

@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioCardGroup, type RadioCardOption } from "@/components/ui/radio-card-group"
 import { Building2, Users, FileCheck, Target, ArrowLeft, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { sendBusinessHealthCheck, type BusinessHealthCheckData } from "@/lib/email"
 
 interface FormData {
   // Step 1: Company Information
@@ -87,6 +88,7 @@ const MultiStepQuestionnaire = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [errors, setErrors] = useState<Partial<FormData>>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
   const updateFormData = (field: keyof FormData, value: string) => {
@@ -154,9 +156,45 @@ const MultiStepQuestionnaire = () => {
     }
   }
 
-  const handleSubmit = () => {
-    if (validateStep(currentStep)) {
-      router.push("/confirmation")
+  const handleSubmit = async () => {
+    if (!validateStep(currentStep)) return
+
+    setIsSubmitting(true)
+    
+    try {
+      // Prepare data for email API
+      const emailData: BusinessHealthCheckData = {
+        companyName: formData.companyName,
+        industry: formData.industry,
+        entityType: formData.entityType,
+        annualRevenue: formData.annualRevenue,
+        employees: formData.employees,
+        employeeCount: formData.employeeCount,
+        stockManagement: formData.stockManagement,
+        foreignCurrency: formData.foreignCurrency,
+        taxCompliance: formData.taxCompliance,
+        auditRequirements: formData.auditRequirements,
+        regulatoryReporting: formData.regulatoryReporting,
+        primaryGoal: formData.primaryGoal,
+        challenges: formData.challenges,
+        contactName: formData.contactName,
+        email: formData.email,
+        phone: formData.phone,
+      }
+      
+      const success = await sendBusinessHealthCheck(emailData)
+      
+      if (success) {
+        console.log("Questionnaire submitted successfully:", formData)
+        router.push("/confirmation?type=questionnaire")
+      } else {
+        throw new Error("Failed to send business health check")
+      }
+    } catch (error) {
+      console.error("Submission error:", error)
+      setErrors({ contactName: "Failed to submit questionnaire. Please try again." })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -190,7 +228,8 @@ const MultiStepQuestionnaire = () => {
   ]
 
   const annualRevenueOptions: RadioCardOption[] = [
-    { value: "Under R500,000", label: "Under R500,000" },
+    { value: "Under R100,000", label: "Under R100,000" },
+    { value: "R100,000 - R500,000", label: "R100,000 - R500,000" },
     { value: "R500,000 - R2 million", label: "R500,000 - R2 million" },
     { value: "R2 million - R10 million", label: "R2 million - R10 million" },
     { value: "R10 million - R50 million", label: "R10 million - R50 million" },
@@ -550,19 +589,19 @@ const MultiStepQuestionnaire = () => {
             size="comfortable"
             className="font-inter font-light bg-transparent"
           >
-            <ArrowLeft className="mr-fluid-xs h-4 w-4" />
+            <ArrowLeft className="mr-fluid-md h-4 w-4" />
             Previous
           </Button>
 
           {currentStep === (shouldShowStep3 ? 4 : 3) ? (
-            <Button onClick={handleSubmit} size="spacious" className="btn-primary font-inter font-light">
-              Calculate My Estimate
-              <ArrowRight className="ml-fluid-xs h-4 w-4" />
+            <Button onClick={handleSubmit} size="spacious" className="btn-primary font-inter font-light" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Calculate My Estimate"}
+              <ArrowRight className="ml-fluid-md h-4 w-4" />
             </Button>
           ) : (
             <Button onClick={handleNext} size="comfortable" className="btn-primary font-inter font-light">
               Next Step
-              <ArrowRight className="ml-fluid-xs h-4 w-4" />
+              <ArrowRight className="ml-fluid-md h-4 w-4" />
             </Button>
           )}
         </div>

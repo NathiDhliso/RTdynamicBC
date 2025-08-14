@@ -3,6 +3,8 @@
 import type React from "react"
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+
+
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { TrendingUp, Shield, Calculator, Users } from "lucide-react"
@@ -237,7 +239,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
             <h2 className="services-heading font-outfit font-extralight text-fluid-3xl text-foreground mb-fluid-lg leading-fluid-snug dynamic-text-spacing-loose">
               Our Core Services
             </h2>
-            <p className="font-inter font-light text-fluid-lg text-muted-foreground max-w-2xl mx-auto leading-fluid-relaxed dynamic-text-spacing">
+            <p className="font-inter font-light text-fluid-lg text-muted-foreground description-center-dynamic leading-fluid-relaxed dynamic-text-spacing">
               Comprehensive financial solutions designed to help your business thrive and grow
             </p>
           </div>
@@ -266,7 +268,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                     <ul className="space-y-fluid-sm text-sm text-muted-foreground">
                       {service.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-center justify-center">
-                          <span className="w-1.5 h-1.5 bg-primary rounded-full mr-fluid-sm"></span>
+                          <span className="w-1.5 h-1.5 bg-primary rounded-full mr-fluid-lg"></span>
                           {feature}
                         </li>
                       ))}

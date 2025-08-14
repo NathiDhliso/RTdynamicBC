@@ -29,7 +29,7 @@ export default function SpacingControls({ className }: SpacingControlsProps) {
   }
 
   const handlePresetChange = (preset: string) => {
-    spacingConfig.applyPreset(preset as any)
+    spacingConfig.applyPreset(preset as 'compact' | 'normal' | 'comfortable' | 'spacious' | 'extra-spacious')
     setConfig(spacingConfig.getConfig())
   }
 

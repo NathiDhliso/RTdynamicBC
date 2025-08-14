@@ -21,7 +21,7 @@ interface RadioCardGroupProps {
 }
 
 const RadioCardGroup = React.forwardRef<React.ElementRef<typeof RadioGroup>, RadioCardGroupProps>(
-  ({ options, value, onValueChange, className, name, ...props }, ref) => {
+  ({ options, value, onValueChange, className, ...props }, ref) => {
     return (
       <RadioGroup
         ref={ref}

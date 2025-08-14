@@ -7,12 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 
-declare global {
-  interface Window {
-    gsap: any
-    ScrollTrigger: any
-  }
-}
+
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null)
@@ -91,7 +86,7 @@ const HeroSection = () => {
             pin: true,
             pinSpacing: true,
           },
-        })
+        }) as { to: (target: unknown, vars: unknown, position?: unknown) => unknown }
 
         mobileTimeline
           .to([titleRef.current, subtitleRef.current, ctaRef.current], { opacity: 1, y: 0, duration: 1 }, 0)
@@ -108,7 +103,7 @@ const HeroSection = () => {
             pinSpacing: true,
             anticipatePin: 1,
           },
-        })
+        }) as { to: (target: unknown, vars: unknown, position?: unknown) => unknown }
         console.log('Desktop timeline created')
 
         // Initial states
@@ -228,7 +223,7 @@ const HeroSection = () => {
 
       // Cleanup
       return () => {
-        ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill())
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
       }
     }
     }
@@ -323,7 +318,7 @@ const HeroSection = () => {
                 <Button asChild size="spacious" className="btn-primary font-inter font-light">
                   <Link href="/questionnaire">
                     Business Health Check
-                    <ArrowRight className="ml-fluid-xs h-5 w-5" />
+                    <ArrowRight className="ml-fluid-md h-5 w-5" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="spacious" className="font-inter font-light glassmorphism text-white border-white">

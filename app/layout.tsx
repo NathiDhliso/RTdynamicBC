@@ -2,7 +2,6 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Poppins, Inter, Outfit } from "next/font/google"
 import Script from "next/script"
-import SpacingControls from "@/components/spacing-controls"
 import "./globals.css"
 
 const poppins = Poppins({
@@ -50,7 +49,6 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
         {children}
-        <SpacingControls />
       </body>
     </html>
   )

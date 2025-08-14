@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin } from "lucide-react"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -11,19 +11,19 @@ export default function Footer() {
     {
       icon: Phone,
       label: "Phone",
-      value: "(555) 123-4567",
-      href: "tel:+15551234567",
+      value: "0736598177",
+      href: "tel:+27736598177",
     },
     {
       icon: Mail,
       label: "Email",
-      value: "info@RTDynamicBC.com",
-      href: "mailto:info@RTDynamicBC.com",
+      value: "info@rtdynamic.co.za",
+      href: "mailto:info@rtdynamic.co.za",
     },
     {
       icon: MapPin,
       label: "Address",
-      value: "123 Business Ave, Suite 100, City, ST 12345",
+      value: "1 Diagonal Street, Midrand, South Africa",
       href: "#",
     },
   ]

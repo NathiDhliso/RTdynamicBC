@@ -11,13 +11,9 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
+import { sendContactForm, type ContactFormData } from "@/lib/email"
 
-declare global {
-  interface Window {
-    gsap: any
-    ScrollTrigger: any
-  }
-}
+
 
 interface ContactForm {
   firstName: string
@@ -43,17 +39,17 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Office Location",
-    details: ["123 Sandton City", "Johannesburg, 2196", "South Africa"],
+    details: ["1 Diagonal Street", "Midrand", "South Africa"],
   },
   {
     icon: Phone,
-    title: "Phone Numbers",
-    details: ["Main: (555) 123-4567", "Toll Free: (800) 123-4567", "Fax: (555) 123-4568"],
+    title: "Phone Number",
+    details: ["0736598177"],
   },
   {
     icon: Mail,
-    title: "Email Addresses",
-    details: ["info@financialservices.com", "support@financialservices.com", "careers@financialservices.com"],
+    title: "Email Address",
+    details: ["info@rtdynamic.co.za"],
   },
   {
     icon: Clock,
@@ -132,7 +128,7 @@ export default function ContactContent() {
       )
 
       return () => {
-        ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill())
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
       }
     }
   }, [])
@@ -168,12 +164,32 @@ export default function ContactContent() {
 
     setIsSubmitting(true)
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    console.log("Contact form submitted:", formData)
-
-    router.push("/confirmation?type=contact")
+    // Submit form via email API
+    try {
+      const emailData: ContactFormData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        inquiryType: formData.inquiryType,
+        message: formData.message,
+      }
+      
+      const success = await sendContactForm(emailData)
+      
+      if (success) {
+        console.log("Form submitted successfully:", formData)
+        router.push("/confirmation?type=contact")
+      } else {
+        throw new Error("Failed to send email")
+      }
+    } catch (error) {
+      console.error("Submission error:", error)
+      setErrors({ message: "Failed to send message. Please try again." })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -291,7 +307,7 @@ export default function ContactContent() {
                           "Tax Consulting",
                           "Business Consulting",
                         ].map((type) => (
-                          <div key={type} className="flex items-center space-x-fluid-xs">
+                          <div key={type} className="flex items-center space-x-fluid-lg">
                             <RadioGroupItem value={type} id={type} />
                             <Label htmlFor={type} className="font-inter">
                               {type}
@@ -328,7 +344,7 @@ export default function ContactContent() {
                       ) : (
                         <>
                           Send Message
-                          <Send className="ml-fluid-xs h-5 w-5" />
+                          <Send className="ml-fluid-md h-5 w-5" />
                         </>
                       )}
                     </Button>
@@ -357,7 +373,7 @@ export default function ContactContent() {
                     >
                       <CardContent className="p-fluid-md">
                         <div className="flex items-start">
-                          <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mr-fluid-sm flex-shrink-0">
+                          <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mr-fluid-lg flex-shrink-0">
                             <IconComponent className="h-6 w-6 text-white" />
                           </div>
                           <div>
@@ -383,7 +399,7 @@ export default function ContactContent() {
                   <div className="text-center">
                     <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-fluid-sm" />
                     <p className="font-inter text-gray-500">Interactive Map Coming Soon</p>
-                    <p className="font-inter text-sm text-gray-400">123 Sandton City, Johannesburg, 2196</p>
+                    <p className="font-inter text-sm text-gray-400">1 Diagonal Street, Midrand, South Africa</p>
                   </div>
                 </div>
               </Card>

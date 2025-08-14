@@ -7,7 +7,10 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "update-deps": "pnpm update --latest"
+    "update-deps": "pnpm update --latest",
+    "server": "cd server && npm run dev",
+    "server:install": "cd server && npm install",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -71,6 +74,7 @@
     "postcss": "^8.5.0",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "^1.3.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "concurrently": "^8.2.2"
   }
 }

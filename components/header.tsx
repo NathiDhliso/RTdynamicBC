@@ -24,8 +24,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center group">
-            <div className="flex items-center space-x-fluid-sm">
-              <div className="w-10 h-10 relative transform group-hover:scale-110 transition-all duration-300 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 shadow-lg ring-2 ring-primary/20 group-hover:ring-primary/40 group-hover:shadow-xl">
+            <div className="header-logo-spacing">
+              <div className="logo-container-dynamic group-hover:scale-110">
                 <Image
                   src="/Logo.png"
                   alt="RT Dynamic Business Consulting Logo"
@@ -34,7 +34,7 @@ export default function Header() {
                   priority
                 />
               </div>
-              <span className="font-outfit font-extralight text-fluid-lg text-primary group-hover:text-primary-dark transition-all duration-300 dynamic-text-spacing drop-shadow-sm group-hover:drop-shadow-md">
+              <span className="company-name-dynamic">
                 RT Dynamic Business Consulting
               </span>
             </div>
@@ -65,7 +65,7 @@ export default function Header() {
             })}
             <Button size="comfortable" className="btn-primary font-inter font-light ml-fluid-lg group">
               Get a Quote
-              <ArrowRight className="ml-fluid-xs h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+              <ArrowRight className="ml-fluid-md h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
           </nav>
 
@@ -123,7 +123,7 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Get a Quote
-                <ArrowRight className="ml-fluid-xs h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight className="ml-fluid-md h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
             </nav>
           </div>

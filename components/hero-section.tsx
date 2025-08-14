@@ -84,7 +84,7 @@ const HeroSection = () => {
             end: "+=80%",
             scrub: 0.5,
             pin: true,
-            pinSpacing: true,
+            pinSpacing: false,
           },
         }) as { to: (target: unknown, vars: unknown, position?: unknown) => unknown }
 
@@ -100,7 +100,7 @@ const HeroSection = () => {
             end: "+=100%",
             scrub: 0.5,
             pin: true,
-            pinSpacing: true,
+            pinSpacing: false,
             anticipatePin: 1,
           },
         }) as { to: (target: unknown, vars: unknown, position?: unknown) => unknown }
@@ -233,7 +233,7 @@ const HeroSection = () => {
   }, [isMobile])
 
   return (
-    <section ref={heroRef} className="relative h-[80vh] overflow-hidden" suppressHydrationWarning>
+    <section ref={heroRef} className="relative h-screen overflow-hidden" suppressHydrationWarning>
       <div ref={backgroundRef} className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800">
           <div className="absolute inset-0 bg-black/20" />

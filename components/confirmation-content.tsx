@@ -319,24 +319,7 @@ export default function ConfirmationContent() {
             </div>
           </div>
 
-          {/* Estimate Summary Card */}
-          <div className="mb-20">
-            <h3 className="font-poppins font-light text-fluid-3xl text-gray-900 text-center mb-6">Your Price Estimate</h3>
-            <div className="max-w-3xl mx-auto">
-              <Card className="border-0 shadow-2xl">
-                <CardContent className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-xl p-6 text-center">
-                    <p className="font-poppins font-light text-gray-700 mb-2">Monthly Total</p>
-                    <p className="font-poppins font-thin text-4xl text-primary">R 9,500</p>
-                  </div>
-                  <div className="bg-blue-50 rounded-xl p-6 text-center">
-                    <p className="font-poppins font-light text-gray-700 mb-2">Annual Total</p>
-                    <p className="font-poppins font-thin text-4xl text-primary">R 114,000</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          {/* Price estimate removed from customer view - only visible in email to business */}
 
           {/* Contact Methods */}
           <div className="mb-20">

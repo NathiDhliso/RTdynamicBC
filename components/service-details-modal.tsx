@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { X, Check, Clock, Banknote, ArrowRight, Phone, Mail } from "lucide-react"
+import { X, Check, Clock, Banknote } from "lucide-react"
 
 
 

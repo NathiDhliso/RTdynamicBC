@@ -233,17 +233,15 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
 
   return (
     <>
-      <section className="services-section py-fluid-2xl md:py-fluid-3xl bg-transparent">
+      <section className="services-section py-fluid-2xl md:py-fluid-3xl bg-background">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-2xl">
-            <div className="bg-background/80 backdrop-blur-sm rounded-lg p-fluid-lg mx-auto max-w-3xl">
-              <h2 className="services-heading font-outfit font-extralight text-fluid-3xl text-foreground mb-fluid-lg leading-fluid-snug dynamic-text-spacing-loose">
-                Our Core Services
-              </h2>
-              <p className="font-inter font-light text-fluid-lg text-muted-foreground description-center-dynamic leading-fluid-relaxed dynamic-text-spacing">
-                Comprehensive financial solutions designed to help your business thrive and grow
-              </p>
-            </div>
+            <h2 className="services-heading font-outfit font-extralight text-fluid-3xl text-foreground mb-fluid-lg leading-fluid-snug dynamic-text-spacing-loose">
+              Our Core Services
+            </h2>
+            <p className="font-inter font-light text-fluid-lg text-muted-foreground description-center-dynamic leading-fluid-relaxed dynamic-text-spacing">
+              Comprehensive financial solutions designed to help your business thrive and grow
+            </p>
           </div>
 
           <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-fluid-lg md:gap-fluid-xl auto-rows-fr">
@@ -253,7 +251,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                 <Card
                   key={service.id}
                   data-service={service.id}
-                  className="service-card group relative overflow-hidden border border-border shadow-lg hover:shadow-2xl transition-all duration-500 bg-card/95 backdrop-blur-sm cursor-pointer h-full flex flex-col"
+                  className="service-card group relative overflow-hidden border border-border shadow-lg hover:shadow-2xl transition-all duration-500 bg-card cursor-pointer h-full flex flex-col"
                   onClick={() => handleServiceSelect(service)}
                   onMouseEnter={() => handleCardHover(service.id)}
                   onMouseLeave={handleCardLeave}

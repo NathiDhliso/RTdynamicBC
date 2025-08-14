@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 async function getTransporter() {
-  if (process.env.SMTP_HOST && !process.env.ALLOW_EMAIL_FALLBACK) {
+  if (process.env.SMTP_HOST && process.env.ALLOW_EMAIL_FALLBACK !== 'true') {
     console.log('SMTP Configuration:', {
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
@@ -71,8 +71,79 @@ function buildContactHtml({ firstName, lastName, email, phone, subject, inquiryT
   const fullName = `${s.firstName} ${s.lastName}`.trim();
   
   return `<!DOCTYPE html><html><head><meta charset="utf-8" /><title>New Contact</title>
-  <style>body{font-family:Inter,Segoe UI,Arial,sans-serif;background:#fff;color:#0f172a;margin:0}.wrap{max-width:640px;margin:0 auto;padding:24px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}.hdr{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#00f5ff 0%,#1e90ff 50%,#20b2aa 100%);padding:20px 24px}.hdr h1{margin:0;color:#0b1220;font-size:20px}.content{padding:24px}.grid{display:grid;grid-template-columns:140px 1fr;gap:12px 16px;margin:0 0 16px}.label{color:#0ea5e9;font-weight:600}.msg{background:#f8fafc;border-left:4px solid #1e40af;border-radius:8px;padding:12px 16px;white-space:pre-wrap}.foot{padding:16px 24px;color:#475569;border-top:1px solid #e2e8f0;font-size:12px}</style></head>
-  <body><div class="wrap"><div class="card"><div class="hdr"><h1>New Contact Form Submission</h1></div><div class="content"><div class="grid"><div class="label">Name</div><div>${fullName}</div><div class="label">Email</div><div><a href="mailto:${s.email}">${s.email}</a></div>${s.phone?`<div class="label">Phone</div><div>${s.phone}</div>`:''}${s.subject?`<div class="label">Subject</div><div>${s.subject}</div>`:''}${s.inquiryType?`<div class="label">Inquiry Type</div><div>${s.inquiryType}</div>`:''}</div><div class="msg">${s.message}</div></div><div class="foot">Submitted: ${escapeHtml(new Date().toLocaleString())}</div></div></div></body></html>`;
+  <style>
+    body{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f8fafc;color:#0f172a;margin:0;padding:0}
+    .container{width:100%;max-width:100%;margin:0;padding:20px;box-sizing:border-box}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.1)}
+    .header{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#00f5ff 0%,#1e90ff 50%,#20b2aa 100%);padding:24px;color:#fff}
+    .logo{width:60px;height:60px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#1e40af;font-size:18px}
+    .header-text{flex:1;margin-left:20px}
+    .header h1{margin:0;font-size:24px;font-weight:600}
+    .header p{margin:5px 0 0 0;opacity:0.9;font-size:14px}
+    .content{padding:32px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:24px}
+    .field{background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #0ea5e9}
+    .label{color:#0ea5e9;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+    .value{color:#0f172a;font-size:16px;font-weight:500}
+    .message-section{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-top:24px}
+    .message-title{color:#1e40af;font-weight:600;font-size:16px;margin-bottom:12px}
+    .message-content{color:#374151;line-height:1.6;white-space:pre-wrap}
+    .footer{padding:24px;background:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;color:#6b7280;font-size:12px}
+    @media (max-width:600px){.grid{grid-template-columns:1fr}.content{padding:20px}}
+  </style></head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="header">
+          <div class="logo">RT</div>
+          <div class="header-text">
+            <h1>New Contact Form Submission</h1>
+            <p>RT Dynamic Business Consulting</p>
+          </div>
+        </div>
+        <div class="content">
+          <div class="grid">
+            <div class="field">
+              <div class="label">Full Name</div>
+              <div class="value">${fullName}</div>
+            </div>
+            <div class="field">
+              <div class="label">Email Address</div>
+              <div class="value"><a href="mailto:${s.email}" style="color:#0ea5e9;text-decoration:none">${s.email}</a></div>
+            </div>
+            ${s.phone ? `<div class="field"><div class="label">Phone Number</div><div class="value">${s.phone}</div></div>` : ''}
+            ${s.subject ? `<div class="field"><div class="label">Subject</div><div class="value">${s.subject}</div></div>` : ''}
+            ${s.inquiryType ? `<div class="field"><div class="label">Inquiry Type</div><div class="value">${s.inquiryType}</div></div>` : ''}
+          </div>
+          ${s.message ? `<div class="message-section"><div class="message-title">Message</div><div class="message-content">${s.message}</div></div>` : ''}
+           
+           <!-- Price Estimate Section -->
+           <div class="message-section" style="margin-top:32px;background:#f0f9ff;border:1px solid #0ea5e9;">
+             <div class="message-title" style="color:#0ea5e9;">💰 Price Estimate</div>
+             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;">
+               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
+                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">MONTHLY TOTAL</div>
+                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 9,500</div>
+               </div>
+               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
+                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">ANNUAL TOTAL</div>
+                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 114,000</div>
+               </div>
+             </div>
+             <div style="margin-top:16px;padding:16px;background:#fff;border-radius:8px;">
+               <div style="color:#64748b;font-size:12px;line-height:1.5;">
+                 <strong>Note:</strong> This is an estimated price range based on typical service requirements. 
+                 Final pricing will be determined after the consultation call and detailed assessment of specific business needs.
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="footer">
+           Submitted: ${escapeHtml(new Date().toLocaleString())} | RT Dynamic Business Consulting
+         </div>
+      </div>
+    </div>
+  </body></html>`;
 }
 
 function buildHealthCheckHtml(formData) {
@@ -82,33 +153,145 @@ function buildHealthCheckHtml(formData) {
   });
   
   return `<!DOCTYPE html><html><head><meta charset="utf-8" /><title>Business Health Check</title>
-  <style>body{font-family:Inter,Segoe UI,Arial,sans-serif;background:#fff;color:#0f172a;margin:0}.wrap{max-width:640px;margin:0 auto;padding:24px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}.hdr{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#00f5ff 0%,#1e90ff 50%,#20b2aa 100%);padding:20px 24px}.hdr h1{margin:0;color:#0b1220;font-size:20px}.content{padding:24px}.section{margin-bottom:24px}.section-title{color:#0ea5e9;font-weight:600;font-size:16px;margin-bottom:12px;border-bottom:1px solid #e2e8f0;padding-bottom:8px}.grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;margin-bottom:16px}.label{color:#64748b;font-weight:500}.value{color:#0f172a}.foot{padding:16px 24px;color:#475569;border-top:1px solid #e2e8f0;font-size:12px}</style></head>
-  <body><div class="wrap"><div class="card"><div class="hdr"><h1>Business Health Check Submission</h1></div><div class="content">
-  <div class="section"><div class="section-title">Company Information</div><div class="grid">
-  <div class="label">Company Name</div><div class="value">${s.companyName}</div>
-  <div class="label">Industry</div><div class="value">${s.industry}</div>
-  <div class="label">Entity Type</div><div class="value">${s.entityType}</div>
-  <div class="label">Annual Revenue</div><div class="value">${s.annualRevenue}</div>
-  </div></div>
-  <div class="section"><div class="section-title">Operations</div><div class="grid">
-  <div class="label">Employees</div><div class="value">${s.employees}</div>
-  ${s.employeeCount ? `<div class="label">Employee Count</div><div class="value">${s.employeeCount}</div>` : ''}
-  <div class="label">Stock Management</div><div class="value">${s.stockManagement}</div>
-  <div class="label">Foreign Currency</div><div class="value">${s.foreignCurrency}</div>
-  </div></div>
-  <div class="section"><div class="section-title">Compliance</div><div class="grid">
-  <div class="label">Tax Compliance</div><div class="value">${s.taxCompliance}</div>
-  <div class="label">Audit Requirements</div><div class="value">${s.auditRequirements}</div>
-  <div class="label">Regulatory Reporting</div><div class="value">${s.regulatoryReporting}</div>
-  </div></div>
-  <div class="section"><div class="section-title">Goals & Contact</div><div class="grid">
-  <div class="label">Primary Goal</div><div class="value">${s.primaryGoal}</div>
-  <div class="label">Contact Name</div><div class="value">${s.contactName}</div>
-  <div class="label">Email</div><div class="value"><a href="mailto:${s.email}">${s.email}</a></div>
-  <div class="label">Phone</div><div class="value">${s.phone}</div>
-  </div></div>
-  ${s.challenges ? `<div class="section"><div class="section-title">Challenges</div><div style="background:#f8fafc;border-left:4px solid #1e40af;border-radius:8px;padding:12px 16px;white-space:pre-wrap">${s.challenges}</div></div>` : ''}
-  </div><div class="foot">Submitted: ${escapeHtml(new Date().toLocaleString())}</div></div></div></body></html>`;
+  <style>
+    body{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f8fafc;color:#0f172a;margin:0;padding:0}
+    .container{width:100%;max-width:100%;margin:0;padding:20px;box-sizing:border-box}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.1)}
+    .header{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#00f5ff 0%,#1e90ff 50%,#20b2aa 100%);padding:24px;color:#fff}
+    .logo{width:60px;height:60px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#1e40af;font-size:18px}
+    .header-text{flex:1;margin-left:20px}
+    .header h1{margin:0;font-size:24px;font-weight:600}
+    .header p{margin:5px 0 0 0;opacity:0.9;font-size:14px}
+    .content{padding:32px}
+    .section{margin-bottom:32px}
+    .section-title{color:#1e40af;font-weight:600;font-size:18px;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #0ea5e9}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:20px}
+    .field{background:#f8fafc;padding:16px;border-radius:8px;border-left:4px solid #0ea5e9}
+    .label{color:#0ea5e9;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+    .value{color:#0f172a;font-size:16px;font-weight:500}
+    .challenges-section{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-top:24px}
+    .challenges-title{color:#1e40af;font-weight:600;font-size:16px;margin-bottom:12px}
+    .challenges-content{color:#374151;line-height:1.6;white-space:pre-wrap}
+    .footer{padding:24px;background:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;color:#6b7280;font-size:12px}
+    @media (max-width:768px){.grid{grid-template-columns:1fr}.content{padding:20px}}
+  </style></head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="header">
+          <div class="logo">RT</div>
+          <div class="header-text">
+            <h1>Business Health Check Submission</h1>
+            <p>RT Dynamic Business Consulting</p>
+          </div>
+        </div>
+        <div class="content">
+          <div class="section">
+            <div class="section-title">Company Information</div>
+            <div class="grid">
+              <div class="field">
+                <div class="label">Company Name</div>
+                <div class="value">${s.companyName}</div>
+              </div>
+              <div class="field">
+                <div class="label">Industry</div>
+                <div class="value">${s.industry}</div>
+              </div>
+              <div class="field">
+                <div class="label">Entity Type</div>
+                <div class="value">${s.entityType}</div>
+              </div>
+              <div class="field">
+                <div class="label">Annual Revenue</div>
+                <div class="value">${s.annualRevenue}</div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Operations</div>
+            <div class="grid">
+              <div class="field">
+                <div class="label">Employees</div>
+                <div class="value">${s.employees}</div>
+              </div>
+              ${s.employeeCount ? `<div class="field"><div class="label">Employee Count</div><div class="value">${s.employeeCount}</div></div>` : ''}
+              <div class="field">
+                <div class="label">Stock Management</div>
+                <div class="value">${s.stockManagement}</div>
+              </div>
+              <div class="field">
+                <div class="label">Foreign Currency</div>
+                <div class="value">${s.foreignCurrency}</div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Compliance</div>
+            <div class="grid">
+              <div class="field">
+                <div class="label">Tax Compliance</div>
+                <div class="value">${s.taxCompliance}</div>
+              </div>
+              <div class="field">
+                <div class="label">Audit Requirements</div>
+                <div class="value">${s.auditRequirements}</div>
+              </div>
+              <div class="field">
+                <div class="label">Regulatory Reporting</div>
+                <div class="value">${s.regulatoryReporting}</div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Goals & Contact</div>
+            <div class="grid">
+              <div class="field">
+                <div class="label">Primary Goal</div>
+                <div class="value">${s.primaryGoal}</div>
+              </div>
+              <div class="field">
+                <div class="label">Contact Name</div>
+                <div class="value">${s.contactName}</div>
+              </div>
+              <div class="field">
+                <div class="label">Email Address</div>
+                <div class="value"><a href="mailto:${s.email}" style="color:#0ea5e9;text-decoration:none">${s.email}</a></div>
+              </div>
+              <div class="field">
+                <div class="label">Phone Number</div>
+                <div class="value">${s.phone}</div>
+              </div>
+            </div>
+          </div>
+          ${s.challenges ? `<div class="challenges-section"><div class="challenges-title">Business Challenges</div><div class="challenges-content">${s.challenges}</div></div>` : ''}
+           
+           <!-- Price Estimate Section -->
+           <div class="challenges-section" style="background:#f0f9ff;border:1px solid #0ea5e9;">
+             <div class="challenges-title" style="color:#0ea5e9;">💰 Price Estimate</div>
+             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;">
+               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
+                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">MONTHLY TOTAL</div>
+                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 9,500</div>
+               </div>
+               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
+                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">ANNUAL TOTAL</div>
+                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 114,000</div>
+               </div>
+             </div>
+             <div style="margin-top:16px;padding:16px;background:#fff;border-radius:8px;">
+               <div style="color:#64748b;font-size:12px;line-height:1.5;">
+                 <strong>Note:</strong> This is an estimated price range based on typical service requirements. 
+                 Final pricing will be determined after the consultation call and detailed assessment of specific business needs.
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="footer">
+           Submitted: ${escapeHtml(new Date().toLocaleString())} | RT Dynamic Business Consulting
+         </div>
+      </div>
+    </div>
+  </body></html>`;
 }
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));

@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Users, Target, Award, TrendingUp, ArrowRight, CheckCircle } from "lucide-react"
+import { Users, Target, Award, TrendingUp, CheckCircle } from "lucide-react"
 import RabelaniProfileCard from "@/components/rabelani-profile-card"
 import TshephishoProfileCard from "@/components/tshephisho-profile-card"
 
@@ -33,22 +32,7 @@ const values = [
   },
 ]
 
-const team = [
-  {
-    name: "Rabelani Neluheni",
-    role: "Founder & Managing Director",
-    credentials: "CA(SA), CTA",
-    description: "Qualified Chartered Accountant with extensive experience in auditing, taxation, and business consulting, leading RT Dynamic Business Consulting with professional excellence.",
-    image: "/rabelani-photo.jpg", // Add actual photo path
-  },
-  {
-    name: "Tshepi",
-    role: "Senior Accountant",
-    credentials: "CA(SA), CPA",
-    description: "Specializes in financial reporting, tax compliance, and audit services, ensuring accurate and timely delivery of professional accounting services.",
-    image: "/tshepi-photo.jpg", // Add actual photo path
-  },
-]
+// Team data moved to individual profile card components
 
 const stats: Array<{ number: string; label: string }> = [
   { number: "6+", label: "Years of Experience" },

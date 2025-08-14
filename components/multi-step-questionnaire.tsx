@@ -522,7 +522,7 @@ const MultiStepQuestionnaire = () => {
           <h1 className="font-poppins font-thin text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
             Business Health <span className="text-primary">Check</span>
           </h1>
-          <p className="font-inter text-fluid-xl text-gray-600 max-w-2xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
+          <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
             Help us understand your business so we can provide you with a customized consultation and estimate.
           </p>
         </div>

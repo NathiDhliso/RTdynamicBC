@@ -200,7 +200,7 @@ export default function ContactContent() {
           <h1 className="font-poppins font-thin text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
             Contact <span className="text-primary">Us</span>
           </h1>
-          <p className="font-inter text-fluid-xl text-gray-600 leading-fluid-relaxed text-spacing-comfortable">
+          <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
             Ready to take control of your financial future? Get in touch with our expert team today. We&apos;re here to
             answer your questions and help you achieve your goals.
           </p>
@@ -357,7 +357,7 @@ export default function ContactContent() {
             <div ref={infoRef} className="space-y-fluid-lg">
               <div>
                 <h2 className="font-poppins font-thin text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Get in Touch</h2>
-                <p className="font-inter text-fluid-lg text-gray-600 leading-fluid-relaxed text-spacing-comfortable mb-fluid-lg">
+                <p className="font-inter text-fluid-lg text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable mb-fluid-lg">
                   We&apos;re here to help you achieve your financial goals. Reach out to us through any of the following
                   methods, and we&apos;ll get back to you promptly.
                 </p>

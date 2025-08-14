@@ -685,10 +685,11 @@
 
   /* Dynamic description text centering */
   .description-center-dynamic {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     max-width: 90%;
+    display: block !important;
   }
   
   @media (min-width: 640px) {

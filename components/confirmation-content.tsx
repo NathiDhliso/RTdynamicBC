@@ -243,7 +243,7 @@ export default function ConfirmationContent() {
               {formDetails.title}
             </h1>
             <h2 className="font-poppins font-light text-fluid-2xl text-primary mb-8">{formDetails.subtitle}</h2>
-            <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-10">
+            <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-relaxed mb-10">
               {formDetails.description}
             </p>
 
@@ -343,7 +343,7 @@ export default function ConfirmationContent() {
             <h3 className="font-poppins font-thin text-fluid-4xl text-gray-900 text-center mb-4">
               Need Immediate Assistance?
             </h3>
-            <p className="font-inter text-fluid-lg text-gray-600 text-center mb-16 max-w-3xl mx-auto">
+            <p className="font-inter text-fluid-lg text-gray-600 description-center-dynamic mb-16">
               Don&apos;t wait for our response. Our team is standing by to help you with any questions or urgent needs.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

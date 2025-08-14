@@ -287,9 +287,9 @@ export default function AboutContent() {
               Meet Our <span className="text-primary">Team</span>
             </h2>
             <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
-               Our qualified chartered accountants are dedicated to providing you with the highest level of professional
-               accounting, auditing, and business consulting services.
-             </p>
+              Our qualified chartered accountants are dedicated to providing you with the highest level of professional
+              accounting, auditing, and business consulting services.
+            </p>
           </div>
 
           <div className="team-grid-dynamic">
@@ -319,7 +319,7 @@ export default function AboutContent() {
                     <h3 className="font-poppins font-light text-fluid-xl text-gray-900 mb-fluid-xs leading-fluid-relaxed text-spacing-comfortable">{member.name}</h3>
                     <p className="font-inter text-primary font-light mb-fluid-xs">{member.role}</p>
                     <p className="font-inter text-sm text-gray-500 mb-fluid-sm">{member.credentials}</p>
-                    <p className="font-inter text-gray-600 leading-fluid-relaxed text-spacing-comfortable">{member.description}</p>
+                    <p className="font-inter text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">{member.description}</p>
                   </CardContent>
                 </Card>
               ))

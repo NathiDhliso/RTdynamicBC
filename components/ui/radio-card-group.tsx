@@ -21,7 +21,8 @@ interface RadioCardGroupProps {
 }
 
 const RadioCardGroup = React.forwardRef<React.ElementRef<typeof RadioGroup>, RadioCardGroupProps>(
-  ({ options, value, onValueChange, className, ...props }, ref) => {
+  ({ options, value, onValueChange, className, name, ...props }, ref) => {
+    const groupId = React.useId()
     return (
       <RadioGroup
         ref={ref}
@@ -30,10 +31,12 @@ const RadioCardGroup = React.forwardRef<React.ElementRef<typeof RadioGroup>, Rad
         className={cn("grid gap-4", className)}
         {...props}
       >
-        {options.map((option) => (
-          <div key={option.value} className="relative">
-            <RadioGroupItem value={option.value} id={option.value} className="peer sr-only" />
-            <Label htmlFor={option.value} className="cursor-pointer">
+        {options.map((option) => {
+          const uniqueId = `${groupId}-${option.value}`
+          return (
+            <div key={option.value} className="relative">
+              <RadioGroupItem value={option.value} id={uniqueId} className="peer sr-only" />
+              <Label htmlFor={uniqueId} className="cursor-pointer">
               <Card
                 className={cn(
                   "transition-all duration-200 hover:shadow-md border-2",
@@ -59,7 +62,8 @@ const RadioCardGroup = React.forwardRef<React.ElementRef<typeof RadioGroup>, Rad
               </Card>
             </Label>
           </div>
-        ))}
+          )
+        })}
       </RadioGroup>
     )
   },

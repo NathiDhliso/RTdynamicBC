@@ -78,8 +78,9 @@ export async function sendBusinessHealthCheck(data: BusinessHealthCheckData): Pr
     });
     
     if (!response.ok) {
-      console.error('Business health check submission failed:', response.statusText);
-      return false;
+      console.error('Business health check submission failed:', response.status, response.statusText);
+      // Return a more user-friendly error message based on status
+      throw new Error(response.status === 404 ? 'Service temporarily unavailable' : 'Unable to submit. Please try again.');
     }
     
     const result = await response.json();

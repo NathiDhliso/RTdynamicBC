@@ -45,26 +45,22 @@ const affiliations = [
   {
     name: "CIPC",
     image: "/CIPC.jpg",
-    alt: "Companies and Intellectual Property Commission",
-    url: "https://www.cipc.co.za"
+    alt: "Companies and Intellectual Property Commission"
   },
   {
     name: "QuickBooks",
     image: "/Quickbooks.png",
-    alt: "QuickBooks Certified ProAdvisor",
-    url: "https://quickbooks.intuit.com"
+    alt: "QuickBooks Certified ProAdvisor"
   },
   {
     name: "SARS",
     image: "/SARS.jpg",
-    alt: "South African Revenue Service",
-    url: "https://www.sars.gov.za"
+    alt: "South African Revenue Service"
   },
   {
     name: "SAICA",
     image: "/SAICA.png",
-    alt: "South African Institute of Chartered Accountants",
-    url: "https://www.saica.co.za"
+    alt: "South African Institute of Chartered Accountants"
   },
 ]
 
@@ -281,7 +277,7 @@ export default function AboutContent() {
             <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Meet Our <span className="text-primary">Founders</span>
             </h2>
-            <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
+            <p className="font-inter text-fluid-xl text-gray-600 max-w-3xl mx-auto text-center leading-fluid-relaxed text-spacing-comfortable">
               With over 6 years of professional accounting experience each, our founders bring combined expertise in auditing, financial reporting, and business consulting to every client engagement.
             </p>
           </div>
@@ -309,57 +305,36 @@ export default function AboutContent() {
           <div className="affiliation-track">
             {/* First set of affiliations */}
             {affiliations.map((affiliation, index) => (
-              <a
+              <Image
                 key={`first-${index}`}
-                href={affiliation.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="affiliation-link"
-              >
-                <Image
-                  src={affiliation.image}
-                  alt={affiliation.alt}
-                  width={150}
-                  height={60}
-                  className="affiliation-item"
-                />
-              </a>
+                src={affiliation.image}
+                alt={affiliation.alt}
+                width={150}
+                height={60}
+                className="affiliation-item"
+              />
             ))}
             {/* Duplicate set for seamless loop */}
             {affiliations.map((affiliation, index) => (
-              <a
+              <Image
                 key={`second-${index}`}
-                href={affiliation.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="affiliation-link"
-              >
-                <Image
-                  src={affiliation.image}
-                  alt={affiliation.alt}
-                  width={150}
-                  height={60}
-                  className="affiliation-item"
-                />
-              </a>
+                src={affiliation.image}
+                alt={affiliation.alt}
+                width={150}
+                height={60}
+                className="affiliation-item"
+              />
             ))}
             {/* Third set for extra smoothness */}
             {affiliations.map((affiliation, index) => (
-              <a
+              <Image
                 key={`third-${index}`}
-                href={affiliation.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="affiliation-link"
-              >
-                <Image
-                  src={affiliation.image}
-                  alt={affiliation.alt}
-                  width={150}
-                  height={60}
-                  className="affiliation-item"
-                />
-              </a>
+                src={affiliation.image}
+                alt={affiliation.alt}
+                width={150}
+                height={60}
+                className="affiliation-item"
+              />
             ))}
           </div>
         </div>

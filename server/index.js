@@ -116,27 +116,6 @@ function buildContactHtml({ firstName, lastName, email, phone, subject, inquiryT
             ${s.inquiryType ? `<div class="field"><div class="label">Inquiry Type</div><div class="value">${s.inquiryType}</div></div>` : ''}
           </div>
           ${s.message ? `<div class="message-section"><div class="message-title">Message</div><div class="message-content">${s.message}</div></div>` : ''}
-           
-           <!-- Price Estimate Section -->
-           <div class="message-section" style="margin-top:32px;background:#f0f9ff;border:1px solid #0ea5e9;">
-             <div class="message-title" style="color:#0ea5e9;">💰 Price Estimate</div>
-             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;">
-               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
-                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">MONTHLY TOTAL</div>
-                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 9,500</div>
-               </div>
-               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
-                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">ANNUAL TOTAL</div>
-                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 114,000</div>
-               </div>
-             </div>
-             <div style="margin-top:16px;padding:16px;background:#fff;border-radius:8px;">
-               <div style="color:#64748b;font-size:12px;line-height:1.5;">
-                 <strong>Note:</strong> This is an estimated price range based on typical service requirements. 
-                 Final pricing will be determined after the consultation call and detailed assessment of specific business needs.
-               </div>
-             </div>
-           </div>
          </div>
          <div class="footer">
            Submitted: ${escapeHtml(new Date().toLocaleString())} | RT Dynamic Business Consulting
@@ -264,27 +243,6 @@ function buildHealthCheckHtml(formData) {
             </div>
           </div>
           ${s.challenges ? `<div class="challenges-section"><div class="challenges-title">Business Challenges</div><div class="challenges-content">${s.challenges}</div></div>` : ''}
-           
-           <!-- Price Estimate Section -->
-           <div class="challenges-section" style="background:#f0f9ff;border:1px solid #0ea5e9;">
-             <div class="challenges-title" style="color:#0ea5e9;">💰 Price Estimate</div>
-             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;">
-               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
-                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">MONTHLY TOTAL</div>
-                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 9,500</div>
-               </div>
-               <div style="background:#fff;padding:20px;border-radius:12px;text-align:center;border:2px solid #0ea5e9;">
-                 <div style="color:#64748b;font-weight:600;font-size:14px;margin-bottom:8px;">ANNUAL TOTAL</div>
-                 <div style="color:#0ea5e9;font-size:32px;font-weight:bold;">R 114,000</div>
-               </div>
-             </div>
-             <div style="margin-top:16px;padding:16px;background:#fff;border-radius:8px;">
-               <div style="color:#64748b;font-size:12px;line-height:1.5;">
-                 <strong>Note:</strong> This is an estimated price range based on typical service requirements. 
-                 Final pricing will be determined after the consultation call and detailed assessment of specific business needs.
-               </div>
-             </div>
-           </div>
          </div>
          <div class="footer">
            Submitted: ${escapeHtml(new Date().toLocaleString())} | RT Dynamic Business Consulting

@@ -73,7 +73,7 @@ const steps = [
   {
     id: 3,
     title: "Compliance",
-    description: "Regulatory requirements",
+    description: "Additional information (if applicable)",
     icon: FileCheck,
   },
   {
@@ -90,6 +90,8 @@ const MultiStepQuestionnaire = () => {
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
+  
+  const shouldShowStep3 = formData.entityType === "Private Limited (Pty) Ltd"
 
   const updateFormData = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -143,7 +145,9 @@ const MultiStepQuestionnaire = () => {
       if (currentStep === 2 && formData.entityType !== "Private Limited (Pty) Ltd") {
         setCurrentStep(4)
       } else {
-        setCurrentStep(currentStep + 1)
+        const maxStep = shouldShowStep3 ? 4 : 3
+        const nextStep = Math.min(currentStep + 1, maxStep)
+        setCurrentStep(nextStep)
       }
     }
   }
@@ -217,8 +221,6 @@ const MultiStepQuestionnaire = () => {
     return currentStep
   }
 
-  const shouldShowStep3 = formData.entityType === "Private Limited (Pty) Ltd"
-
   const entityTypeOptions: RadioCardOption[] = [
     { value: "Sole Proprietorship", label: "Sole Proprietorship" },
     { value: "Partnership", label: "Partnership" },
@@ -258,7 +260,7 @@ const MultiStepQuestionnaire = () => {
                 options={entityTypeOptions}
                 value={formData.entityType}
                 onValueChange={(value) => updateFormData("entityType", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.entityType && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.entityType}</p>}
             </div>
@@ -269,7 +271,7 @@ const MultiStepQuestionnaire = () => {
                 options={annualRevenueOptions}
                 value={formData.annualRevenue}
                 onValueChange={(value) => updateFormData("annualRevenue", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.annualRevenue && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.annualRevenue}</p>}
             </div>
@@ -313,7 +315,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.employees}
                 onValueChange={(value) => updateFormData("employees", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2"
               />
               {errors.employees && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.employees}</p>}
             </div>
@@ -331,7 +333,7 @@ const MultiStepQuestionnaire = () => {
                   ]}
                   value={formData.employeeCount}
                   onValueChange={(value) => updateFormData("employeeCount", value)}
-                  className="grid-cols-1"
+                  className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 />
                 {errors.employeeCount && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.employeeCount}</p>}
               </div>
@@ -349,7 +351,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.stockManagement}
                 onValueChange={(value) => updateFormData("stockManagement", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.stockManagement && <p className="text-red-500 text-fluid-sm mt-2">{errors.stockManagement}</p>}
             </div>
@@ -366,7 +368,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.foreignCurrency}
                 onValueChange={(value) => updateFormData("foreignCurrency", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.foreignCurrency && <p className="text-red-500 text-fluid-sm mt-2">{errors.foreignCurrency}</p>}
             </div>
@@ -386,7 +388,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.taxCompliance}
                 onValueChange={(value) => updateFormData("taxCompliance", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.taxCompliance && <p className="text-red-500 text-fluid-sm mt-2">{errors.taxCompliance}</p>}
             </div>
@@ -401,7 +403,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.auditRequirements}
                 onValueChange={(value) => updateFormData("auditRequirements", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.auditRequirements && (
                 <p className="text-red-500 text-fluid-sm mt-2">{errors.auditRequirements}</p>
@@ -418,7 +420,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.regulatoryReporting}
                 onValueChange={(value) => updateFormData("regulatoryReporting", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.regulatoryReporting && (
                 <p className="text-red-500 text-fluid-sm mt-2">{errors.regulatoryReporting}</p>
@@ -442,7 +444,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.primaryGoal}
                 onValueChange={(value) => updateFormData("primaryGoal", value)}
-                className="grid-cols-1"
+                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.primaryGoal && <p className="text-red-500 text-fluid-sm mt-2">{errors.primaryGoal}</p>}
             </div>
@@ -523,7 +525,8 @@ const MultiStepQuestionnaire = () => {
             Business Health <span className="text-primary">Check</span>
           </h1>
           <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
-            Help us understand your business so we can provide you with a customized consultation and estimate.
+-            Help us understand your business so we can provide you with a customized consultation and estimate.
++            Help us understand your business so we can provide you with a customized consultation and next steps.
           </p>
         </div>
 
@@ -593,9 +596,9 @@ const MultiStepQuestionnaire = () => {
             Previous
           </Button>
 
-          {currentStep === (shouldShowStep3 ? 4 : 3) ? (
+          {currentStep === 4 ? (
             <Button onClick={handleSubmit} size="spacious" className="btn-primary font-inter font-light" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Calculate My Estimate"}
+              {isSubmitting ? "Submitting..." : "Submit Application"}
               <ArrowRight className="ml-fluid-md h-4 w-4" />
             </Button>
           ) : (

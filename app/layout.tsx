@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${inter.variable} ${outfit.variable}`}>
+    <html lang="en" className={`${poppins.variable} ${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head />
       <body className="font-outfit antialiased bg-[color:var(--background)] text-[color:var(--foreground)] font-light" suppressHydrationWarning>
         <Script

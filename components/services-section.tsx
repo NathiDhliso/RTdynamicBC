@@ -233,7 +233,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
 
   return (
     <>
-      <section className="services-section py-fluid-2xl md:py-fluid-3xl bg-background">
+      <section className="services-section py-fluid-2xl md:py-fluid-3xl bg-transparent">
         <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
           <div className="text-center mb-fluid-2xl">
             <h2 className="services-heading font-outfit font-extralight text-fluid-3xl text-foreground mb-fluid-lg leading-fluid-snug dynamic-text-spacing-loose">

@@ -767,6 +767,78 @@
     padding-top: var(--space-3xl);
     padding-bottom: var(--space-3xl);
   }
+
+  /* Unified background container for homepage */
+  .unified-background-container {
+    position: relative;
+    min-height: 200vh; /* Ensure it covers both hero and services sections */
+    overflow: hidden;
+  }
+
+  .unified-background-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      oklch(0.45 0.02 240) 0%, 
+      oklch(0.4 0.02 220) 25%, 
+      oklch(0.35 0.02 200) 50%, 
+      oklch(0.3 0.02 180) 75%, 
+      oklch(0.25 0.02 160) 100%
+    );
+    z-index: -2;
+  }
+
+  .unified-background-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, 
+      rgba(0, 0, 0, 0.3) 0%, 
+      rgba(0, 0, 0, 0.1) 50%, 
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    z-index: -1;
+  }
+
+  /* Financial chart background elements for unified container */
+  .unified-background-container .financial-chart-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Responsive adjustments for unified background */
+  @media (max-width: 768px) {
+    .unified-background-container {
+      min-height: 150vh;
+    }
+    
+    .unified-background-container::before {
+      background: linear-gradient(135deg, 
+        oklch(0.4 0.02 240) 0%, 
+        oklch(0.35 0.02 220) 50%, 
+        oklch(0.3 0.02 200) 100%
+      );
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .unified-background-container {
+      min-height: 250vh;
+    }
+  }
 }
 
 @layer components {

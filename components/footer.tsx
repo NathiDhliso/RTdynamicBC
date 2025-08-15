@@ -34,7 +34,7 @@ export default function Footer() {
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl py-fluid-2xl relative z-10">
+      <div className="container-mobile-safe py-fluid-2xl relative z-10">
         {/* MODIFIED: Changed to flexbox for better alignment control */}
         <div className="flex flex-col md:flex-row md:justify-between gap-fluid-xl">
           

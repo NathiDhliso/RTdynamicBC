@@ -620,7 +620,7 @@ const HeroSection = () => {
     >
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+        <div className="container-mobile-safe">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-xl items-center">
             {/* Left column: headline + subtext + CTAs */}
             <div>

@@ -196,7 +196,7 @@ export default function ContactContent() {
     <div className="bg-white">
       {/* Hero Section */}
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl text-center">
+        <div className="container-mobile-safe text-center">
           <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
             Contact <span className="text-primary">Us</span>
           </h1>
@@ -209,7 +209,7 @@ export default function ContactContent() {
 
       {/* Main Content */}
       <section className="py-fluid-2xl">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+        <div className="container-mobile-safe">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl">
             {/* Contact Form */}
             <div ref={formRef}>

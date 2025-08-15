@@ -477,6 +477,63 @@
     padding-right: var(--space-3xl);
   }
 
+  /* Enhanced mobile-first responsive padding utilities */
+  .px-mobile-safe {
+    padding-left: max(var(--space-lg), env(safe-area-inset-left, 1rem));
+    padding-right: max(var(--space-lg), env(safe-area-inset-right, 1rem));
+  }
+  
+  @media (min-width: 640px) {
+    .px-mobile-safe {
+      padding-left: var(--space-xl);
+      padding-right: var(--space-xl);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .px-mobile-safe {
+      padding-left: var(--space-2xl);
+      padding-right: var(--space-2xl);
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .px-mobile-safe {
+      padding-left: var(--space-3xl);
+      padding-right: var(--space-3xl);
+    }
+  }
+
+  /* Container with safe mobile margins */
+  .container-mobile-safe {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: max(var(--space-lg), env(safe-area-inset-left, 1rem));
+    padding-right: max(var(--space-lg), env(safe-area-inset-right, 1rem));
+  }
+  
+  @media (min-width: 640px) {
+    .container-mobile-safe {
+      padding-left: var(--space-xl);
+      padding-right: var(--space-xl);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container-mobile-safe {
+      padding-left: var(--space-2xl);
+      padding-right: var(--space-2xl);
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .container-mobile-safe {
+      padding-left: var(--space-3xl);
+      padding-right: var(--space-3xl);
+    }
+  }
+
   /* Desktop-specific generous spacing */
   .desktop-spacious {
     padding: var(--space-md) var(--space-lg);

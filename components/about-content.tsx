@@ -159,7 +159,7 @@ export default function AboutContent() {
     <div className="bg-white">
       {/* Hero Section */}
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+        <div className="container-mobile-safe">
           <div className="text-center mb-fluid-2xl">
             <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               About <span className="text-primary">RTDynamicBC</span>
@@ -216,7 +216,7 @@ export default function AboutContent() {
 
       {/* Stats Section */}
       <section ref={statsRef} className="py-fluid-2xl bg-gray-900 text-white">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+        <div className="container-mobile-safe">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-fluid-lg">
             {stats.length > 0 ? (
               stats.map((stat, index) => (
@@ -237,8 +237,8 @@ export default function AboutContent() {
       </section>
 
       {/* Values Section */}
-      <section ref={valuesRef} className="py-fluid-2xl bg-gradient-to-b from-white to-gray-50">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+      <section ref={valuesRef} className="py-fluid-2xl bg-white">
+        <div className="container-mobile-safe">
           <div className="text-center mb-fluid-2xl">
             <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Our <span className="text-primary">Values</span>
@@ -270,9 +270,9 @@ export default function AboutContent() {
         </div>
       </section>
 
-      {/* Founders Profile Section */}
-      <section ref={teamRef} className="py-fluid-2xl bg-gradient-to-br from-gray-50 to-white">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+      {/* Team Section */}
+      <section ref={teamRef} className="py-fluid-2xl bg-gradient-to-b from-gray-50 to-white">
+        <div className="container-mobile-safe">
           <div className="text-center mb-fluid-xl">
             <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Meet Our <span className="text-primary">Founders</span>
@@ -288,9 +288,9 @@ export default function AboutContent() {
         </div>
       </section>
 
-      {/* Affiliations Strip */}
-      <section className="py-fluid-xl bg-gray-50">
-        <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl mb-fluid-lg">
+      {/* Affiliations Section */}
+      <section className="py-fluid-2xl bg-white">
+        <div className="container-mobile-safe mb-fluid-lg">
           <div className="text-center">
             <h2 className="font-poppins font-thin text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-sm leading-fluid-snug text-spacing-comfortable text-center">
               Professional <span className="text-primary">Affiliations</span>

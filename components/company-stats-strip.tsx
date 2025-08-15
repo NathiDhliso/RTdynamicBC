@@ -68,7 +68,7 @@ const CompanyStatsStrip = () => {
 
   return (
     <section ref={stripRef} className="py-fluid-xl bg-gradient-to-r from-primary/5 via-blue-50 to-primary/5">
-      <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+      <div className="container-mobile-safe">
         <div className="text-center mb-fluid-lg">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}

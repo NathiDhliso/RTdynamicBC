@@ -518,7 +518,7 @@ const MultiStepQuestionnaire = () => {
 
   return (
     <section className="py-fluid-2xl bg-gradient-to-b from-gray-50 to-white min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-4xl mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+      <div className="w-full max-w-4xl mx-auto container-mobile-safe">
         {/* Header */}
         <div className="text-center mb-fluid-xl">
           <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">

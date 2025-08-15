@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/50 backdrop-blur-xl border-b border-white/10 shadow-lg">
-      <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
+      <div className="container-mobile-safe">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center group">

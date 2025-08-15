@@ -28,7 +28,7 @@ const RadioCardGroup = React.forwardRef<React.ElementRef<typeof RadioGroup>, Rad
         ref={ref}
         value={value}
         onValueChange={onValueChange}
-        className={cn("grid gap-4", className)}
+        className={cn("grid gap-3 grid-cols-2 sm:gap-4", className)}
         {...props}
       >
         {options.map((option) => {

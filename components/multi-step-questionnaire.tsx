@@ -260,7 +260,7 @@ const MultiStepQuestionnaire = () => {
                 options={entityTypeOptions}
                 value={formData.entityType}
                 onValueChange={(value) => updateFormData("entityType", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.entityType && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.entityType}</p>}
             </div>
@@ -271,7 +271,7 @@ const MultiStepQuestionnaire = () => {
                 options={annualRevenueOptions}
                 value={formData.annualRevenue}
                 onValueChange={(value) => updateFormData("annualRevenue", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.annualRevenue && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.annualRevenue}</p>}
             </div>
@@ -296,7 +296,7 @@ const MultiStepQuestionnaire = () => {
                 options={industryOptions}
                 value={formData.industry}
                 onValueChange={(value) => updateFormData("industry", value)}
-                className="grid-cols-1 md:grid-cols-2"
+                className="grid-cols-2 sm:grid-cols-2"
               />
               {errors.industry && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.industry}</p>}
             </div>
@@ -315,7 +315,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.employees}
                 onValueChange={(value) => updateFormData("employees", value)}
-                className="grid-cols-1 sm:grid-cols-2"
+                className="grid-cols-2 sm:grid-cols-2"
               />
               {errors.employees && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.employees}</p>}
             </div>
@@ -333,7 +333,7 @@ const MultiStepQuestionnaire = () => {
                   ]}
                   value={formData.employeeCount}
                   onValueChange={(value) => updateFormData("employeeCount", value)}
-                  className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                  className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
                 />
                 {errors.employeeCount && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.employeeCount}</p>}
               </div>
@@ -351,7 +351,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.stockManagement}
                 onValueChange={(value) => updateFormData("stockManagement", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.stockManagement && <p className="text-red-500 text-fluid-sm mt-2">{errors.stockManagement}</p>}
             </div>
@@ -368,7 +368,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.foreignCurrency}
                 onValueChange={(value) => updateFormData("foreignCurrency", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.foreignCurrency && <p className="text-red-500 text-fluid-sm mt-2">{errors.foreignCurrency}</p>}
             </div>
@@ -388,7 +388,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.taxCompliance}
                 onValueChange={(value) => updateFormData("taxCompliance", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.taxCompliance && <p className="text-red-500 text-fluid-sm mt-2">{errors.taxCompliance}</p>}
             </div>
@@ -403,7 +403,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.auditRequirements}
                 onValueChange={(value) => updateFormData("auditRequirements", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.auditRequirements && (
                 <p className="text-red-500 text-fluid-sm mt-2">{errors.auditRequirements}</p>
@@ -420,7 +420,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.regulatoryReporting}
                 onValueChange={(value) => updateFormData("regulatoryReporting", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.regulatoryReporting && (
                 <p className="text-red-500 text-fluid-sm mt-2">{errors.regulatoryReporting}</p>
@@ -444,7 +444,7 @@ const MultiStepQuestionnaire = () => {
                 ]}
                 value={formData.primaryGoal}
                 onValueChange={(value) => updateFormData("primaryGoal", value)}
-                className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.primaryGoal && <p className="text-red-500 text-fluid-sm mt-2">{errors.primaryGoal}</p>}
             </div>

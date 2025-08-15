@@ -533,40 +533,45 @@ const HeroSection = () => {
     }
   }, [isMobile, animationsInitialized, setupAnimations]) // Removed cleanupAnimations from deps to prevent loop
 
-  // Fallback visibility on mount (prevents invisible content) - More permissive timing
+  // Fallback visibility - Only activate if animations genuinely fail
   useEffect(() => {
-    console.log('🚨 FALLBACK EFFECT: Setting up extended fallback timeout')
-    const fallbackTimeout = setTimeout(() => {
-      // Check current state of animationsInitialized and GSAP availability
-      const gsapReady = typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger
-      if (!animationsInitialized && !gsapReady) {
-        console.log('🚨 FALLBACK: 8 seconds passed, animations/GSAP not ready - ensuring elements are visible')
-        setElementsVisible()
-      } else if (!animationsInitialized && gsapReady) {
-        console.log('⏳ FALLBACK: GSAP ready but animations not initialized yet - giving more time')
-        // Give additional time if GSAP is ready but animations haven't initialized
-        const extendedTimeout = setTimeout(() => {
-          if (!animationsInitialized) {
-            console.log('🚨 FALLBACK: Extended timeout reached - ensuring elements are visible')
+    // Only set up fallback if animations are not already initialized
+    if (!animationsInitialized) {
+      console.log('🚨 FALLBACK EFFECT: Setting up conditional fallback timeout')
+      const fallbackTimeout = setTimeout(() => {
+        // Double-check current state before activating fallback
+        if (!animationsInitialized) {
+          const gsapReady = typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger
+          console.log('🚨 FALLBACK: 15 seconds passed, checking animation state:', {
+            animationsInitialized,
+            gsapReady
+          })
+          
+          if (!gsapReady) {
+            console.log('🚨 FALLBACK: GSAP not available after 15 seconds - ensuring elements are visible')
+            setElementsVisible()
+          } else {
+            console.log('⏳ FALLBACK: GSAP ready but animations not initialized - this should not happen')
             setElementsVisible()
           }
-        }, 5000) // Additional 5 seconds
-        return () => clearTimeout(extendedTimeout)
-      } else {
-        console.log('✅ FALLBACK: Animations are initialized, no fallback needed')
+        } else {
+          console.log('✅ FALLBACK: Animations initialized during timeout period - no action needed')
+        }
+      }, 15000) // Very generous 15 second timeout
+      
+      return () => {
+        console.log('🚨 FALLBACK EFFECT: Clearing conditional fallback timeout')
+        clearTimeout(fallbackTimeout)
       }
-    }, 8000) // Extended to 8 second fallback for more permissive timing
-    
-    return () => {
-      console.log('🚨 FALLBACK EFFECT: Clearing fallback timeout')
-      clearTimeout(fallbackTimeout)
+    } else {
+      console.log('✅ FALLBACK EFFECT: Animations already initialized - no fallback needed')
     }
-  }, [animationsInitialized, setElementsVisible]) // Add dependencies to track state changes
+  }, []) // Empty dependency array to prevent re-creation
 
-  // Clear fallback timeout when animations are initialized
+  // Monitor animation state changes
   useEffect(() => {
     if (animationsInitialized) {
-      console.log('✅ FALLBACK: Animations initialized, fallback no longer needed')
+      console.log('✅ ANIMATION STATE: Animations successfully initialized')
     }
   }, [animationsInitialized])
 

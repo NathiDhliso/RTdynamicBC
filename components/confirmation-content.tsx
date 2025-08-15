@@ -233,22 +233,22 @@ export default function ConfirmationContent() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div ref={contentRef} className="text-center mb-20">
             {/* Success Icon */}
-            <div className="success-icon w-28 h-28 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl relative">
+            <div className="success-icon w-28 h-28 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-12 shadow-2xl relative">
               <CheckCircle className="h-20 w-20 text-white" />
               <div className="absolute inset-0 bg-green-400/30 rounded-full animate-ping" />
             </div>
 
             {/* Main Message */}
-            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-6 bg-gradient-to-r from-gray-900 via-primary to-gray-900 bg-clip-text text-transparent">
+            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-8 bg-gradient-to-r from-gray-900 via-primary to-gray-900 bg-clip-text text-transparent">
               {formDetails.title}
             </h1>
-            <h2 className="font-poppins font-light text-fluid-2xl text-primary mb-8">{formDetails.subtitle}</h2>
-            <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-relaxed mb-10">
+            <h2 className="font-poppins font-light text-fluid-2xl text-primary mb-10">{formDetails.subtitle}</h2>
+            <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-relaxed mb-12">
               {formDetails.description}
             </p>
 
             {/* Reference Number */}
-            <div className="inline-flex items-center glassmorphism rounded-full px-8 py-4 mb-12 shadow-lg">
+            <div className="inline-flex items-center glassmorphism rounded-full px-8 py-4 mb-16 shadow-lg">
               <FileText className="h-6 w-6 text-primary mr-3" />
               <span className="font-inter text-fluid-base text-gray-700">
                 Reference ID: <span className="font-light text-primary">RTD-{Date.now().toString().slice(-6)}</span>
@@ -256,11 +256,11 @@ export default function ConfirmationContent() {
             </div>
 
             {/* Trust Indicators */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mb-24">
               {trustIndicators.map((indicator, index) => {
                 const IconComponent = indicator.icon
                 return (
-                  <div key={index} className="trust-indicator flex items-center justify-center space-x-3">
+                  <div key={index} className="trust-indicator flex items-center justify-center space-x-3 mb-6 md:mb-0">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                       <IconComponent className="h-5 w-5 text-primary" />
                     </div>

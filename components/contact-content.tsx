@@ -133,6 +133,30 @@ export default function ContactContent() {
     }
   }, [])
 
+  // Google Maps initialization
+  useEffect(() => {
+    // Make initMap a global function so the script can call it
+    ;(window as any).initMap = () => {
+      const mapElement = document.getElementById("map")
+      if (mapElement) {
+        const map = new google.maps.Map(mapElement, {
+          center: { lat: -25.993459, lng: 28.131355 }, // Coordinates for 1 Diagonal Street, Midrand
+          zoom: 15,
+        })
+        new google.maps.Marker({
+          position: { lat: -25.993459, lng: 28.131355 },
+          map: map,
+          title: "RT Dynamic Business Consulting",
+        })
+      }
+    }
+
+    // If the script is already loaded, initialize the map
+    if (window.google && window.google.maps) {
+      ;(window as any).initMap()
+    }
+  }, [])
+
   const updateFormData = (field: keyof ContactForm, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
@@ -393,15 +417,9 @@ export default function ContactContent() {
                 })}
               </div>
 
-              {/* Map Placeholder */}
+              {/* Google Maps */}
               <Card className="border-0 shadow-lg overflow-hidden">
-                <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-fluid-sm" />
-                    <p className="font-inter text-gray-500">Interactive Map Coming Soon</p>
-                    <p className="font-inter text-sm text-gray-400">1 Diagonal Street, Midrand, South Africa</p>
-                  </div>
-                </div>
+                <div id="map" className="h-96 w-full"></div>
               </Card>
             </div>
           </div>

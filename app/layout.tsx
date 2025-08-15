@@ -58,6 +58,12 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         {children}
+        
+        {/* Google Maps Script */}
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyDxp1ePJB5-e8y_34ZnLkxb3tpCOKeuJmc&callback=initMap`}
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   )

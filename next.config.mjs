@@ -11,13 +11,8 @@ const nextConfig = {
   },
   // Enable experimental features for better performance
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react'],
   },
-  // Enable static generation for faster page loads
-  output: 'standalone',
-  // Optimize compilation for faster builds
-  swcMinify: true,
   // Enable compression for smaller bundle sizes
   compress: true,
   // Configure caching headers for better performance

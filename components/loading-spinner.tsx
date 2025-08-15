@@ -8,7 +8,11 @@ const LoadingSpinner = () => {
 
   useEffect(() => {
     let loadTimeout: NodeJS.Timeout
-    let fallbackTimeout: NodeJS.Timeout
+    const fallbackTimeout: NodeJS.Timeout = setTimeout(() => {
+      console.log('⚠️ LOADING: Fallback timeout reached, forcing spinner to hide')
+      setFadeOut(true)
+      setTimeout(() => setIsLoading(false), 500)
+    }, 6000) // 6 second maximum loading time
     
     const handleLoad = () => {
       // Clear fallback timeout if load completes normally
@@ -20,13 +24,6 @@ const LoadingSpinner = () => {
         setTimeout(() => setIsLoading(false), 500) // Allow fade out animation
       }, 1000) // Minimum loading time for better UX
     }
-    
-    // Fallback timeout - force hide spinner after 6 seconds max
-    fallbackTimeout = setTimeout(() => {
-      console.log('⚠️ LOADING: Fallback timeout reached, forcing spinner to hide')
-      setFadeOut(true)
-      setTimeout(() => setIsLoading(false), 500)
-    }, 6000) // 6 second maximum loading time
 
     // Check if page is already loaded
     if (document.readyState === 'complete') {

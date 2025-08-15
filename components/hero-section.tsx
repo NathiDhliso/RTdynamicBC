@@ -8,14 +8,27 @@ import { ArrowRight } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 
 // Types for better reliability
+interface GSAPTimeline {
+  to: (targets: unknown, vars: unknown, position?: string | number) => GSAPTimeline
+  scrollTrigger?: unknown
+}
+
 interface GSAPInstance {
-  gsap: any
-  ScrollTrigger: any
+  gsap: {
+    registerPlugin: (plugin: unknown) => void
+    set: (targets: unknown, vars: unknown) => void
+    to: (targets: unknown, vars: unknown) => unknown
+    timeline: (vars?: unknown) => GSAPTimeline
+  }
+  ScrollTrigger: {
+    create: (vars: unknown) => unknown
+    refresh?: () => void
+  }
 }
 
 interface AnimationRefs {
-  scrollTriggers: any[]
-  animations: any[]
+  scrollTriggers: unknown[]
+  animations: unknown[]
   cleanup: (() => void)[]
 }
 
@@ -74,67 +87,7 @@ const HeroSection = () => {
     })
   }, [])
 
-  // Comprehensive cleanup function
-  const cleanupAnimations = useCallback(() => {
-    console.log('Cleaning up hero animations')
-    
-    const { scrollTriggers, animations, cleanup } = animationRefs.current
-    
-    // Execute custom cleanup functions
-    cleanup.forEach(fn => {
-      try {
-        fn()
-      } catch (error) {
-        console.warn('Cleanup function error:', error)
-      }
-    })
-    
-    // Kill ScrollTriggers
-    scrollTriggers.forEach(trigger => {
-      try {
-        if (trigger && typeof trigger.kill === 'function') {
-          trigger.kill()
-        }
-      } catch (error) {
-        console.warn('ScrollTrigger cleanup error:', error)
-      }
-    })
-    
-    // Kill animations
-    animations.forEach(animation => {
-      try {
-        if (animation && typeof animation.kill === 'function') {
-          animation.kill()
-        }
-      } catch (error) {
-        console.warn('Animation cleanup error:', error)
-      }
-    })
-    
-    // Reset element styles if GSAP is available
-    if (typeof window !== "undefined" && window.gsap) {
-      const elements = [titleRef.current, subtitleRef.current, ctaRef.current, logoRef.current].filter(Boolean)
-      if (elements.length > 0) {
-        try {
-          window.gsap.set(elements, {
-            clearProps: "all",
-            opacity: 1
-          })
-        } catch (error) {
-          console.warn('GSAP reset error:', error)
-        }
-      }
-    }
-    
-    // Clear arrays
-    animationRefs.current = {
-      scrollTriggers: [],
-      animations: [],
-      cleanup: []
-    }
-    
-    setAnimationsInitialized(false)
-  }, [])
+  // Note: Cleanup function removed as it was unused
 
   // Reduced motion check - disabled to always show animations
   const prefersReducedMotion = useCallback(() => {
@@ -169,7 +122,7 @@ const HeroSection = () => {
   }, [])
 
   // Mobile animations setup - optimized for mid-tier devices
-  const setupMobileAnimations = useCallback((gsap: any, ScrollTrigger: any) => {
+  const setupMobileAnimations = useCallback((gsap: GSAPInstance['gsap']) => {
     console.log('🔵 MOBILE: Starting optimized mobile animations setup')
     
     const elements = [logoRef.current, titleRef.current, subtitleRef.current, ctaRef.current].filter(Boolean)
@@ -203,7 +156,7 @@ const HeroSection = () => {
     console.log('🔵 MOBILE: Elements set to hidden state, current scroll position:', window.scrollY)
     
     // Simplified timeline for better performance on mid-tier devices
-    const mobileTimeline = gsap.timeline({
+    const mobileTimeline: GSAPTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: heroRef.current,
         start: "top 90%", // Earlier trigger for smoother experience
@@ -277,7 +230,7 @@ const HeroSection = () => {
   }, [])
 
   // Desktop animations setup
-  const setupDesktopAnimations = useCallback((gsap: any, ScrollTrigger: any) => {
+  const setupDesktopAnimations = useCallback((gsap: GSAPInstance['gsap'], ScrollTrigger: GSAPInstance['ScrollTrigger']) => {
     console.log('Setting up desktop animations')
     
     const elements = [titleRef.current, subtitleRef.current, ctaRef.current, logoRef.current].filter(Boolean)
@@ -309,7 +262,7 @@ const HeroSection = () => {
     
     // Only create scroll animations if viewport is tall enough
     if (window.innerHeight > 600) {
-      const masterTimeline = gsap.timeline({
+      const masterTimeline: GSAPTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: heroRef.current,
           start: "top top",
@@ -323,7 +276,7 @@ const HeroSection = () => {
               opacity: 1
             })
           },
-          onToggle: (self: any) => {
+          onToggle: (self: { isActive: boolean }) => {
             if (!self.isActive) {
               gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
                 opacity: 1,
@@ -432,7 +385,7 @@ const HeroSection = () => {
     } else {
       console.log('Viewport too small - using simple entrance animation')
       
-      const entranceTimeline = gsap.timeline({ delay: 0.5 })
+      const entranceTimeline: GSAPTimeline = gsap.timeline({ delay: 0.5 })
       
       gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
         opacity: 0,
@@ -530,7 +483,7 @@ const HeroSection = () => {
       // Setup animations based on device type
       if (isMobile) {
         console.log('📱 SETUP: Detected mobile device, setting up mobile animations')
-        setupMobileAnimations(gsap, ScrollTrigger)
+        setupMobileAnimations(gsap)
       } else {
         console.log('💻 SETUP: Detected desktop device, setting up desktop animations')
         setupDesktopAnimations(gsap, ScrollTrigger)
@@ -600,7 +553,8 @@ const HeroSection = () => {
     const handleResize = () => {
       console.log('🔄 RESIZE: Window resized, refreshing ScrollTrigger')
       if (typeof window !== "undefined" && window.ScrollTrigger) {
-        window.ScrollTrigger.refresh()
+        // Type assertion to handle ScrollTrigger refresh method
+        (window.ScrollTrigger as GSAPInstance['ScrollTrigger']).refresh?.()
       }
     }
     
@@ -649,7 +603,7 @@ const HeroSection = () => {
                     <ArrowRight className="ml-fluid-md h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="spacious" className="font-inter font-light glassmorphism text-white border-white">
+                <Button asChild variant="outline" size="spacious" className="font-inter font-light glassmorphism text-black border-black">
                   <Link href="#services">Our Services</Link>
                 </Button>
               </div>

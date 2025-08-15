@@ -102,7 +102,7 @@ export default function Header() {
         >
           <div className="py-fluid-sm border-t border-white/10">
             <nav className="flex flex-col space-y-fluid-xs">
-              {navigation.map((item, index) => {
+              {navigation.map((item) => {
                 const isActive = pathname === item.href
                 const isContact = item.name === "Contact"
                 return (

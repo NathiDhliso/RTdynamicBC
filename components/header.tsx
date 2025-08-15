@@ -48,6 +48,7 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  prefetch={true} // Enable prefetching for instant navigation
                   aria-current={isActive ? "page" : undefined}
                   className={`font-inter px-fluid-md py-fluid-sm rounded-lg transition-all duration-300 relative group whitespace-nowrap dynamic-text-spacing ${
                     isActive
@@ -67,31 +68,37 @@ export default function Header() {
             })}
           </nav>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - optimized for low-end devices */}
           <button
-            className="md:hidden p-fluid-xs rounded-lg hover:bg-white/10 transition-colors duration-200"
+            className="md:hidden p-fluid-xs rounded-lg hover:bg-white/10 transition-colors duration-200 touch-manipulation"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onTouchStart={() => {}} // Improve touch responsiveness
+            style={{
+              minHeight: '44px', // Ensure minimum touch target size
+              minWidth: '44px',
+              WebkitTapHighlightColor: 'transparent' // Remove tap highlight on iOS
+            }}
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMenuOpen}
           >
-            <div className="relative w-6 h-6">
-              <Menu
-                className={`absolute inset-0 h-6 w-6 text-gray-300 transition-all duration-300 ${
-                  isMenuOpen ? "rotate-180 opacity-0" : "rotate-0 opacity-100"
-                }`}
-              />
-              <X
-                className={`absolute inset-0 h-6 w-6 text-gray-300 transition-all duration-300 ${
-                  isMenuOpen ? "rotate-0 opacity-100" : "-rotate-180 opacity-0"
-                }`}
-              />
+            <div className="relative w-6 h-6 flex items-center justify-center">
+              {isMenuOpen ? (
+                <X className="h-6 w-6 text-gray-300" />
+              ) : (
+                <Menu className="h-6 w-6 text-gray-300" />
+              )}
             </div>
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - optimized for low-end devices */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${
             isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
+          style={{
+            willChange: isMenuOpen ? 'max-height, opacity' : 'auto'
+          }}
         >
           <div className="py-fluid-sm border-t border-white/10">
             <nav className="flex flex-col space-y-fluid-xs">
@@ -102,18 +109,23 @@ export default function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
+                    prefetch={true} // Enable prefetching for instant mobile navigation
                     aria-current={isActive ? "page" : undefined}
-                    className={`font-inter px-fluid-sm py-fluid-sm rounded-lg transition-all duration-300 transform ${
+                    className={`font-inter px-fluid-sm py-fluid-sm rounded-lg transition-colors duration-200 touch-manipulation ${
                       isActive
-                        ? "text-blue-400 font-light bg-blue-500/20 translate-x-2"
+                        ? "text-blue-400 font-light bg-blue-500/20"
                         : isContact
-                        ? "text-white font-light bg-primary hover:bg-primary/90 hover:translate-x-1"
-                        : "text-gray-300 font-light hover:text-white hover:bg-white/10 hover:translate-x-1"
+                        ? "text-white font-light bg-primary hover:bg-primary/90"
+                        : "text-gray-300 font-light hover:text-white hover:bg-white/10"
                     }`}
                     style={{
-                      transitionDelay: `${index * 50}ms`,
+                      minHeight: '44px', // Ensure minimum touch target
+                      display: 'flex',
+                      alignItems: 'center',
+                      WebkitTapHighlightColor: 'transparent'
                     }}
                     onClick={() => setIsMenuOpen(false)}
+                    onTouchStart={() => {}} // Improve touch responsiveness
                   >
                     {item.name}
                   </Link>

@@ -239,8 +239,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
             <h2 className="services-heading font-outfit font-extralight text-fluid-3xl text-foreground mb-fluid-lg leading-fluid-snug dynamic-text-spacing-loose">
               Our Core Services
             </h2>
-            <p className="font-inter font-light text-fluid-lg text-muted-foreground description-center-dynamic leading-fluid-relaxed dynamic-text-spacing">
-              Comprehensive financial solutions designed to help your business thrive and grow
+            <p>
             </p>
           </div>
 

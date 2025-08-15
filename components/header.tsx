@@ -18,7 +18,7 @@ export default function Header() {
   ]
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/50 backdrop-blur-xl border-b border-white/10 shadow-lg">
       <div className="w-full mx-auto px-fluid-md lg:px-fluid-lg xl:px-fluid-xl">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -51,17 +51,17 @@ export default function Header() {
                   aria-current={isActive ? "page" : undefined}
                   className={`font-inter px-fluid-md py-fluid-sm rounded-lg transition-all duration-300 relative group whitespace-nowrap dynamic-text-spacing ${
                     isActive
-                      ? "text-primary font-light bg-primary/10"
+                      ? "text-blue-400 font-light bg-blue-500/20"
                       : isContact
                       ? "text-white font-light bg-primary hover:bg-primary/90"
-                      : "text-foreground font-light hover:text-primary hover:bg-primary/5"
+                      : "text-gray-300 font-light hover:text-white hover:bg-white/10"
                   }`}
                 >
                   {item.name}
                   {isActive && (
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-400 rounded-full" />
                   )}
-                  <div className="absolute inset-0 bg-primary/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+                  <div className="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
                 </Link>
               )
             })}
@@ -69,17 +69,17 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-fluid-xs rounded-lg hover:bg-muted transition-colors duration-200"
+            className="md:hidden p-fluid-xs rounded-lg hover:bg-white/10 transition-colors duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <div className="relative w-6 h-6">
               <Menu
-                className={`absolute inset-0 h-6 w-6 text-foreground transition-all duration-300 ${
+                className={`absolute inset-0 h-6 w-6 text-gray-300 transition-all duration-300 ${
                   isMenuOpen ? "rotate-180 opacity-0" : "rotate-0 opacity-100"
                 }`}
               />
               <X
-                className={`absolute inset-0 h-6 w-6 text-foreground transition-all duration-300 ${
+                className={`absolute inset-0 h-6 w-6 text-gray-300 transition-all duration-300 ${
                   isMenuOpen ? "rotate-0 opacity-100" : "-rotate-180 opacity-0"
                 }`}
               />
@@ -93,7 +93,7 @@ export default function Header() {
             isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="py-fluid-sm border-t border-border/50">
+          <div className="py-fluid-sm border-t border-white/10">
             <nav className="flex flex-col space-y-fluid-xs">
               {navigation.map((item, index) => {
                 const isActive = pathname === item.href
@@ -105,10 +105,10 @@ export default function Header() {
                     aria-current={isActive ? "page" : undefined}
                     className={`font-inter px-fluid-sm py-fluid-sm rounded-lg transition-all duration-300 transform ${
                       isActive
-                        ? "text-primary font-light bg-primary/10 translate-x-2"
+                        ? "text-blue-400 font-light bg-blue-500/20 translate-x-2"
                         : isContact
                         ? "text-white font-light bg-primary hover:bg-primary/90 hover:translate-x-1"
-                        : "text-foreground font-light hover:text-primary hover:bg-primary/5 hover:translate-x-1"
+                        : "text-gray-300 font-light hover:text-white hover:bg-white/10 hover:translate-x-1"
                     }`}
                     style={{
                       transitionDelay: `${index * 50}ms`,

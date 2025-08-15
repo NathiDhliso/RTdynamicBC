@@ -233,7 +233,7 @@ const HeroSection = () => {
   }, [isMobile])
 
   return (
-    <section ref={heroRef} className="relative h-screen overflow-hidden" suppressHydrationWarning>
+    <section ref={heroRef} className="relative h-screen" suppressHydrationWarning>
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">

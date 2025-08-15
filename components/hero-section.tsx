@@ -153,7 +153,8 @@ const HeroSection = () => {
     console.log('🔵 MOBILE: Setting initial states with hardware acceleration')
     gsap.set(elements, {
       opacity: 0,
-      y: 20, // Reduced movement for better performance
+      y: 40, // Increased movement for more noticeable animation
+      scale: 0.9, // Add scale for more dramatic effect
       willChange: "transform, opacity" // Hint to browser for optimization
     })
     
@@ -172,7 +173,7 @@ const HeroSection = () => {
           console.log('🟡 MOBILE: ScrollTrigger refresh, scroll position:', window.scrollY)
           if (window.scrollY < 50) {
             console.log('🟢 MOBILE: Near top of page, making elements visible')
-            gsap.set(elements, { opacity: 1, y: 0 })
+            gsap.set(elements, { opacity: 1, y: 0, scale: 1 })
           }
         },
         onEnter: () => {
@@ -181,15 +182,16 @@ const HeroSection = () => {
       },
     })
     
-    console.log('🔵 MOBILE: Adding optimized animations to timeline')
-    // Faster, simpler animations for mid-tier devices
+    console.log('🔵 MOBILE: Adding enhanced animations to timeline')
+    // More noticeable animations for better user experience
     mobileTimeline
       .to([titleRef.current, subtitleRef.current, ctaRef.current], { 
         opacity: 1, 
         y: 0, 
-        duration: 0.8, // Faster duration
-        stagger: 0.15, // Reduced stagger
-        ease: "power1.out", // Simpler easing
+        scale: 1, // Animate scale back to normal
+        duration: 1.2, // Longer duration for more noticeable effect
+        stagger: 0.25, // Increased stagger for better visual flow
+        ease: "power2.out", // More dramatic easing
         force3D: true,
         onStart: () => console.log('🟢 MOBILE: Text elements animation started'),
         onComplete: () => console.log('🟢 MOBILE: Text elements animation completed')
@@ -198,12 +200,12 @@ const HeroSection = () => {
         opacity: 1, 
         y: 0, 
         scale: 1,
-        duration: 0.6, // Faster duration
-        ease: "power1.out", // Simpler easing for better performance
+        duration: 1.0, // Longer duration for more noticeable effect
+        ease: "back.out(1.7)", // Bouncy easing for more dramatic effect
         force3D: true,
         onStart: () => console.log('🟢 MOBILE: Logo animation started'),
         onComplete: () => console.log('🟢 MOBILE: Logo animation completed')
-      }, "-=0.6")
+      }, "-=0.8")
     
     // Add gentle pulse effect for logo (performance optimized)
     const logoPulse = gsap.to(logoRef.current, {
@@ -228,7 +230,7 @@ const HeroSection = () => {
       
       if (currentScroll < 100) {
         console.log('🟢 MOBILE: User is at top, triggering immediate visibility')
-        gsap.set(elements, { opacity: 1, y: 0, force3D: true })
+        gsap.set(elements, { opacity: 1, y: 0, scale: 1, force3D: true })
       }
     }, 200) // Reduced timeout for faster response
   }, [])

@@ -199,25 +199,30 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
   const handleCardHover = (serviceId: string) => {
     if (typeof window !== "undefined" && window.gsap) {
       const gsap = window.gsap
-
-      gsap.to(`[data-service="${serviceId}"]`, {
-        y: -4,
-        duration: 0.3,
-        ease: "power2.out",
-      })
+      const targetElement = document.querySelector(`[data-service="${serviceId}"]`)
+      
+      if (targetElement) {
+        gsap.to(`[data-service="${serviceId}"]`, {
+          y: -4,
+          duration: 0.3,
+          ease: "power2.out",
+        })
+      }
     }
   }
 
   const handleCardLeave = () => {
-
     if (typeof window !== "undefined" && window.gsap) {
       const gsap = window.gsap
-
-      gsap.to(".service-card", {
-        y: 0,
-        duration: 0.3,
-        ease: "power2.out",
-      })
+      const serviceCards = document.querySelectorAll(".service-card")
+      
+      if (serviceCards.length > 0) {
+        gsap.to(".service-card", {
+          y: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        })
+      }
     }
   }
 

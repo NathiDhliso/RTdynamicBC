@@ -131,23 +131,28 @@ export default function AboutContent() {
         },
       )
 
-      // Team animation
-      gsap.fromTo(
-        ".team-card",
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.3,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: teamRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
+      // Team animation - with element existence check
+      const teamCards = document.querySelectorAll(".team-card")
+      if (teamCards.length > 0) {
+        gsap.fromTo(
+          ".team-card",
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.3,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: teamRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
           },
-        },
-      )
+        )
+      } else {
+        console.log('Team cards not found, skipping team animation')
+      }
 
       return () => {
         ScrollTrigger.getAll().forEach((trigger) => trigger.kill())

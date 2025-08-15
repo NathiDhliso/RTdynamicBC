@@ -53,20 +53,23 @@ const HeroSection = () => {
   // Reliable GSAP detection with timeout fallback
   const waitForGSAP = useCallback((): Promise<GSAPInstance | null> => {
     return new Promise((resolve) => {
-      const maxAttempts = 50 // 5 seconds max wait
+      const maxAttempts = 100 // Extended to 20 seconds max wait (more permissive)
       let attempts = 0
       
-      console.log('⏳ GSAP WAIT: Starting GSAP detection')
+      console.log('⏳ GSAP WAIT: Starting extended GSAP detection (more permissive)')
       
       const checkGSAP = () => {
         attempts++
         
-        console.log(`⏳ GSAP WAIT: Attempt ${attempts}/${maxAttempts}`)
-        console.log('⏳ GSAP WAIT: Current state:', {
-          windowExists: typeof window !== "undefined",
-          gsapExists: typeof window !== "undefined" && !!window.gsap,
-          scrollTriggerExists: typeof window !== "undefined" && !!window.ScrollTrigger
-        })
+        // Reduce logging frequency to avoid spam
+        if (attempts % 5 === 0 || attempts <= 3) {
+          console.log(`⏳ GSAP WAIT: Attempt ${attempts}/${maxAttempts}`)
+          console.log('⏳ GSAP WAIT: Current state:', {
+            windowExists: typeof window !== "undefined",
+            gsapExists: typeof window !== "undefined" && !!window.gsap,
+            scrollTriggerExists: typeof window !== "undefined" && !!window.ScrollTrigger
+          })
+        }
         
         if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
           console.log(`✅ GSAP WAIT: GSAP loaded successfully after ${attempts} attempts`)
@@ -75,12 +78,13 @@ const HeroSection = () => {
         }
         
         if (attempts >= maxAttempts) {
-          console.warn('❌ GSAP WAIT: GSAP failed to load within timeout period')
+          console.warn('❌ GSAP WAIT: GSAP failed to load within extended timeout period')
           resolve(null)
           return
         }
         
-        setTimeout(checkGSAP, 100)
+        // Increased interval to 200ms for less aggressive checking
+        setTimeout(checkGSAP, 200)
       }
       
       checkGSAP()
@@ -500,9 +504,9 @@ const HeroSection = () => {
     }
   }, [isMobile, animationsInitialized, waitForGSAP, prefersReducedMotion, setElementsVisible, setupMobileAnimations, setupDesktopAnimations])
 
-  // Initialize animations on mount and when dependencies change
+  // Initialize animations on mount and when dependencies change - More permissive approach
   useEffect(() => {
-    console.log('🎯 EFFECT: Main useEffect triggered')
+    console.log('🎯 EFFECT: Main useEffect triggered (permissive mode)')
     console.log('🎯 EFFECT: Dependencies:', { isMobile, animationsInitialized })
     
     setGsapReady(typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
@@ -510,12 +514,12 @@ const HeroSection = () => {
     
     // Only run setup if animations haven't been initialized yet
     if (!animationsInitialized) {
-      console.log('🎯 EFFECT: Setting up animations (not initialized yet)')
-      // Small delay to ensure DOM is fully ready
+      console.log('🎯 EFFECT: Setting up animations with extended timing (not initialized yet)')
+      // Extended delay to be more permissive with DOM readiness
       const timeoutId = setTimeout(() => {
-        console.log('🎯 EFFECT: Timeout reached, calling setupAnimations')
+        console.log('🎯 EFFECT: Extended timeout reached, calling setupAnimations')
         setupAnimations()
-      }, 100)
+      }, 500) // Increased from 100ms to 500ms for more permissive timing
       
       return () => {
         console.log('🧹 EFFECT: Cleanup called (timeout version)')
@@ -529,23 +533,42 @@ const HeroSection = () => {
     }
   }, [isMobile, animationsInitialized, setupAnimations]) // Removed cleanupAnimations from deps to prevent loop
 
-  // Fallback visibility on mount (prevents invisible content)
+  // Fallback visibility on mount (prevents invisible content) - More permissive timing
   useEffect(() => {
-    console.log('🚨 FALLBACK EFFECT: Setting up fallback timeout')
+    console.log('🚨 FALLBACK EFFECT: Setting up extended fallback timeout')
     const fallbackTimeout = setTimeout(() => {
-      if (!animationsInitialized) {
-        console.log('🚨 FALLBACK: 3 seconds passed, animations not initialized - ensuring elements are visible')
+      // Check current state of animationsInitialized and GSAP availability
+      const gsapReady = typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger
+      if (!animationsInitialized && !gsapReady) {
+        console.log('🚨 FALLBACK: 8 seconds passed, animations/GSAP not ready - ensuring elements are visible')
         setElementsVisible()
+      } else if (!animationsInitialized && gsapReady) {
+        console.log('⏳ FALLBACK: GSAP ready but animations not initialized yet - giving more time')
+        // Give additional time if GSAP is ready but animations haven't initialized
+        const extendedTimeout = setTimeout(() => {
+          if (!animationsInitialized) {
+            console.log('🚨 FALLBACK: Extended timeout reached - ensuring elements are visible')
+            setElementsVisible()
+          }
+        }, 5000) // Additional 5 seconds
+        return () => clearTimeout(extendedTimeout)
       } else {
         console.log('✅ FALLBACK: Animations are initialized, no fallback needed')
       }
-    }, 3000) // 3 second fallback
+    }, 8000) // Extended to 8 second fallback for more permissive timing
     
     return () => {
       console.log('🚨 FALLBACK EFFECT: Clearing fallback timeout')
       clearTimeout(fallbackTimeout)
     }
-  }, []) // Remove dependencies to prevent re-creation
+  }, [animationsInitialized, setElementsVisible]) // Add dependencies to track state changes
+
+  // Clear fallback timeout when animations are initialized
+  useEffect(() => {
+    if (animationsInitialized) {
+      console.log('✅ FALLBACK: Animations initialized, fallback no longer needed')
+    }
+  }, [animationsInitialized])
 
   // Handle window resize
   useEffect(() => {

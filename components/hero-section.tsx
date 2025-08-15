@@ -514,9 +514,16 @@ const HeroSection = () => {
     setGsapReady(typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
     console.log('🎯 EFFECT: GSAP ready state:', typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
     
+    // Wait for mobile detection to complete before setting up animations
+    if (isMobile === undefined) {
+      console.log('🎯 EFFECT: Mobile detection not complete yet, waiting...')
+      return
+    }
+    
     // Only run setup if animations haven't been initialized yet
     if (!animationsInitialized) {
       console.log('🎯 EFFECT: Setting up animations with extended timing (not initialized yet)')
+      console.log('🎯 EFFECT: Mobile device detected:', isMobile)
       // Extended delay to be more permissive with DOM readiness
       const timeoutId = setTimeout(() => {
         console.log('🎯 EFFECT: Extended timeout reached, calling setupAnimations')

@@ -312,6 +312,9 @@ export default function AboutContent() {
                 width={150}
                 height={60}
                 className="affiliation-item"
+                sizes="(max-width: 640px) 100px, (max-width: 1024px) 150px, 200px"
+                quality={85}
+                loading="lazy"
               />
             ))}
             {/* Duplicate set for seamless loop */}
@@ -323,6 +326,9 @@ export default function AboutContent() {
                 width={150}
                 height={60}
                 className="affiliation-item"
+                sizes="(max-width: 640px) 100px, (max-width: 1024px) 150px, 200px"
+                quality={85}
+                loading="lazy"
               />
             ))}
             {/* Third set for extra smoothness */}
@@ -334,6 +340,9 @@ export default function AboutContent() {
                 width={150}
                 height={60}
                 className="affiliation-item"
+                sizes="(max-width: 640px) 100px, (max-width: 1024px) 150px, 200px"
+                quality={85}
+                loading="lazy"
               />
             ))}
           </div>

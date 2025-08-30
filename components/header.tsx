@@ -31,6 +31,8 @@ export default function Header() {
                   fill
                   className="object-contain p-1 rounded-full"
                   priority
+                  sizes="(max-width: 640px) 40px, (max-width: 1024px) 44px, 48px"
+                  quality={90}
                 />
               </div>
               <span className="company-name-dynamic">

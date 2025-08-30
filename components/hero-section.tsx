@@ -50,45 +50,35 @@ const HeroSection = () => {
     cleanup: []
   })
 
-  // Reliable GSAP detection with timeout fallback
-  const waitForGSAP = useCallback((): Promise<GSAPInstance | null> => {
-    return new Promise((resolve) => {
-      const maxAttempts = 100 // Extended to 20 seconds max wait (more permissive)
-      let attempts = 0
+  // Dynamic GSAP loading for better performance
+  const loadGSAP = useCallback(async (): Promise<GSAPInstance | null> => {
+    try {
+      console.log('🔄 GSAP: Loading GSAP dynamically for better performance')
       
-      console.log('⏳ GSAP WAIT: Starting extended GSAP detection (more permissive)')
-      
-      const checkGSAP = () => {
-        attempts++
-        
-        // Reduce logging frequency to avoid spam
-        if (attempts % 5 === 0 || attempts <= 3) {
-          console.log(`⏳ GSAP WAIT: Attempt ${attempts}/${maxAttempts}`)
-          console.log('⏳ GSAP WAIT: Current state:', {
-            windowExists: typeof window !== "undefined",
-            gsapExists: typeof window !== "undefined" && !!window.gsap,
-            scrollTriggerExists: typeof window !== "undefined" && !!window.ScrollTrigger
-          })
-        }
-        
-        if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-          console.log(`✅ GSAP WAIT: GSAP loaded successfully after ${attempts} attempts`)
-          resolve({ gsap: window.gsap, ScrollTrigger: window.ScrollTrigger })
-          return
-        }
-        
-        if (attempts >= maxAttempts) {
-          console.warn('❌ GSAP WAIT: GSAP failed to load within extended timeout period')
-          resolve(null)
-          return
-        }
-        
-        // Increased interval to 200ms for less aggressive checking
-        setTimeout(checkGSAP, 200)
+      // Check if GSAP is already loaded from external scripts
+      if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
+        console.log('✅ GSAP: Already loaded from external scripts')
+        return { gsap: window.gsap, ScrollTrigger: window.ScrollTrigger }
       }
       
-      checkGSAP()
-    })
+      // Fallback to dynamic import if external scripts fail
+      console.log('🔄 GSAP: External scripts not available, using dynamic import')
+      const [gsapModule, scrollTriggerModule] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger')
+      ])
+      
+      const gsap = gsapModule.gsap || gsapModule.default
+      const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default
+      
+      gsap.registerPlugin(ScrollTrigger)
+      
+      console.log('✅ GSAP: Successfully loaded via dynamic import')
+      return { gsap, ScrollTrigger }
+    } catch (error) {
+      console.warn('❌ GSAP: Failed to load dynamically:', error)
+      return null
+    }
   }, [])
 
   // Note: Cleanup function removed as it was unused
@@ -442,9 +432,9 @@ const HeroSection = () => {
       return
     }
     
-    console.log('⏳ SETUP: Waiting for GSAP to be available...')
-    // Wait for GSAP to be available
-    const gsapInstance = await waitForGSAP()
+    console.log('⏳ SETUP: Loading GSAP dynamically...')
+    // Load GSAP dynamically
+    const gsapInstance = await loadGSAP()
     
     if (!gsapInstance) {
       console.warn('❌ SETUP: GSAP not available - falling back to visible elements')
@@ -474,7 +464,7 @@ const HeroSection = () => {
       setElementsVisible()
       setAnimationsInitialized(true)
     }
-  }, [animationsInitialized, waitForGSAP, prefersReducedMotion, setElementsVisible, setupResponsiveAnimations])
+  }, [isMobile, animationsInitialized, waitForGSAP, prefersReducedMotion, setElementsVisible, setupMobileAnimations, setupDesktopAnimations])
 
   // Initialize animations on mount and when dependencies change
   useEffect(() => {
@@ -484,9 +474,16 @@ const HeroSection = () => {
     setGsapReady(typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
     console.log('🎯 EFFECT: GSAP ready state:', typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
     
+    // Wait for mobile detection to complete before setting up animations
+    if (isMobile === undefined) {
+      console.log('🎯 EFFECT: Mobile detection not complete yet, waiting...')
+      return
+    }
+    
     // Only run setup if animations haven't been initialized yet
     if (!animationsInitialized) {
       console.log('🎯 EFFECT: Setting up animations with extended timing (not initialized yet)')
+      console.log('🎯 EFFECT: Mobile device detected:', isMobile)
       // Extended delay to be more permissive with DOM readiness
       const timeoutId = setTimeout(() => {
         console.log('🎯 EFFECT: Extended timeout reached, calling setupAnimations')
@@ -635,7 +632,9 @@ const HeroSection = () => {
                   alt="RT Dynamic Business Consulting Logo"
                   fill
                   className="object-contain p-6 rounded-full"
-                  priority // Ensure logo loads quickly
+                  priority
+                  sizes="(max-width: 640px) 160px, (max-width: 1024px) 180px, 200px"
+                  quality={90}
                 />
               </div>
             </div>

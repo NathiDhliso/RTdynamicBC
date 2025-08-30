@@ -1,6 +1,16 @@
+import dynamic from "next/dynamic"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import MultiStepQuestionnaire from "@/components/multi-step-questionnaire"
+
+// Dynamic import for lazy loading
+const MultiStepQuestionnaire = dynamic(() => import("@/components/multi-step-questionnaire"), {
+  loading: () => (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-pulse text-white">Loading questionnaire...</div>
+    </div>
+  ),
+  ssr: false // Complex form component, better to load client-side
+})
 
 export default function QuestionnairePage() {
   return (

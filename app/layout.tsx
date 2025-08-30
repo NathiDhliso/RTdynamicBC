@@ -4,6 +4,7 @@ import { Poppins, Inter, Outfit } from "next/font/google"
 import Script from "next/script"
 import LoadingSpinner from "@/components/loading-spinner"
 import PagePreloader from "@/components/page-preloader"
+import PerformanceMonitor from "@/components/performance-monitor"
 import "./globals.css"
 
 // Optimized font loading for better performance on low-end devices
@@ -48,21 +49,23 @@ export default function RootLayout({
       <body className="font-outfit antialiased bg-[color:var(--background)] text-[color:var(--foreground)] font-light" suppressHydrationWarning>
         <LoadingSpinner />
         <PagePreloader />
-        {/* Optimized GSAP loading for better performance */}
+        <PerformanceMonitor />
+        {/* Optimized GSAP loading - load with lower priority */}
         <Script
           src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script
           src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         {children}
         
-        {/* Google Maps Script */}
+        {/* Google Maps Script - only load when needed */}
         <Script
+          id="google-maps"
           src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyDxp1ePJB5-e8y_34ZnLkxb3tpCOKeuJmc&callback=initMap`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>

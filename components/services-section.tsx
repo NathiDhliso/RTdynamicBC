@@ -1,14 +1,18 @@
 "use client"
 
 import type React from "react"
+import dynamic from "next/dynamic"
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-
-
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { TrendingUp, Shield, Calculator, Users } from "lucide-react"
-import ServiceDetailsModal from "@/components/service-details-modal"
+
+// Dynamic import for code splitting
+const ServiceDetailsModal = dynamic(() => import("@/components/service-details-modal"), {
+  loading: () => <div className="animate-pulse bg-gray-800/50 rounded-lg p-4">Loading...</div>,
+  ssr: false
+})
 
 interface Service {
   id: string

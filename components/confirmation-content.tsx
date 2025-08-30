@@ -229,26 +229,26 @@ export default function ConfirmationContent() {
       </div>
 
       {/* Main Confirmation Section */}
-      <section className="py-20 relative z-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div ref={contentRef} className="text-center mb-20">
+      <section className="py-fluid-3xl relative z-10">
+        <div className="container-mobile-safe">
+          <div ref={contentRef} className="text-center mb-fluid-3xl">
             {/* Success Icon */}
-            <div className="success-icon w-28 h-28 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-12 shadow-2xl relative">
+            <div className="success-icon w-28 h-28 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-fluid-xl shadow-2xl relative">
               <CheckCircle className="h-20 w-20 text-white" />
               <div className="absolute inset-0 bg-green-400/30 rounded-full animate-ping" />
             </div>
 
             {/* Main Message */}
-            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-8 bg-gradient-to-r from-gray-900 via-primary to-gray-900 bg-clip-text text-transparent">
+            <h1 className="font-poppins font-light text-fluid-5xl md:text-fluid-6xl text-gray-900 mb-fluid-lg bg-gradient-to-r from-gray-900 via-primary to-gray-900 bg-clip-text text-transparent">
               {formDetails.title}
             </h1>
-            <h2 className="font-poppins font-light text-fluid-2xl text-primary mb-10">{formDetails.subtitle}</h2>
-            <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-relaxed mb-12">
+            <h2 className="font-poppins font-light text-fluid-2xl text-primary mb-fluid-lg">{formDetails.subtitle}</h2>
+            <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-relaxed mb-fluid-xl">
               {formDetails.description}
             </p>
 
             {/* Reference Number */}
-            <div className="inline-flex items-center glassmorphism rounded-full px-8 py-4 mb-16 shadow-lg">
+            <div className="inline-flex items-center glassmorphism rounded-full px-fluid-lg py-fluid-sm mb-fluid-2xl shadow-lg">
               <FileText className="h-6 w-6 text-primary mr-3" />
               <span className="font-inter text-fluid-base text-gray-700">
                 Reference ID: <span className="font-light text-primary">RTD-{Date.now().toString().slice(-6)}</span>
@@ -256,11 +256,11 @@ export default function ConfirmationContent() {
             </div>
 
             {/* Trust Indicators */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mb-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-fluid-lg mb-fluid-3xl">
               {trustIndicators.map((indicator, index) => {
                 const IconComponent = indicator.icon
                 return (
-                  <div key={index} className="trust-indicator flex items-center justify-center space-x-3 mb-6 md:mb-0">
+                  <div key={index} className="trust-indicator flex items-center justify-center gap-fluid-sm mb-fluid-md md:mb-0">
                     <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                       <IconComponent className="h-5 w-5 text-primary" />
                     </div>
@@ -275,13 +275,13 @@ export default function ConfirmationContent() {
           </div>
 
           {/* Next Steps */}
-          <div ref={stepsRef} className="mb-20">
-            <h3 className="font-poppins font-light text-fluid-4xl text-gray-900 text-center mb-4">What Happens Next?</h3>
-            <p className="font-inter text-fluid-lg text-gray-600 text-center mb-16 max-w-3xl mx-auto">
+          <div ref={stepsRef} className="mb-fluid-3xl">
+            <h3 className="font-poppins font-light text-fluid-4xl text-gray-900 text-center mb-fluid-sm">What Happens Next?</h3>
+            <p className="font-inter text-fluid-lg text-gray-600 text-center mb-fluid-2xl max-w-3xl mx-auto">
               Our proven process ensures you receive the highest quality service and results. Here&apos;s your personalized
               roadmap:
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-fluid-lg">
               {nextSteps.map((step, index) => {
                 const IconComponent = step.icon
                 return (
@@ -293,22 +293,22 @@ export default function ConfirmationContent() {
                       className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
                     />
 
-                    <CardContent className="p-8 relative z-10">
+                    <CardContent className="p-fluid-lg relative z-10">
                       <div
-                        className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                        className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-fluid-md shadow-lg group-hover:scale-110 transition-transform duration-300`}
                       >
                         <IconComponent className="h-10 w-10 text-white" />
                       </div>
-                      <div className="flex items-center justify-center mb-6">
+                      <div className="flex items-center justify-center mb-fluid-md">
                         <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center text-fluid-base font-light mr-4 shadow-lg">
                           {index + 1}
                         </div>
                         <h4 className="font-poppins font-light text-fluid-xl text-gray-900">{step.title}</h4>
                       </div>
-                      <p className="font-inter text-gray-600 leading-relaxed mb-6 text-fluid-base">
+                      <p className="font-inter text-gray-600 leading-relaxed mb-fluid-md text-fluid-base">
                         {step.description}
                       </p>
-                      <div className="inline-flex items-center bg-blue-50 rounded-full px-6 py-3 shadow-sm">
+                      <div className="inline-flex items-center bg-blue-50 rounded-full px-fluid-md py-fluid-sm shadow-sm">
                         <Clock className="h-4 w-4 text-primary mr-2" />
                         <span className="font-inter text-fluid-sm text-primary font-light">{step.timeline}</span>
                       </div>
@@ -322,14 +322,14 @@ export default function ConfirmationContent() {
           {/* Price estimate removed from customer view - only visible in email to business */}
 
           {/* Contact Methods */}
-          <div className="mb-20">
-            <h3 className="font-poppins font-thin text-fluid-4xl text-gray-900 text-center mb-4">
+          <div className="mb-fluid-3xl">
+            <h3 className="font-poppins font-thin text-fluid-4xl text-gray-900 text-center mb-fluid-sm">
               Need Immediate Assistance?
             </h3>
-            <p className="font-inter text-fluid-lg text-gray-600 description-center-dynamic mb-16">
+            <p className="font-inter text-fluid-lg text-gray-600 description-center-dynamic mb-fluid-2xl">
               Don&apos;t wait for our response. Our team is standing by to help you with any questions or urgent needs.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-fluid-lg">
               {contactMethods.map((method, index) => {
                 const IconComponent = method.icon
                 return (
@@ -341,10 +341,10 @@ export default function ConfirmationContent() {
                       className={`absolute inset-0 bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
                     />
 
-                    <CardContent className="p-8 relative z-10">
-                      <div className="flex items-center mb-6">
+                    <CardContent className="p-fluid-lg relative z-10">
+                      <div className="flex items-center mb-fluid-md">
                         <div
-                          className={`w-16 h-16 bg-gradient-to-br ${method.color} rounded-xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                          className={`w-16 h-16 bg-gradient-to-br ${method.color} rounded-xl flex items-center justify-center mr-fluid-md group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                         >
                           <IconComponent className="h-8 w-8 text-white" />
                         </div>
@@ -369,12 +369,12 @@ export default function ConfirmationContent() {
 
           {/* Navigation Options */}
           <div className="text-center">
-            <h3 className="font-poppins font-thin text-fluid-3xl text-gray-900 mb-8">Continue Your Journey</h3>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <h3 className="font-poppins font-thin text-fluid-3xl text-gray-900 mb-fluid-lg">Continue Your Journey</h3>
+            <div className="flex flex-col sm:flex-row gap-fluid-md justify-center items-center">
               <Button
                 asChild
                 size="lg"
-                className="btn-primary font-inter font-light text-fluid-lg px-10 py-4 transition-all duration-500 transform hover:scale-105 group"
+                className="btn-primary font-inter font-light text-fluid-lg px-fluid-xl py-fluid-sm transition-all duration-500 transform hover:scale-105 group"
               >
                 <Link href="/">
                   <Home className="mr-3 h-6 w-6" />
@@ -387,7 +387,7 @@ export default function ConfirmationContent() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="font-inter font-light text-fluid-lg px-10 py-4 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-500 transform hover:scale-105 bg-transparent group glassmorphism"
+                className="font-inter font-light text-fluid-lg px-fluid-xl py-fluid-sm border-primary text-primary hover:bg-primary hover:text-white transition-all duration-500 transform hover:scale-105 bg-transparent group glassmorphism"
               >
                 <Link href="/about">
                   <Users className="mr-3 h-6 w-6" />
@@ -401,40 +401,40 @@ export default function ConfirmationContent() {
       </section>
 
       {/* Additional Information */}
-      <section className="py-20 bg-gray-900 text-white relative overflow-hidden">
+      <section className="py-fluid-3xl bg-gray-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl" />
         </div>
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h3 className="font-poppins font-thin text-fluid-3xl mb-12">Why Choose RT Dynamic Business Consulting?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left">
+        <div className="container-mobile-safe text-center relative z-10">
+          <h3 className="font-poppins font-thin text-fluid-3xl mb-fluid-xl">Why Choose RT Dynamic Business Consulting?</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-fluid-xl text-left">
             <div className="group">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center mb-fluid-md group-hover:scale-110 transition-transform duration-300">
                 <Shield className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-poppins font-light text-fluid-lg text-primary mb-4">Privacy & Security</h4>
+              <h4 className="font-poppins font-light text-fluid-lg text-primary mb-fluid-sm">Privacy & Security</h4>
               <p className="font-inter text-gray-300 leading-relaxed text-fluid-base">
                 Your business information is protected by enterprise-grade security and will never be shared with third
                 parties without your explicit consent.
               </p>
             </div>
             <div className="group">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-fluid-md group-hover:scale-110 transition-transform duration-300">
                 <Star className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-poppins font-light text-fluid-lg text-primary mb-4">No Obligation</h4>
+              <h4 className="font-poppins font-light text-fluid-lg text-primary mb-fluid-sm">No Obligation</h4>
               <p className="font-inter text-gray-300 leading-relaxed text-fluid-base">
                 Our initial consultation is completely free with no obligation to proceed. We&apos;re here to help you make
                 informed business decisions.
               </p>
             </div>
             <div className="group">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-fluid-md group-hover:scale-110 transition-transform duration-300">
                 <Clock className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-poppins font-light text-fluid-lg text-primary mb-4">Proven Results</h4>
+              <h4 className="font-poppins font-light text-fluid-lg text-primary mb-fluid-sm">Proven Results</h4>
               <p className="font-inter text-gray-300 leading-relaxed text-fluid-base">
                 Over 500+ businesses transformed with our strategic guidance. Join our community of successful
                 entrepreneurs and business leaders.

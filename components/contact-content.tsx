@@ -272,7 +272,7 @@ export default function ContactContent() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-md">
                       <div>
                         <Label htmlFor="email" className="font-inter font-light">
                           Email Address *
@@ -331,7 +331,7 @@ export default function ContactContent() {
                           "Tax Consulting",
                           "Business Consulting",
                         ].map((type) => (
-                          <div key={type} className="flex items-center space-x-fluid-lg">
+                          <div key={type} className="flex items-center space-x-fluid-sm">
                             <RadioGroupItem value={type} id={type} />
                             <Label htmlFor={type} className="font-inter">
                               {type}
@@ -368,7 +368,7 @@ export default function ContactContent() {
                       ) : (
                         <>
                           Send Message
-                          <Send className="ml-fluid-md h-5 w-5" />
+                          <Send className="ml-2 h-5 w-5" />
                         </>
                       )}
                     </Button>

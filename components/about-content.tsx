@@ -169,10 +169,7 @@ export default function AboutContent() {
             <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               About <span className="text-primary">RTDynamicBC</span>
             </h1>
-            <p className="font-inter text-fluid-xl text-gray-600 max-w-4xl mx-auto leading-fluid-relaxed text-spacing-comfortable">
-               We are a professional chartered accounting firm providing comprehensive accounting, auditing, taxation,
-               and business consulting services to help businesses achieve compliance, growth, and operational excellence.
-             </p>
+          
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl items-center">
@@ -282,9 +279,7 @@ export default function AboutContent() {
             <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
               Meet Our <span className="text-primary">Founders</span>
             </h2>
-            <p className="font-inter text-fluid-xl text-gray-600 max-w-3xl mx-auto text-center leading-fluid-relaxed text-spacing-comfortable">
-              With over 6 years of professional accounting experience each, our founders bring combined expertise in auditing, financial reporting, and business consulting to every client engagement.
-            </p>
+            
           </div>
           <div className="flex flex-col lg:flex-row justify-center items-center gap-8 max-w-6xl mx-auto">
             <RabelaniProfileCard />

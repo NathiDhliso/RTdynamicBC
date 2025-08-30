@@ -305,7 +305,7 @@ const MultiStepQuestionnaire = () => {
 
       case 2:
         return (
-          <div className="space-y-12">
+          <div className="space-y-fluid-xl">
             <div>
               <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">Do you have employees? *</Label>
               <RadioCardGroup
@@ -340,7 +340,7 @@ const MultiStepQuestionnaire = () => {
             )}
 
             <div>
-              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-8 block border-b border-gray-200 pb-4">
+              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">
                 Do you manage stock/inventory? *
               </Label>
               <RadioCardGroup
@@ -353,11 +353,11 @@ const MultiStepQuestionnaire = () => {
                 onValueChange={(value) => updateFormData("stockManagement", value)}
                 className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
-              {errors.stockManagement && <p className="text-red-500 text-fluid-sm mt-2">{errors.stockManagement}</p>}
+              {errors.stockManagement && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.stockManagement}</p>}
             </div>
 
             <div>
-              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-8 block border-b border-gray-200 pb-4">
+              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">
                 Do you deal in foreign currency? *
               </Label>
               <RadioCardGroup
@@ -370,16 +370,16 @@ const MultiStepQuestionnaire = () => {
                 onValueChange={(value) => updateFormData("foreignCurrency", value)}
                 className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
-              {errors.foreignCurrency && <p className="text-red-500 text-fluid-sm mt-2">{errors.foreignCurrency}</p>}
+              {errors.foreignCurrency && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.foreignCurrency}</p>}
             </div>
           </div>
         )
 
       case 3:
         return shouldShowStep3 ? (
-          <div className="space-y-12">
+          <div className="space-y-fluid-xl">
             <div>
-              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-8 block border-b border-gray-200 pb-4">Tax compliance complexity *</Label>
+              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">Tax compliance complexity *</Label>
               <RadioCardGroup
                 options={[
                   { value: "Simple", label: "Simple - Basic tax returns" },
@@ -390,11 +390,11 @@ const MultiStepQuestionnaire = () => {
                 onValueChange={(value) => updateFormData("taxCompliance", value)}
                 className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
-              {errors.taxCompliance && <p className="text-red-500 text-fluid-sm mt-2">{errors.taxCompliance}</p>}
+              {errors.taxCompliance && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.taxCompliance}</p>}
             </div>
 
             <div>
-              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-8 block border-b border-gray-200 pb-4">Audit requirements *</Label>
+              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">Audit requirements *</Label>
               <RadioCardGroup
                 options={[
                   { value: "Required", label: "Annual audit required" },
@@ -406,12 +406,12 @@ const MultiStepQuestionnaire = () => {
                 className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.auditRequirements && (
-                <p className="text-red-500 text-fluid-sm mt-2">{errors.auditRequirements}</p>
+                <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.auditRequirements}</p>
               )}
             </div>
 
             <div>
-              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-8 block border-b border-gray-200 pb-4">Regulatory reporting *</Label>
+              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">Regulatory reporting *</Label>
               <RadioCardGroup
                 options={[
                   { value: "Extensive", label: "Extensive reporting required" },
@@ -423,7 +423,7 @@ const MultiStepQuestionnaire = () => {
                 className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
               {errors.regulatoryReporting && (
-                <p className="text-red-500 text-fluid-sm mt-2">{errors.regulatoryReporting}</p>
+                <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.regulatoryReporting}</p>
               )}
             </div>
           </div>
@@ -431,9 +431,9 @@ const MultiStepQuestionnaire = () => {
 
       case 4:
         return (
-          <div className="space-y-12">
+          <div className="space-y-fluid-xl">
             <div>
-              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-8 block border-b border-gray-200 pb-4">Primary Goal *</Label>
+              <Label className="font-poppins font-light text-fluid-2xl text-gray-900 mb-fluid-lg block border-b border-gray-200 pb-fluid-sm">Primary Goal *</Label>
               <RadioCardGroup
                 options={[
                   { value: "Reduce costs", label: "Reduce costs" },
@@ -446,7 +446,7 @@ const MultiStepQuestionnaire = () => {
                 onValueChange={(value) => updateFormData("primaryGoal", value)}
                 className="grid-cols-2 sm:grid-cols-2 lg:grid-cols-3"
               />
-              {errors.primaryGoal && <p className="text-red-500 text-fluid-sm mt-2">{errors.primaryGoal}</p>}
+              {errors.primaryGoal && <p className="text-red-500 text-fluid-sm mt-fluid-xs">{errors.primaryGoal}</p>}
             </div>
 
             <div>
@@ -543,7 +543,7 @@ const MultiStepQuestionnaire = () => {
 
         {/* Step Navigation */}
         <div className="flex justify-center mb-fluid-xl">
-          <div className="flex space-x-fluid-sm">
+          <div className="flex gap-fluid-sm">
             {steps.map((step) => {
               if (step.id === 3 && !shouldShowStep3) return null
 
@@ -592,19 +592,19 @@ const MultiStepQuestionnaire = () => {
             size="comfortable"
             className="font-inter font-light bg-transparent"
           >
-            <ArrowLeft className="mr-fluid-md h-4 w-4" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Previous
           </Button>
 
           {currentStep === 4 ? (
             <Button onClick={handleSubmit} size="spacious" className="btn-primary font-inter font-light" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Submit Application"}
-              <ArrowRight className="ml-fluid-md h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
             <Button onClick={handleNext} size="comfortable" className="btn-primary font-inter font-light">
               Next Step
-              <ArrowRight className="ml-fluid-md h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           )}
         </div>

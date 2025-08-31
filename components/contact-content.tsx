@@ -168,10 +168,10 @@ export default function ContactContent() {
       {/* Hero Section */}
       <section ref={heroRef} className="py-fluid-2xl bg-gradient-to-br from-blue-50 to-white">
         <div className="container-mobile-safe text-center">
-          <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+          <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-6xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable gsap-animation">
             Start the <span className="text-primary">Conversation</span>
           </h1>
-          <p className="font-inter text-fluid-lg md:text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
+          <p className="font-inter text-fluid-lg md:text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable gsap-animation">
             Whether you have a specific question or are ready to explore a strategic partnership, our team of Chartered Accountants is here to provide the guidance you need. Reach out to begin.
           </p>
         </div>
@@ -183,9 +183,9 @@ export default function ContactContent() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl">
             {/* Contact Form */}
             <div ref={formRef}>
-              <Card className="shadow-xl border-0">
+              <Card className="shadow-xl border-0 gsap-animation">
                 <CardHeader>
-                  <CardTitle className="font-poppins font-light text-fluid-2xl text-gray-900">Send Us a Message</CardTitle>
+                  <CardTitle className="font-poppins font-light text-fluid-2xl text-gray-900 gsap-animation">Send Us a Message</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-fluid-md">

@@ -68,7 +68,7 @@ const RabelaniProfileCard = () => {
   return (
     <div ref={cardRef} className="gsap-animation">
       <motion.div 
-        className="relative w-96 h-[28rem] cursor-pointer"
+        className="relative w-full max-w-sm mx-auto h-[28rem] cursor-pointer" // Fixed: responsive width to prevent overflow
         style={{ perspective: "1000px" }}
         onClick={() => setIsFlipped(!isFlipped)}
         whileHover={{ y: -5 }}
@@ -76,14 +76,15 @@ const RabelaniProfileCard = () => {
       >
         <motion.div
           className="relative w-full h-full"
-          style={{ transformStyle: "preserve-3d" }}
+          style={{ 
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "hidden" // Fixed: prevent text rendering issues during flip
+          }}
           animate={{ rotateX: isFlipped ? 180 : 0 }}
           transition={{ 
-            duration: 0.8, 
-            ease: "easeInOut",
-            type: "spring",
-            stiffness: 100,
-            damping: 15
+            duration: 0.6, // Fixed: reduced duration for smoother animation
+            ease: [0.4, 0, 0.2, 1], // Fixed: custom cubic-bezier for smoother motion
+            type: "tween" // Fixed: changed from spring to tween for more predictable animation
           }}
         >
           {/* Front of Card */}
@@ -215,19 +216,7 @@ const RabelaniProfileCard = () => {
           </motion.div>
         </motion.div>
         
-        {/* Subtle blur effect during rotation */}
-        <motion.div
-          className="absolute inset-0 bg-black/10 backdrop-blur-sm rounded-lg pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ 
-            opacity: isFlipped ? [0, 0.3, 0] : [0, 0.3, 0]
-          }}
-          transition={{ 
-            duration: 0.8,
-            times: [0, 0.5, 1],
-            ease: "easeInOut"
-          }}
-        />
+        {/* Removed blur effect to prevent text jumbling during rotation */}
       </motion.div>
     </div>
   )

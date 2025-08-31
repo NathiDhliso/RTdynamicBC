@@ -528,16 +528,15 @@ const MultiStepQuestionnaire = () => {
   }
 
   return (
-    <section className="py-fluid-2xl bg-gradient-to-b from-gray-50 to-white min-h-screen flex items-center justify-center">
+    <section ref={sectionRef} className="py-fluid-2xl bg-gradient-to-b from-gray-50 to-white min-h-screen flex items-center justify-center">
       <div className="w-full max-w-4xl mx-auto container-mobile-safe">
         {/* Header */}
-        <div className="text-center mb-fluid-xl">
-          <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
+        <div className="text-center mb-fluid-xl gsap-animation">
+          <h1 className="font-poppins font-light text-fluid-4xl md:text-fluid-5xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable gsap-animation">
             Business Health <span className="text-primary">Check</span>
           </h1>
-          <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
--            Help us understand your business so we can provide you with a customized consultation and estimate.
-+            Answer a few questions about your business to receive a customized consultation and a clear path forward.
+          <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable gsap-animation">
+            Answer a few questions about your business to receive a customized consultation and a clear path forward.
           </p>
         </div>
 
@@ -582,12 +581,12 @@ const MultiStepQuestionnaire = () => {
         </div>
 
         {/* Form Content */}
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+        <Card ref={formRef} className="shadow-xl border-0 bg-white/80 backdrop-blur-sm gsap-animation">
           <CardHeader className="text-center pb-fluid-md">
-            <CardTitle className="font-poppins text-fluid-2xl text-gray-900">
+            <CardTitle className="font-poppins text-fluid-2xl text-gray-900 gsap-animation">
               {steps.find((s) => s.id === currentStep)?.title}
             </CardTitle>
-            <p className="font-inter text-fluid-base text-gray-600 mt-fluid-xs leading-fluid-relaxed text-spacing-comfortable">
+            <p className="font-inter text-fluid-base text-gray-600 mt-fluid-xs leading-fluid-relaxed text-spacing-comfortable gsap-animation">
               {steps.find((s) => s.id === currentStep)?.description}
             </p>
           </CardHeader>

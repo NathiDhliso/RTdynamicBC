@@ -136,14 +136,14 @@ export default function ContactContent() {
   // Google Maps initialization
   useEffect(() => {
     // Make initMap a global function so the script can call it
-    ;(window as any).initMap = () => {
+    window.initMap = () => {
       const mapElement = document.getElementById("map")
       if (mapElement) {
-        const map = new google.maps.Map(mapElement, {
+        const map = new (window as any).google.maps.Map(mapElement, {
           center: { lat: -25.993459, lng: 28.131355 }, // Coordinates for 1 Diagonal Street, Midrand
           zoom: 15,
         })
-        new google.maps.Marker({
+        new (window as any).google.maps.Marker({
           position: { lat: -25.993459, lng: 28.131355 },
           map: map,
           title: "RT Dynamic Business Consulting",
@@ -153,7 +153,7 @@ export default function ContactContent() {
 
     // If the script is already loaded, initialize the map
     if (window.google && window.google.maps) {
-      ;(window as any).initMap()
+      window.initMap?.()
     }
   }, [])
 

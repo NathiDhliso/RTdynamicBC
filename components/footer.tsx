@@ -42,15 +42,17 @@ export default function Footer() {
           <div className="md:w-1/2">
             <Link href="/" className="flex items-center mb-fluid-lg group">
               <div className="flex items-center space-x-fluid-sm">
-                <div className="w-12 h-12 relative transform group-hover:scale-110 transition-all duration-300 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg ring-2 ring-primary/30 group-hover:ring-primary/50 group-hover:shadow-xl">
+                <div className="w-12 h-12 relative transform gsap-animation rounded-full bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg ring-2 ring-primary/30">
                   <Image
                     src="/Logo.png"
                     alt="RT Dynamic Business Consulting Logo"
                     fill
                     className="object-contain p-1.5 rounded-full"
+                    sizes="48px"
+                    quality={90}
                   />
                 </div>
-                <span className="font-poppins font-thin text-fluid-xl text-white group-hover:text-primary transition-all duration-300 drop-shadow-lg group-hover:drop-shadow-xl">
+                <span className="font-poppins font-thin text-fluid-xl text-white gsap-animation drop-shadow-lg">
                   RT Dynamic Business Consulting
                 </span>
               </div>

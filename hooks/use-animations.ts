@@ -7,9 +7,12 @@ import {
   SCROLL_TRIGGER_CONFIGS, 
   ANIMATION_STYLES,
   getAnimationConfig,
+  getContinuousAnimationConfig,
   getScrollTriggerConfig,
   getAnimationStyle,
   getDeviceType,
+  getAnimationDeviceType,
+  prefersReducedMotion,
   applyHoverAnimations
 } from '@/lib/animations';
 
@@ -26,11 +29,11 @@ interface AnimationRefs {
 }
 
 interface UseAnimationsProps {
-  heroRef: React.RefObject<HTMLElement>;
-  titleRef: React.RefObject<HTMLElement>;
-  subtitleRef: React.RefObject<HTMLElement>;
-  ctaRef: React.RefObject<HTMLElement>;
-  logoRef: React.RefObject<HTMLElement>;
+  heroRef: React.RefObject<HTMLDivElement | null>;
+  titleRef: React.RefObject<HTMLHeadingElement | null>;
+  subtitleRef: React.RefObject<HTMLParagraphElement | null>;
+  ctaRef: React.RefObject<HTMLDivElement | null>;
+  logoRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const useAnimations = ({
@@ -42,7 +45,13 @@ export const useAnimations = ({
 }: UseAnimationsProps) => {
   const [gsapReady, setGsapReady] = useState(false);
   const [animationsInitialized, setAnimationsInitialized] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const animationRefs = useRef<AnimationRefs>({ cleanup: [] });
+
+  // Ensure client-side rendering detection
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Load GSAP dynamically
   const loadGSAP = useCallback(async (): Promise<GSAPInstance | null> => {
@@ -87,49 +96,25 @@ export const useAnimations = ({
 
   // Setup mobile animations
   const setupMobileAnimations = useCallback((gsap: any, ScrollTrigger: any) => {
-    console.log('📱 MOBILE: Setting up centralized mobile animations');
+    console.log('📱 MOBILE: Setting up optimized mobile animations');
     
-    const elements = [logoRef.current, titleRef.current, subtitleRef.current, ctaRef.current].filter(Boolean);
-    const deviceType = getDeviceType();
+    // Check for reduced motion preference
+    const reducedMotion = prefersReducedMotion();
+    if (reducedMotion) {
+      console.log('♿ ACCESSIBILITY: Reduced motion detected, using minimal animations');
+    }
     
-    // Get configurations - using direct object access to avoid import issues
-    const entranceConfig = deviceType === 'mobile' ? {
-      text: { duration: 0.8, ease: "back.out(1.7)", delay: 0.2, stagger: 0.15 },
-      logo: { duration: 1, ease: "elastic.out(1, 0.5)", delay: 0.6 }
-    } : {
-      text: { duration: 1.2, ease: "power2.out", stagger: 0.2 },
-      logo: { duration: 1, ease: "back.out(1.7)" }
-    };
+    // Get configurations using centralized utility functions
+    const entranceTextConfig = getAnimationConfig('entrance', 'mobile', 'text');
+    const entranceLogoConfig = getAnimationConfig('entrance', 'mobile', 'logo');
+    const scrollConfig = getAnimationConfig('scroll', 'mobile');
+    const scrollTriggerConfig = getScrollTriggerConfig('mobile');
+    const styles = getAnimationStyle('glow', 'mobile');
+    const transforms = getAnimationStyle('transforms', 'mobile');
     
-    const scrollConfig = deviceType === 'mobile' ? {
-      fadeOut: { duration: 1, ease: "power2.inOut", stagger: 0.1 },
-      logoTransform: { duration: 1.2, ease: "power2.inOut" }
-    } : {
-      fadeOut: { duration: 1.2, ease: "power2.inOut", stagger: 0.15 },
-      logoTransform: { duration: 1.8, ease: "back.inOut(1.2)" }
-    };
-    
-    // Continuous animation values now inline for reliability
-    
-    const scrollTriggerConfig = deviceType === 'mobile' ? {
-      trigger: '[data-hero-section]', start: 'top top', end: '+=80%', scrub: 1, pin: true, pinSpacing: false, toggleActions: 'play reverse play reverse'
-    } : {
-      trigger: '[data-hero-section]', start: 'top top', end: '+=100%', scrub: 0.5, pin: true, pinSpacing: false
-    };
-    
-    const styles = deviceType === 'mobile' ? {
-      boxShadow: '0 0 40px rgba(255, 255, 255, 0.8), 0 0 80px rgba(255, 255, 255, 0.4), 0 0 120px rgba(255, 255, 255, 0.2)'
-    } : {
-      boxShadow: '0 0 25px rgba(255, 255, 255, 0.4), 0 0 50px rgba(255, 255, 255, 0.25), 0 0 75px rgba(255, 255, 255, 0.15)'
-    };
-    
-    const transforms = deviceType === 'mobile' ? {
-      textFadeOut: { opacity: 0, y: -50, scale: 0.8 },
-      logoFadeOut: { scale: 0.3, y: -100, opacity: 0.7 }
-    } : {
-      textFadeOut: { opacity: 0, y: -80, scale: 0.9 },
-      logoTransform: { scale: 0.12, rotation: 360 }
-    };
+    // Get continuous animation configs (optimized for mobile)
+    const pulseConfig = getContinuousAnimationConfig('logoPulse', 'mobile');
+    const rotationConfig = getContinuousAnimationConfig('logoRotation', 'mobile');
 
     // Set initial states
     gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
@@ -145,111 +130,132 @@ export const useAnimations = ({
     });
 
     // Entrance animations
-    const entranceTimeline = gsap.timeline({ delay: entranceConfig.text.delay });
+    const entranceTimeline = gsap.timeline({ delay: entranceTextConfig.delay });
     
     entranceTimeline
       .to([titleRef.current, subtitleRef.current, ctaRef.current], {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: entranceConfig.text.duration,
-        stagger: entranceConfig.text.stagger,
-        ease: entranceConfig.text.ease
+        duration: entranceTextConfig.duration,
+        stagger: entranceTextConfig.stagger,
+        ease: entranceTextConfig.ease
       })
       .to(logoRef.current, {
         opacity: 1,
         scale: 1,
         rotation: 0,
-        duration: entranceConfig.logo.duration,
-        ease: entranceConfig.logo.ease
+        duration: entranceLogoConfig.duration,
+        ease: entranceLogoConfig.ease
       }, "-=0.4");
 
-    // Continuous animations - simplified for reliability
-    gsap.to(logoRef.current, {
-      boxShadow: styles.boxShadow,
-      duration: deviceType === 'mobile' ? 3 : 8,
-      ease: deviceType === 'mobile' ? "power2.inOut" : "power1.inOut",
-      yoyo: true,
-      repeat: -1
-    });
-
-    gsap.to(logoRef.current, {
-      rotation: 360,
-      duration: deviceType === 'mobile' ? 30 : 20,
-      ease: "none",
-      repeat: -1
-    });
-
-    // Scroll animations
-    const scrollTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: scrollTriggerConfig.start,
-        end: scrollTriggerConfig.end,
-        scrub: scrollTriggerConfig.scrub,
-        pin: scrollTriggerConfig.pin,
-        pinSpacing: scrollTriggerConfig.pinSpacing,
-        toggleActions: scrollTriggerConfig.toggleActions,
-        onRefresh: () => {
-          gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
-            opacity: 1,
-            y: 0,
-            scale: 1
-          });
-          gsap.set(logoRef.current, {
-            opacity: 1,
-            scale: 1,
-            y: 0
-          });
-        }
-      }
-    });
-
-    scrollTimeline
-      .to([titleRef.current, subtitleRef.current, ctaRef.current], {
-        ...transforms.textFadeOut,
-        duration: scrollConfig.fadeOut.duration,
-        stagger: scrollConfig.fadeOut.stagger,
-        ease: scrollConfig.fadeOut.ease
-      }, 0)
-      .to(logoRef.current, {
-        ...transforms.logoFadeOut,
-        duration: scrollConfig.logoTransform.duration,
-        ease: scrollConfig.logoTransform.ease
-      }, 0.2);
-
-    // Services animation
-    const servicesHeading = document.querySelector(".services-heading");
-    const servicesCards = document.querySelectorAll(".service-card");
-    
-    if (servicesHeading) {
-      gsap.set(servicesHeading, { opacity: 0, y: 40, scale: 0.9 });
-      scrollTimeline.to(servicesHeading, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        ease: "power2.out"
-      }, 0.6);
+    // Optimized continuous animations for mobile performance
+    if (!reducedMotion && pulseConfig.duration > 0) {
+      gsap.to(logoRef.current, {
+        boxShadow: styles.boxShadow,
+        duration: pulseConfig.duration,
+        ease: pulseConfig.ease,
+        yoyo: pulseConfig.yoyo,
+        repeat: pulseConfig.repeat // Limited repeats on mobile
+      });
     }
-    
-    if (servicesCards.length > 0) {
-      gsap.set(servicesCards, { opacity: 0, y: 40, scale: 0.9 });
-      scrollTimeline.to(servicesCards, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        ease: "power2.out",
-        stagger: 0.1
-      }, 0.8);
+
+    // Logo rotation disabled on mobile for performance
+    if (!reducedMotion && rotationConfig.duration > 0) {
+      gsap.to(logoRef.current, {
+        rotation: 360,
+        duration: rotationConfig.duration,
+        ease: rotationConfig.ease,
+        repeat: rotationConfig.repeat
+      });
+    }
+
+    // Scroll animations (disabled for reduced motion)
+    if (!reducedMotion && scrollTriggerConfig) {
+      const scrollTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: scrollTriggerConfig.start,
+          end: scrollTriggerConfig.end,
+          scrub: scrollTriggerConfig.scrub,
+          pin: scrollTriggerConfig.pin,
+          pinSpacing: scrollTriggerConfig.pinSpacing,
+          toggleActions: scrollTriggerConfig.toggleActions,
+          onRefresh: () => {
+            gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
+              opacity: 1,
+              y: 0,
+              scale: 1
+            });
+            gsap.set(logoRef.current, {
+              opacity: 1,
+              scale: 1,
+              y: 0
+            });
+          }
+        }
+      });
+
+      scrollTimeline
+        .to([titleRef.current, subtitleRef.current, ctaRef.current], {
+          ...transforms.textFadeOut,
+          duration: scrollConfig.fadeOut.duration,
+          stagger: scrollConfig.fadeOut.stagger,
+          ease: scrollConfig.fadeOut.ease
+        }, 0)
+        .to(logoRef.current, {
+          ...transforms.logoTransform,
+          x: () => {
+            const heroWidth = heroRef.current?.offsetWidth || window.innerWidth;
+            return -(heroWidth / 2) + 32 + 48;
+          },
+          y: () => {
+            const heroHeight = heroRef.current?.offsetHeight || window.innerHeight;
+            return -(heroHeight / 2) + 32 + 48;
+          },
+          duration: scrollConfig.logoTransform.duration,
+          ease: scrollConfig.logoTransform.ease
+        }, 0.2);
+
+      // Services animation (inside scroll timeline)
+      const servicesHeading = document.querySelector(".services-heading");
+      const servicesCards = document.querySelectorAll(".service-card");
+      
+      if (servicesHeading) {
+        gsap.set(servicesHeading, { opacity: 0, y: 40, scale: 0.9 });
+        scrollTimeline.to(servicesHeading, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out"
+        }, 0.6);
+      }
+      
+      if (servicesCards.length > 0) {
+        gsap.set(servicesCards, { opacity: 0, y: 40, scale: 0.9 });
+        scrollTimeline.to(servicesCards, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.1
+        }, 0.8);
+      }
     }
 
     // Setup hover animations for interactive elements
         const hoverCleanups = [
           ...applyHoverAnimations('.btn-primary', 'button'),
           ...applyHoverAnimations('.service-card', 'serviceCard'),
-          ...applyHoverAnimations('.service-card-icon', 'serviceIcon')
+          ...applyHoverAnimations('.service-card-icon', 'serviceIcon'),
+          ...applyHoverAnimations('nav a', 'navLink'),
+          ...applyHoverAnimations('button.gsap-animation', 'button'),
+          ...applyHoverAnimations('footer .gsap-animation', 'button'),
+          ...applyHoverAnimations('.next-step-card', 'serviceCard'),
+          ...applyHoverAnimations('.contact-method-card', 'serviceCard'),
+          ...applyHoverAnimations('.value-card', 'serviceCard')
         ];
         
         // Store cleanup functions
@@ -258,17 +264,25 @@ export const useAnimations = ({
         console.log('📱 MOBILE: Centralized animations with hover effects setup completed');
   }, [heroRef, titleRef, subtitleRef, ctaRef, logoRef]);
 
-  // Setup desktop animations
+  // Setup desktop animations (includes tablets)
   const setupDesktopAnimations = useCallback((gsap: any, ScrollTrigger: any) => {
-    console.log('💻 DESKTOP: Setting up centralized desktop animations');
+    console.log('💻 DESKTOP/TABLET: Setting up optimized desktop animations');
     
-    const deviceType = getDeviceType();
+    // Check for reduced motion preference
+    const reducedMotion = prefersReducedMotion();
+    if (reducedMotion) {
+      console.log('♿ ACCESSIBILITY: Reduced motion detected, using minimal animations');
+    }
     
-    const styles = deviceType === 'mobile' ? {
-      boxShadow: '0 0 40px rgba(255, 255, 255, 0.8), 0 0 80px rgba(255, 255, 255, 0.4), 0 0 120px rgba(255, 255, 255, 0.2)'
-    } : {
-      boxShadow: '0 0 25px rgba(255, 255, 255, 0.4), 0 0 50px rgba(255, 255, 255, 0.25), 0 0 75px rgba(255, 255, 255, 0.15)'
-    };
+    // Get configurations using centralized utility functions
+    const styles = getAnimationStyle('glow', 'desktop');
+    const transforms = getAnimationStyle('transforms', 'desktop');
+    const scrollConfig = getAnimationConfig('scroll', 'desktop');
+    const scrollTriggerConfig = getScrollTriggerConfig('desktop');
+    
+    // Get continuous animation configs
+    const pulseConfig = getContinuousAnimationConfig('logoPulse', 'desktop');
+    const rotationConfig = getContinuousAnimationConfig('logoRotation', 'desktop');
 
     // Set initial visible state
     gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
@@ -284,38 +298,28 @@ export const useAnimations = ({
       rotate: 0
     });
 
-    // Continuous animations - simplified for reliability
-    gsap.to(logoRef.current, {
-      boxShadow: styles.boxShadow,
-      duration: deviceType === 'mobile' ? 3 : 8,
-      ease: deviceType === 'mobile' ? "power2.inOut" : "power1.inOut",
-      yoyo: true,
-      repeat: -1
-    });
+    // Continuous animations for desktop/tablet
+    if (!reducedMotion && pulseConfig.duration > 0) {
+      gsap.to(logoRef.current, {
+        boxShadow: styles.boxShadow,
+        duration: pulseConfig.duration,
+        ease: pulseConfig.ease,
+        yoyo: pulseConfig.yoyo,
+        repeat: pulseConfig.repeat
+      });
+    }
 
-    // Desktop scroll animations (if viewport is tall enough)
-    if (window.innerHeight > 600) {
-      const scrollTriggerConfig = deviceType === 'mobile' ? {
-        trigger: '[data-hero-section]', start: 'top top', end: '+=80%', scrub: 1, pin: true, pinSpacing: false, toggleActions: 'play reverse play reverse'
-      } : {
-        trigger: '[data-hero-section]', start: 'top top', end: '+=100%', scrub: 0.5, pin: true, pinSpacing: false
-      };
-      
-      const scrollConfig = deviceType === 'mobile' ? {
-        fadeOut: { duration: 1, ease: "power2.inOut", stagger: 0.1 },
-        logoTransform: { duration: 1.2, ease: "power2.inOut" }
-      } : {
-        fadeOut: { duration: 1.2, ease: "power2.inOut", stagger: 0.15 },
-        logoTransform: { duration: 1.8, ease: "back.inOut(1.2)" }
-      };
-      
-      const transforms = deviceType === 'mobile' ? {
-        textFadeOut: { opacity: 0, y: -50, scale: 0.8 },
-        logoFadeOut: { scale: 0.3, y: -100, opacity: 0.7 }
-      } : {
-        textFadeOut: { opacity: 0, y: -80, scale: 0.9 },
-        logoTransform: { scale: 0.12, rotation: 360 }
-      };
+    if (!reducedMotion && rotationConfig.duration > 0) {
+      gsap.to(logoRef.current, {
+        rotation: 360,
+        duration: rotationConfig.duration,
+        ease: rotationConfig.ease,
+        repeat: rotationConfig.repeat
+      });
+    }
+
+    // Desktop/tablet scroll animations (motion not reduced)
+    if (!reducedMotion && scrollTriggerConfig) {
 
       const masterTimeline = gsap.timeline({
         scrollTrigger: {
@@ -329,7 +333,7 @@ export const useAnimations = ({
         }
       });
 
-      // Desktop scroll sequence
+      // Desktop/tablet scroll sequence
       masterTimeline
         .to(titleRef.current, {
           ...transforms.textFadeOut,
@@ -363,39 +367,74 @@ export const useAnimations = ({
           duration: scrollConfig.logoTransform.duration,
           ease: scrollConfig.logoTransform.ease
         }, 0.2);
+
+      // Services animation (inside scroll timeline)
+      const servicesHeading = document.querySelector(".services-heading");
+      const servicesCards = document.querySelectorAll(".service-card");
+      
+      if (servicesHeading) {
+        gsap.set(servicesHeading, { opacity: 0, y: 40, scale: 0.9 });
+        masterTimeline.to(servicesHeading, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out"
+        }, 0.6);
+      }
+      
+      if (servicesCards.length > 0) {
+        gsap.set(servicesCards, { opacity: 0, y: 40, scale: 0.9 });
+        masterTimeline.to(servicesCards, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.1
+        }, 0.8);
+      }
     }
 
     // Setup hover animations for interactive elements
     const hoverCleanups = [
       ...applyHoverAnimations('.btn-primary', 'button'),
       ...applyHoverAnimations('.service-card', 'serviceCard'),
-      ...applyHoverAnimations('.service-card-icon', 'serviceIcon')
+      ...applyHoverAnimations('.service-card-icon', 'serviceIcon'),
+      ...applyHoverAnimations('nav a', 'navLink'),
+      ...applyHoverAnimations('button.gsap-animation', 'button'),
+      ...applyHoverAnimations('footer .gsap-animation', 'button'),
+      ...applyHoverAnimations('.next-step-card', 'serviceCard'),
+      ...applyHoverAnimations('.contact-method-card', 'serviceCard'),
+      ...applyHoverAnimations('.value-card', 'serviceCard')
     ];
     
     // Store cleanup functions
     animationRefs.current.cleanup.push(...hoverCleanups);
     
-    console.log('💻 DESKTOP: Centralized animations with hover effects setup completed');
+    console.log('💻 DESKTOP/TABLET: Optimized animations with accessibility support completed');
   }, [heroRef, titleRef, subtitleRef, ctaRef, logoRef]);
 
   // Setup responsive animations
   const setupResponsiveAnimations = useCallback((gsap: any, ScrollTrigger: any) => {
-    console.log('🎯 RESPONSIVE: Setting up centralized responsive animations');
+    console.log('🎯 RESPONSIVE: Setting up optimized responsive animations with tablet support');
     
     const mm = gsap.matchMedia();
     animationRefs.current.matchMedia = mm;
 
-    // Mobile animations
+    // Mobile animations (phones only)
     mm.add("(max-width: 768px)", () => {
+      console.log('📱 MOBILE: Activating mobile-optimized animations');
       setupMobileAnimations(gsap, ScrollTrigger);
     });
 
-    // Desktop animations
+    // Desktop and tablet animations (tablets treated as desktop for better UX)
     mm.add("(min-width: 769px)", () => {
+      console.log('💻 DESKTOP/TABLET: Activating desktop animations for larger screens');
       setupDesktopAnimations(gsap, ScrollTrigger);
     });
     
-    console.log('🎯 RESPONSIVE: Centralized responsive animations setup completed');
+    console.log('🎯 RESPONSIVE: Optimized responsive animations with accessibility and performance improvements completed');
   }, [setupMobileAnimations, setupDesktopAnimations]);
 
   // Main animation setup
@@ -432,6 +471,8 @@ export const useAnimations = ({
 
   // Initialize animations
   useEffect(() => {
+    if (!isClient) return; // Only run on client side
+    
     console.log('🎯 EFFECT: Centralized animation hook triggered');
     
     setGsapReady(typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger);
@@ -447,7 +488,7 @@ export const useAnimations = ({
       
       return () => clearTimeout(timeoutId);
     }
-  }, []);
+  }, [isClient, animationsInitialized, setupAnimations, setElementsVisible]);
 
   // Cleanup
   useEffect(() => {
@@ -462,6 +503,7 @@ export const useAnimations = ({
   return {
     gsapReady,
     animationsInitialized,
+    isClient,
     setupAnimations
   };
 };

@@ -15,7 +15,7 @@ const HeroSection = () => {
   const ctaRef = useRef<HTMLDivElement>(null)
   
   // Use centralized animation system
-  const { gsapReady, animationsInitialized } = useAnimations({
+  useAnimations({
     heroRef,
     titleRef,
     subtitleRef,
@@ -42,10 +42,11 @@ const HeroSection = () => {
         <div className="container-mobile-safe">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-xl items-center">
             {/* Left column: headline + subtext + CTAs */}
-            <div className="pb-16 md:pb-0">
+            <div className="pb-16 md:pb-0" suppressHydrationWarning>
               <h1
                 ref={titleRef}
                 className="gsap-animation font-outfit font-extralight text-fluid-4xl md:text-fluid-6xl text-white leading-fluid-snug mb-fluid-lg dynamic-text-spacing-loose"
+                style={{ opacity: 0, transform: 'translateY(30px) scale(0.95)' }}
                 suppressHydrationWarning
               >
                 Clarity in Complexity. Growth in Strategy.
@@ -53,13 +54,15 @@ const HeroSection = () => {
               <p
                 ref={subtitleRef}
                 className="gsap-animation font-inter font-light text-fluid-lg md:text-fluid-2xl text-white/90 max-w-xl leading-fluid-loose mb-fluid-xl dynamic-text-spacing"
+                style={{ opacity: 0, transform: 'translateY(30px) scale(0.95)' }}
                 suppressHydrationWarning
               >
-                We provide expert financial direction to navigate compliance, optimize cash flow, and unlock your business's true potential.
+                We provide expert financial direction to navigate compliance, optimize cash flow, and unlock your business&apos;s true potential.
               </p>
               <div 
                 ref={ctaRef} 
                 className="gsap-animation flex flex-col sm:flex-row gap-fluid-lg"
+                style={{ opacity: 0, transform: 'translateY(30px) scale(0.95)' }}
                 suppressHydrationWarning
               >
                 <Button asChild size="spacious" className="btn-primary font-inter font-light">
@@ -75,11 +78,13 @@ const HeroSection = () => {
             </div>
 
             {/* Right column: rotating logo */}
-            <div className="flex justify-center md:justify-end">
+            <div className="flex justify-center md:justify-end" suppressHydrationWarning>
               <div 
                 ref={logoRef} 
                 className="gsap-animation w-40 h-40 relative rounded-full flex items-center justify-center" 
                 style={{
+                  opacity: 0,
+                  transform: 'scale(0.8) rotate(-10deg)',
                   boxShadow: '0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.1)'
                 }}
                 suppressHydrationWarning

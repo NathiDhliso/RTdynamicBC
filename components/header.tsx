@@ -52,7 +52,7 @@ export default function Header() {
                   href={item.href}
                   prefetch={true} // Enable prefetching for instant navigation
                   aria-current={isActive ? "page" : undefined}
-                  className={`font-inter px-fluid-md py-fluid-sm rounded-lg transition-all duration-300 relative group whitespace-nowrap dynamic-text-spacing ${
+                  className={`font-inter px-fluid-md py-fluid-sm rounded-lg gsap-animation relative group whitespace-nowrap dynamic-text-spacing ${
                     isActive
                       ? "text-blue-400 font-light bg-blue-500/20"
                       : isContact
@@ -64,7 +64,7 @@ export default function Header() {
                   {isActive && (
                     <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-400 rounded-full" />
                   )}
-                  <div className="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+                  <div className="absolute inset-0 bg-white/10 rounded-lg scale-0 gsap-animation -z-10" />
                 </Link>
               )
             })}
@@ -72,7 +72,7 @@ export default function Header() {
 
           {/* Mobile menu button - optimized for low-end devices */}
           <button
-            className="md:hidden p-fluid-xs rounded-lg hover:bg-white/10 transition-colors duration-200 touch-manipulation"
+            className="md:hidden p-fluid-xs rounded-lg hover:bg-white/10 gsap-animation touch-manipulation"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             onTouchStart={() => {}} // Improve touch responsiveness
             style={{

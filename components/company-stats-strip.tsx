@@ -94,7 +94,7 @@ const CompanyStatsStrip = () => {
             return (
               <motion.div
                 key={index}
-                className="stat-item text-center p-fluid-md bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className="stat-item text-center p-fluid-md bg-white rounded-xl shadow-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

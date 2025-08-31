@@ -287,7 +287,7 @@ export default function ConfirmationContent() {
                 return (
                   <Card
                     key={index}
-                    className="next-step-card text-center border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white relative overflow-hidden group"
+                    className="next-step-card text-center border-0 shadow-xl gsap-animation bg-white relative overflow-hidden group"
                   >
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
@@ -295,7 +295,7 @@ export default function ConfirmationContent() {
 
                     <CardContent className="p-fluid-lg relative z-10">
                       <div
-                        className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-fluid-md shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                        className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-fluid-md shadow-lg gsap-animation`}
                       >
                         <IconComponent className="h-10 w-10 text-white" />
                       </div>
@@ -335,7 +335,7 @@ export default function ConfirmationContent() {
                 return (
                   <Card
                     key={index}
-                    className="contact-method-card border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer group bg-white relative overflow-hidden"
+                    className="contact-method-card border-0 shadow-xl gsap-animation cursor-pointer group bg-white relative overflow-hidden"
                   >
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
@@ -344,7 +344,7 @@ export default function ConfirmationContent() {
                     <CardContent className="p-fluid-lg relative z-10">
                       <div className="flex items-center mb-fluid-md">
                         <div
-                          className={`w-16 h-16 bg-gradient-to-br ${method.color} rounded-xl flex items-center justify-center mr-fluid-md group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                          className={`w-16 h-16 bg-gradient-to-br ${method.color} rounded-xl flex items-center justify-center mr-fluid-md gsap-animation shadow-lg`}
                         >
                           <IconComponent className="h-8 w-8 text-white" />
                         </div>
@@ -355,10 +355,10 @@ export default function ConfirmationContent() {
                       </div>
                       <Link
                         href={method.href}
-                        className="font-inter text-primary font-light hover:text-primary/80 transition-colors duration-300 flex items-center text-fluid-base group-hover:translate-x-1 transition-transform duration-300"
+                        className="font-inter text-primary font-light gsap-animation flex items-center text-fluid-base"
                       >
                         {method.action}
-                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                        <ArrowRight className="ml-2 h-5 w-5 gsap-animation" />
                       </Link>
                     </CardContent>
                   </Card>
@@ -374,12 +374,12 @@ export default function ConfirmationContent() {
               <Button
                 asChild
                 size="lg"
-                className="btn-primary font-inter font-light text-fluid-lg px-fluid-xl py-fluid-sm transition-all duration-500 transform hover:scale-105 group"
+                className="btn-primary font-inter font-light text-fluid-lg px-fluid-xl py-fluid-sm gsap-animation group"
               >
                 <Link href="/">
                   <Home className="mr-3 h-6 w-6" />
                   Return Home
-                  <ArrowRight className="ml-3 h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" />
+                  <ArrowRight className="ml-3 h-5 w-5 gsap-animation" />
                 </Link>
               </Button>
 
@@ -387,12 +387,12 @@ export default function ConfirmationContent() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="font-inter font-light text-fluid-lg px-fluid-xl py-fluid-sm border-primary text-primary hover:bg-primary hover:text-white transition-all duration-500 transform hover:scale-105 bg-transparent group glassmorphism"
+                className="font-inter font-light text-fluid-lg px-fluid-xl py-fluid-sm border-primary text-primary gsap-animation bg-transparent group glassmorphism"
               >
                 <Link href="/about">
                   <Users className="mr-3 h-6 w-6" />
                   Learn About Us
-                  <ArrowRight className="ml-3 h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" />
+                  <ArrowRight className="ml-3 h-5 w-5 gsap-animation" />
                 </Link>
               </Button>
             </div>
@@ -411,7 +411,7 @@ export default function ConfirmationContent() {
           <h3 className="font-poppins font-thin text-fluid-3xl mb-fluid-xl">Why Choose RT Dynamic Business Consulting?</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-fluid-xl text-left">
             <div className="group">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center mb-fluid-md group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center mb-fluid-md gsap-animation">
                 <Shield className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-poppins font-light text-fluid-lg text-primary mb-fluid-sm">Privacy & Security</h4>
@@ -421,7 +421,7 @@ export default function ConfirmationContent() {
               </p>
             </div>
             <div className="group">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-fluid-md group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-fluid-md gsap-animation">
                 <Star className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-poppins font-light text-fluid-lg text-primary mb-fluid-sm">No Obligation</h4>
@@ -431,7 +431,7 @@ export default function ConfirmationContent() {
               </p>
             </div>
             <div className="group">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-fluid-md group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-fluid-md gsap-animation">
                 <Clock className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-poppins font-light text-fluid-lg text-primary mb-fluid-sm">Proven Results</h4>

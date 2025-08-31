@@ -200,35 +200,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
     return null
   }
 
-  const handleCardHover = (serviceId: string) => {
-    if (typeof window !== "undefined" && window.gsap) {
-      const gsap = window.gsap
-      const targetElement = document.querySelector(`[data-service="${serviceId}"]`)
-      
-      if (targetElement) {
-        gsap.to(`[data-service="${serviceId}"]`, {
-          y: -4,
-          duration: 0.3,
-          ease: "power2.out",
-        })
-      }
-    }
-  }
-
-  const handleCardLeave = () => {
-    if (typeof window !== "undefined" && window.gsap) {
-      const gsap = window.gsap
-      const serviceCards = document.querySelectorAll(".service-card")
-      
-      if (serviceCards.length > 0) {
-        gsap.to(".service-card", {
-          y: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        })
-      }
-    }
-  }
+  // Removed custom hover handlers - now using centralized GSAP animation system
 
   const handleServiceSelect = (service: Service) => {
     setSelectedService(service)
@@ -259,10 +231,8 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                 <Card
                   key={service.id}
                   data-service={service.id}
-                  className="service-card group relative overflow-hidden border border-border shadow-lg hover:shadow-2xl transition-all duration-500 bg-card cursor-pointer h-full flex flex-col"
+                  className="service-card group relative overflow-hidden border border-border shadow-lg gsap-animation bg-card cursor-pointer h-full flex flex-col"
                   onClick={() => handleServiceSelect(service)}
-                  onMouseEnter={() => handleCardHover(service.id)}
-                  onMouseLeave={handleCardLeave}
                 >
                   <CardHeader className="text-center pb-fluid-md">
                     <div className="w-16 h-16 mx-auto mb-fluid-md bg-primary/10 rounded-full flex items-center justify-center">
@@ -287,7 +257,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                     <Button
                       variant="outline"
                       size="comfortable"
-                       className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors bg-transparent"
+                       className="w-full gsap-animation bg-transparent"
                     >
                       Learn More
                     </Button>

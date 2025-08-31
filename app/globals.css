@@ -593,11 +593,18 @@
     height: 2.5rem;
     position: relative;
     transform: scale(1);
-    transition: all 0.3s ease;
+    /* Transition disabled for GSAP-controlled elements */
+    transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     border-radius: 50%;
     background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, transparent), color-mix(in srgb, var(--primary) 5%, transparent));
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     border: 2px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  }
+  
+  /* Disable transitions for GSAP-controlled elements */
+  .gsap-animation .logo-container-dynamic,
+  .gsap-logo-element .logo-container-dynamic {
+    transition: none !important;
   }
   
   @media (min-width: 640px) {
@@ -615,9 +622,14 @@
   }
   
   .logo-container-dynamic:hover {
-    transform: scale(1.1);
+    /* Transform disabled for GSAP-controlled elements - handled by GSAP hover animations */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+  
+  /* Only apply transform hover for non-GSAP elements */
+  .logo-container-dynamic:not(.gsap-animation):not(.gsap-logo-element):hover {
+    transform: scale(1.1);
   }
 
   /* Dynamic company name */
@@ -625,11 +637,18 @@
     font-family: var(--font-outfit);
     font-weight: 200;
     color: var(--primary);
-    transition: all 0.3s ease;
+    /* Transition limited to avoid GSAP conflicts */
+    transition: color 0.3s ease, filter 0.3s ease;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
     letter-spacing: var(--letter-spacing-comfortable);
     line-height: var(--line-height-snug);
     font-size: var(--font-size-base);
+  }
+  
+  /* Disable transitions for GSAP-controlled elements */
+  .gsap-animation .company-name-dynamic,
+  .gsap-text-element .company-name-dynamic {
+    transition: none !important;
   }
   
   @media (min-width: 640px) {
@@ -673,24 +692,34 @@
     height: 60px;
     width: auto;
     max-width: 150px;
-    transition: all 0.3s ease;
+    /* Transition limited to avoid GSAP conflicts */
+    transition: filter 0.3s ease;
     filter: grayscale(100%) opacity(0.6);
     cursor: pointer;
   }
 
   .affiliation-item:hover {
     filter: grayscale(0%) opacity(1);
+  }
+  
+  /* Only apply transform hover for non-GSAP elements */
+  .affiliation-item:not(.gsap-animation):hover {
     transform: scale(1.1);
   }
 
   .affiliation-link {
     display: inline-block;
     flex-shrink: 0;
-    transition: all 0.3s ease;
+    /* Transition limited to avoid GSAP conflicts */
+    transition: filter 0.3s ease;
   }
 
   .affiliation-link:hover .affiliation-item {
     filter: grayscale(0%) opacity(1);
+  }
+  
+  /* Only apply transform hover for non-GSAP elements */
+  .affiliation-link:not(.gsap-animation):hover .affiliation-item:not(.gsap-animation) {
     transform: scale(1.1);
   }
 
@@ -922,6 +951,70 @@
   /* CSS animations and transitions are disabled above */
 }
 
+/* COMPREHENSIVE GSAP PROTECTION RULES */
+/* Prevent any CSS animations/transitions from interfering with GSAP */
+
+/* Disable all transitions for GSAP-controlled elements */
+.gsap-animation,
+.gsap-animation *,
+.gsap-text-element,
+.gsap-text-element *,
+.gsap-logo-element,
+.gsap-logo-element *,
+.gsap-cta-element,
+.gsap-cta-element * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Specific protection for common interactive elements */
+.gsap-animation button,
+.gsap-animation a,
+.gsap-animation .btn-primary,
+.gsap-animation .service-card,
+.gsap-animation .service-card-icon,
+.gsap-animation .logo-container-dynamic,
+.gsap-animation .company-name-dynamic,
+.gsap-animation .affiliation-item,
+.gsap-animation .affiliation-link {
+  transition: none !important;
+  animation: none !important;
+  transform-origin: center !important;
+}
+
+/* Ensure GSAP has full control over transforms */
+.gsap-animation,
+.gsap-text-element,
+.gsap-logo-element,
+.gsap-cta-element {
+  will-change: transform, opacity, scale !important;
+}
+
+/* Prevent CSS hover effects on GSAP elements */
+.gsap-animation:hover,
+.gsap-animation *:hover {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Future-proof protection for any new GSAP classes */
+[class*="gsap-"],
+[class*="gsap-"] * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Allow only specific CSS properties to transition for non-animation styling */
+.gsap-animation.allow-color-transition {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease !important;
+}
+
+.gsap-animation.allow-filter-transition {
+  transition: filter 0.3s ease !important;
+}
+
+/* End GSAP Protection Rules */
+
 /* Container queries for component-responsive design */
 @container (min-width: 400px) {
   .service-card {
@@ -944,6 +1037,16 @@
 
 .service-card-icon {
   transform: scale(1);
+}
+
+/* Disable any potential CSS transitions for GSAP-controlled service cards */
+.gsap-animation .service-card,
+.gsap-animation .service-card-content,
+.gsap-animation .service-card-icon,
+.service-card.gsap-animation,
+.service-card-content.gsap-animation,
+.service-card-icon.gsap-animation {
+  transition: none !important;
 }
 
 .service-card-title {

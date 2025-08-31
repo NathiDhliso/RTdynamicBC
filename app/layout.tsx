@@ -4,7 +4,7 @@ import { Poppins, Inter, Outfit } from "next/font/google"
 import Script from "next/script"
 import LoadingSpinner from "@/components/loading-spinner"
 import PagePreloader from "@/components/page-preloader"
-import PerformanceMonitor from "@/components/performance-monitor"
+
 import "./globals.css"
 
 // Optimized font loading for better performance on low-end devices
@@ -45,20 +45,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
-      <head />
+      <head>
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+      </head>
       <body className="font-outfit antialiased bg-[color:var(--background)] text-[color:var(--foreground)] font-light" suppressHydrationWarning>
         <LoadingSpinner />
         <PagePreloader />
         {/* <PerformanceMonitor /> - Temporarily disabled due to webpack module loading issue */}
-        {/* Optimized GSAP loading - load with lower priority */}
+        {/* Optimized GSAP loading - load early for animations */}
         <Script
-          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
-          strategy="lazyOnload"
+          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"
+          strategy="beforeInteractive"
         />
         <Script
-          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
-          strategy="lazyOnload"
+          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"
+          strategy="beforeInteractive"
         />
+        <Script id="gsap-init" strategy="afterInteractive">
+          {`
+            if (typeof window !== 'undefined' && window.gsap && window.ScrollTrigger) {
+              window.gsap.registerPlugin(window.ScrollTrigger);
+              console.log('✅ GSAP and ScrollTrigger loaded and registered');
+            }
+          `}
+        </Script>
         {children}
         
         {/* Google Maps Script - only load when needed */}

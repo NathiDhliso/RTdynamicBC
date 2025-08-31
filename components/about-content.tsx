@@ -181,7 +181,7 @@ export default function AboutContent() {
             <div>
               <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Our Mission</h2>
                <p className="font-inter text-fluid-base md:text-fluid-lg text-gray-700 leading-fluid-relaxed text-spacing-comfortable mb-fluid-md" suppressHydrationWarning>
-                 Our mission is to be the cornerstone of our clients' success, transforming complex financial challenges into opportunities for growth and stability. We deliver clarity and strategic direction with the integrity and precision that defines a Chartered Accountant.
+                 Our mission is to be the cornerstone of our clients&apos; success, transforming complex financial challenges into opportunities for growth and stability. We deliver clarity and strategic direction with the integrity and precision that defines a Chartered Accountant.
                </p>
               <div className="space-y-fluid-sm">
                 {[
@@ -259,7 +259,7 @@ export default function AboutContent() {
               return (
                 <Card
                   key={index}
-                  className="value-card text-center p-fluid-md border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                  className="value-card text-center p-fluid-md border-0 shadow-lg gsap-animation"
                 >
                   <CardContent className="p-0">
                     <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center mx-auto mb-fluid-md">

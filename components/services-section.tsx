@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { useState, useEffect } from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Shield, Calculator, Users } from "lucide-react"
@@ -184,6 +185,12 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   if (!services || services.length === 0) {
     return null
   }
@@ -209,37 +216,29 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                 <Card
                   key={service.id}
                   data-service={service.id}
-                  className={`service-card group relative overflow-hidden border border-primary/20 shadow-xl gsap-animation h-full flex flex-col hover:shadow-2xl hover:border-primary/30 transition-all duration-300`}
-                  style={{
-                    background: `linear-gradient(to bottom right, var(--primary) / 0.05, var(--primary) / 0.1)`,
-                    ...(service.id === 'taxation-services' || service.id === 'payroll-services' ? {
-                      background: `linear-gradient(to bottom right, var(--accent) / 0.05, var(--accent) / 0.1)`
-                    } : {}),
-                    ...(service.id === 'auditing-assurance' ? {
-                      background: `linear-gradient(to bottom right, var(--primary) / 0.08, var(--primary) / 0.15)`
-                    } : {}),
-                    ...(service.id === 'payroll-services' ? {
-                      background: `linear-gradient(to bottom right, var(--accent) / 0.08, var(--accent) / 0.15)`
-                    } : {}),
-                    ...(service.id === 'finance-other-services' ? {
-                      background: `linear-gradient(to bottom right, var(--primary) / 0.1, var(--primary) / 0.2)`
-                    } : {})
-                  }}
+                  className={`service-card group relative overflow-hidden border ${isClient ? 'border-primary/20 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all duration-300' : 'border-border shadow-lg'} gsap-animation h-full flex flex-col`}
+                  style={isClient ? {
+                    background: service.id === 'taxation-services' ? `linear-gradient(to bottom right, var(--accent) / 0.05, var(--accent) / 0.1)` :
+                               service.id === 'auditing-assurance' ? `linear-gradient(to bottom right, var(--primary) / 0.08, var(--primary) / 0.15)` :
+                               service.id === 'payroll-services' ? `linear-gradient(to bottom right, var(--accent) / 0.08, var(--accent) / 0.15)` :
+                               service.id === 'finance-other-services' ? `linear-gradient(to bottom right, var(--primary) / 0.1, var(--primary) / 0.2)` :
+                               `linear-gradient(to bottom right, var(--primary) / 0.05, var(--primary) / 0.1)`
+                  } : {}}
                 >
-                  <CardHeader className="text-center pb-fluid-md relative z-10">
-                    <div className="w-16 h-16 mx-auto mb-fluid-md bg-primary/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-primary/30">
+                  <CardHeader className={`text-center pb-fluid-md ${isClient ? 'relative z-10' : ''}`}>
+                    <div className={`w-16 h-16 mx-auto mb-fluid-md ${isClient ? 'bg-primary/20 backdrop-blur-sm shadow-lg border border-primary/30' : 'bg-primary/10'} rounded-full flex items-center justify-center`}>
                       <IconComponent className="w-8 h-8 text-primary" />
                     </div>
                     <CardTitle className="text-fluid-xl font-light text-foreground leading-fluid-relaxed dynamic-text-spacing">{service.title}</CardTitle>
                   </CardHeader>
 
-                  <CardContent className="text-center flex-grow px-fluid-md relative z-10">
-                    <p className="text-foreground/80 mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing font-light">{service.description}</p>
-                    <ul className="space-y-fluid-sm text-sm text-foreground/70">
+                  <CardContent className={`text-center flex-grow px-fluid-md ${isClient ? 'relative z-10' : ''}`}>
+                    <p className={`${isClient ? 'text-foreground/80 font-light' : 'text-muted-foreground'} mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing`}>{service.description}</p>
+                    <ul className={`space-y-fluid-sm text-sm ${isClient ? 'text-foreground/70' : 'text-muted-foreground'}`}>
                       {service.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-center justify-center">
-                          <span className="w-2 h-2 bg-primary rounded-full mr-fluid-lg shadow-sm"></span>
-                          <span className="font-light">{feature}</span>
+                          <span className={`${isClient ? 'w-2 h-2 shadow-sm' : 'w-1.5 h-1.5'} bg-primary rounded-full mr-fluid-lg`}></span>
+                          {isClient ? <span className="font-light">{feature}</span> : feature}
                         </li>
                       ))}
                     </ul>

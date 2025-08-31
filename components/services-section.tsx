@@ -1,10 +1,11 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Shield, Calculator, Users } from "lucide-react"
+import { useAnimations } from "@/hooks/use-animations"
 
 interface Service {
   id: string
@@ -186,10 +187,16 @@ interface ServicesSectionProps {
 
 const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
   const [isClient, setIsClient] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  // Initialize animations
+  useAnimations({
+    sectionRef
+  })
 
   if (!services || services.length === 0) {
     return null
@@ -199,7 +206,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
 
   return (
     <>
-      <section className="services-section py-fluid-2xl md:py-fluid-3xl bg-transparent">
+      <section ref={sectionRef} className="services-section py-fluid-2xl md:py-fluid-3xl bg-transparent">
         <div className="container-mobile-safe">
           <div className="text-center mb-fluid-2xl">
             <h2 className="services-heading font-outfit font-extralight text-fluid-3xl text-foreground mb-fluid-lg leading-fluid-snug dynamic-text-spacing-loose">

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Users, Target, Award, TrendingUp, CheckCircle } from "lucide-react"
 import RabelaniProfileCard from "@/components/rabelani-profile-card"
 import TshephishoProfileCard from "@/components/tshephisho-profile-card"
+import { useAnimations } from "@/hooks/use-animations"
 
 
 
@@ -69,6 +70,14 @@ export default function AboutContent() {
   const statsRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
   const teamRef = useRef<HTMLDivElement>(null)
+
+  // Initialize animations
+  useAnimations({
+    heroRef,
+    statsRef,
+    valuesRef,
+    teamRef
+  })
 
   useEffect(() => {
   }, [])

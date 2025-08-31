@@ -260,7 +260,7 @@
     letter-spacing: 0.01em;
     /* Ensure smooth scrolling for GSAP ScrollTrigger */
     overflow-x: hidden;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; - Removed to prevent conflicts with GSAP ScrollTrigger */
   }
 
   /* Fluid typography classes */
@@ -869,26 +869,16 @@
 
   /* Dark glassmorphism removed - light mode only */
 
-  /* Simplified button styles with press feedback */
+  /* Simplified button styles - animations handled by GSAP */
   .btn-primary {
     background: var(--primary);
     color: var(--primary-foreground);
     border: 1px solid color-mix(in oklch, var(--primary) 80%, transparent 20%);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 24px;
     min-height: 24px;
   }
 
-  .btn-primary:hover {
-    background: color-mix(in oklch, var(--primary) 110%, white 10%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 40%, transparent 60%);
-  }
-
-  .btn-primary:active {
-    transform: scale(0.97);
-    box-shadow: 0 2px 4px color-mix(in oklch, var(--primary) 30%, transparent 70%);
-  }
+  /* Note: Button hover and active animations moved to centralized GSAP system */
   
   /* Enhanced focus states for accessibility */
   button:focus-visible,
@@ -922,6 +912,12 @@
     scroll-behavior: auto !important;
   }
   
+  /* Allow GSAP animations to work even with reduced motion preference */
+  .gsap-animation {
+    animation-duration: unset !important;
+    transition-duration: unset !important;
+  }
+  
   /* Note: GSAP animations are handled in JavaScript via matchMedia check */
   /* CSS animations and transitions are disabled above */
 }
@@ -930,6 +926,7 @@
 @container (min-width: 400px) {
   .service-card {
     container-type: inline-size;
+    transform: scale(1);
   }
   
   .service-card-horizontal {
@@ -939,6 +936,21 @@
     text-align: left;
   }
 }
+
+/* Service card styles - animations handled by GSAP */
+.service-card-content {
+  opacity: 0.9;
+}
+
+.service-card-icon {
+  transform: scale(1);
+}
+
+.service-card-title {
+  /* Static styles only - hover effects via GSAP */
+}
+
+/* Note: Hover animations moved to centralized GSAP system */
 
 @container (min-width: 600px) {
   .services-grid {
@@ -1028,23 +1040,7 @@ progress {
     font-weight: 300;
   }
 
-  /* Animation utilities */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Added new microinteraction utilities */
+  /* Background utilities for microinteractions */
   .bg-size-200 {
     background-size: 200% 100%;
   }
@@ -1057,49 +1053,16 @@ progress {
     background-position: 100% 50%;
   }
 
-  /* Enhanced button hover effects */
-  .btn-hover-lift {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
+  /* Static hover effects (non-animated) */
   .btn-hover-lift:hover {
-    transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Pulse animation variants */
-  .animate-pulse-slow {
-    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .animate-pulse-fast {
-    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  /* Glow effect */
-  .glow {
-    transition: box-shadow 0.3s ease;
   }
 
   .glow:hover {
     box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
   }
 
-  /* Infinite scroll animation */
-  @keyframes scroll-left {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
-  .animate-scroll-left {
-    animation: scroll-left 20s linear infinite;
-  }
-
-  .animate-scroll-left:hover {
-    animation-play-state: paused;
-  }
+  /* Note: All animations now handled by centralized GSAP system */
+  /* Removed: fadeInUp, pulse animations, scroll animations */
+  /* Removed: CSS transitions that could conflict with GSAP */
 }

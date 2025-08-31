@@ -96,93 +96,7 @@ export default function ConfirmationContent() {
   const contentRef = useRef<HTMLDivElement>(null)
   const stepsRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.gsap) {
-      const gsap = window.gsap
-
-      // Enhanced entrance animation
-      gsap.fromTo(
-        contentRef.current,
-        {
-          opacity: 0,
-          y: 60,
-          scale: 0.9,
-          rotationX: 15,
-          transformPerspective: 1000,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotationX: 0,
-          duration: 1.2,
-          ease: "power4.out",
-        },
-      )
-
-      // Animate success icon with bounce
-      gsap.fromTo(
-        ".success-icon",
-        { scale: 0, rotation: -180 },
-        {
-          scale: 1,
-          rotation: 0,
-          duration: 0.8,
-          ease: "back.out(2)",
-          delay: 0.3,
-        },
-      )
-
-      // Animate next steps with enhanced stagger
-      gsap.fromTo(
-        ".next-step-card",
-        {
-          opacity: 0,
-          y: 50,
-          rotationY: 15,
-          transformPerspective: 1000,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          rotationY: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power3.out",
-          delay: 0.6,
-        },
-      )
-
-      // Animate contact methods with slide effect
-      gsap.fromTo(
-        ".contact-method-card",
-        { opacity: 0, x: -40, scale: 0.9 },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 0.7,
-          stagger: 0.15,
-          ease: "power3.out",
-          delay: 1.2,
-        },
-      )
-
-      // Animate trust indicators
-      gsap.fromTo(
-        ".trust-indicator",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power2.out",
-          delay: 1.8,
-        },
-      )
-    }
-  }, [])
+  // Animation handled by centralized system via data attributes
 
   const getFormTypeDetails = () => {
     switch (formType) {
@@ -290,7 +204,7 @@ export default function ConfirmationContent() {
                     className="next-step-card text-center border-0 shadow-xl gsap-animation bg-white relative overflow-hidden group"
                   >
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                      className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-5`}
                     />
 
                     <CardContent className="p-fluid-lg relative z-10">
@@ -338,7 +252,7 @@ export default function ConfirmationContent() {
                     className="contact-method-card border-0 shadow-xl gsap-animation cursor-pointer group bg-white relative overflow-hidden"
                   >
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                      className={`absolute inset-0 bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-5`}
                     />
 
                     <CardContent className="p-fluid-lg relative z-10">

@@ -95,7 +95,7 @@ export default function Header() {
 
         {/* Mobile Navigation - optimized for low-end devices */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${
+          className={`md:hidden overflow-hidden ${
             isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
           style={{
@@ -113,7 +113,7 @@ export default function Header() {
                     href={item.href}
                     prefetch={true} // Enable prefetching for instant mobile navigation
                     aria-current={isActive ? "page" : undefined}
-                    className={`font-inter px-fluid-sm py-fluid-sm rounded-lg transition-colors duration-200 touch-manipulation ${
+                    className={`font-inter px-fluid-sm py-fluid-sm rounded-lg touch-manipulation ${
                       isActive
                         ? "text-blue-400 font-light bg-blue-500/20"
                         : isContact

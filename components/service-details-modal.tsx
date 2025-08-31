@@ -31,34 +31,18 @@ export default function ServiceDetailsModal({ service, isOpen, onClose }: Servic
   const contentRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
 
+  // Modal animations handled by CSS transitions and centralized system
   useEffect(() => {
-    if (typeof window !== "undefined" && window.gsap) {
-      const gsap = window.gsap
-
-      if (isOpen && service && modalRef.current && overlayRef.current && contentRef.current) {
-        // Animate modal opening
-        gsap.set(modalRef.current, { display: "flex" })
-        gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" })
-        gsap.fromTo(
-          contentRef.current,
-          { opacity: 0, scale: 0.9, y: 50 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power3.out", delay: 0.1 },
-        )
-      } else if (!isOpen && overlayRef.current && contentRef.current && modalRef.current) {
-        // Animate modal closing
-        gsap.to(overlayRef.current, { opacity: 0, duration: 0.2, ease: "power2.in" })
-        gsap.to(contentRef.current, {
-          opacity: 0,
-          scale: 0.9,
-          y: 30,
-          duration: 0.3,
-          ease: "power2.in",
-          onComplete: () => {
-            if (modalRef.current) {
-              gsap.set(modalRef.current, { display: "none" })
-            }
-          },
-        })
+    if (modalRef.current) {
+      if (isOpen) {
+        modalRef.current.style.display = "flex"
+      } else {
+        const timer = setTimeout(() => {
+          if (modalRef.current) {
+            modalRef.current.style.display = "none"
+          }
+        }, 300) // Match CSS transition duration
+        return () => clearTimeout(timer)
       }
     }
   }, [isOpen, service])
@@ -106,7 +90,7 @@ export default function ServiceDetailsModal({ service, isOpen, onClose }: Servic
         <div className="sticky top-0 z-10 bg-gray-900/80 backdrop-blur-lg p-[var(--space-lg)] text-white rounded-t-2xl border-b border-white/10">
           <button
             onClick={onClose}
-            className="absolute top-fluid-sm right-fluid-sm p-fluid-xs rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200"
+            className="absolute top-fluid-sm right-fluid-sm p-fluid-xs rounded-full bg-white/10 hover:bg-white/20"
           >
             <X className="h-6 w-6 text-white" />
           </button>

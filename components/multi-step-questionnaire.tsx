@@ -554,7 +554,7 @@ const MultiStepQuestionnaire = () => {
               return (
                 <div
                   key={step.id}
-                  className={`flex flex-col items-center p-fluid-sm rounded-lg transition-all duration-300 ${
+                  className={`flex flex-col items-center p-fluid-sm rounded-lg ${
                     isActive
                       ? "bg-primary text-primary-foreground shadow-lg"
                       : isCompleted

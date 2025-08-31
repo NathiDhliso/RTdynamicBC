@@ -45,13 +45,13 @@ export default function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="w-9 h-9 transition-all duration-300 hover:scale-105"
+      className="w-9 h-9 hover:scale-105"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
     >
       {theme === 'light' ? (
-        <Moon className="h-4 w-4 transition-transform duration-300" />
+        <Moon className="h-4 w-4" />
       ) : (
-        <Sun className="h-4 w-4 transition-transform duration-300" />
+        <Sun className="h-4 w-4" />
       )}
     </Button>
   )

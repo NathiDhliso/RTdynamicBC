@@ -77,13 +77,13 @@ export default function Footer() {
                     key={index}
                     href={contact.href}
                     // MODIFIED: Justify content for right alignment on desktop
-                    className="flex items-center md:justify-end text-gray-300 hover:text-primary transition-colors duration-300 group"
+                    className="flex items-center md:justify-end text-gray-300 hover:text-primary group"
                   >
                     {/* MODIFIED: Swapped order for right alignment on desktop */}
                     <div className="md:order-2">
                       <span className="font-inter text-fluid-sm">{contact.value}</span>
                     </div>
-                    <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center mr-fluid-md md:mr-0 md:ml-fluid-md md:order-1 group-hover:bg-primary/20 transition-colors duration-300">
+                    <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center mr-fluid-md md:mr-0 md:ml-fluid-md md:order-1 group-hover:bg-primary/20">
                       <IconComponent className="h-4 w-4" />
                     </div>
                   </Link>

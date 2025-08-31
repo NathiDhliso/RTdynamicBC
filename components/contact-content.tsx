@@ -68,70 +68,7 @@ export default function ContactContent() {
   const formRef = useRef<HTMLDivElement>(null)
   const infoRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-      const gsap = window.gsap
-      const ScrollTrigger = window.ScrollTrigger
-
-      gsap.registerPlugin(ScrollTrigger)
-
-      // Hero animation
-      gsap.fromTo(
-        heroRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        },
-      )
-
-      // Form animation
-      gsap.fromTo(
-        formRef.current,
-        { opacity: 0, x: -50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        },
-      )
-
-      // Info cards animation
-      gsap.fromTo(
-        ".contact-info-card",
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: infoRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        },
-      )
-
-      return () => {
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-      }
-    }
-  }, [])
+  // Animation handled by centralized system via data attributes
 
   // Google Maps initialization
   useEffect(() => {
@@ -360,7 +297,7 @@ export default function ContactContent() {
                       type="submit"
                       disabled={isSubmitting}
                       size="comfortable"
-                      className="w-full font-inter font-light text-fluid-lg bg-primary hover:bg-primary/90 transition-all duration-300"
+                      className="w-full font-inter font-light text-fluid-lg bg-primary hover:bg-primary/90"
                     >
                       {isSubmitting ? (
                         "Sending..."
@@ -392,7 +329,7 @@ export default function ContactContent() {
                   return (
                     <Card
                       key={index}
-                      className="contact-info-card border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="contact-info-card border-0 shadow-lg hover:shadow-xl"
                     >
                       <CardContent className="p-fluid-md">
                         <div className="flex items-start">

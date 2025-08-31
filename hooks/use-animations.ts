@@ -49,15 +49,19 @@ interface AnimationRefs {
 }
 
 interface UseAnimationsProps {
-  heroRef: React.RefObject<HTMLDivElement | null>;
-  titleRef: React.RefObject<HTMLHeadingElement | null>;
-  subtitleRef: React.RefObject<HTMLParagraphElement | null>;
-  ctaRef: React.RefObject<HTMLDivElement | null>;
-  logoRef: React.RefObject<HTMLDivElement | null>;
-  // Extended props for more animations
+  heroRef?: React.RefObject<HTMLDivElement | null>;
+  titleRef?: React.RefObject<HTMLHeadingElement | null>;
+  subtitleRef?: React.RefObject<HTMLParagraphElement | null>;
+  ctaRef?: React.RefObject<HTMLDivElement | null>;
+  logoRef?: React.RefObject<HTMLDivElement | null>;
+  // Optional refs for additional elements
+  sectionRef?: React.RefObject<HTMLElement | null>;
   sectionRefs?: React.RefObject<HTMLElement | null>[];
   cardRefs?: React.RefObject<HTMLElement | null>[];
   imageRefs?: React.RefObject<HTMLImageElement | null>[];
+  statsRef?: React.RefObject<HTMLDivElement | null>;
+  valuesRef?: React.RefObject<HTMLDivElement | null>;
+  teamRef?: React.RefObject<HTMLDivElement | null>;
   options?: AnimationOptions;
 }
 
@@ -209,9 +213,13 @@ export const useAnimations = ({
   subtitleRef,
   ctaRef,
   logoRef,
+  sectionRef,
   sectionRefs = [],
   cardRefs = [],
   imageRefs = [],
+  statsRef,
+  valuesRef,
+  teamRef,
   options = {}
 }: UseAnimationsProps) => {
   // State management
@@ -381,10 +389,14 @@ export const useAnimations = ({
           
           // Apply CSS fallbacks for critical elements
           const elements = [
-            titleRef.current, 
-            subtitleRef.current, 
-            ctaRef.current, 
-            logoRef.current
+            titleRef?.current, 
+            subtitleRef?.current, 
+            ctaRef?.current, 
+            logoRef?.current,
+            sectionRef?.current,
+            statsRef?.current,
+            valuesRef?.current,
+            teamRef?.current
           ].filter(Boolean) as HTMLElement[];
           
           elements.forEach(element => {
@@ -481,32 +493,39 @@ export const useAnimations = ({
     }
 
     // Set initial states with will-change for optimization
-    const textElements = [titleRef.current, subtitleRef.current, ctaRef.current];
-    gsap.set(textElements, {
-      opacity: 0,
-      y: 30,
-      scale: 0.95,
-      willChange: "transform, opacity"
-    });
+    const textElements = [titleRef?.current, subtitleRef?.current, ctaRef?.current].filter(Boolean);
+    if (textElements.length > 0) {
+      gsap.set(textElements, {
+        opacity: 0,
+        y: 30,
+        scale: 0.95,
+        willChange: "transform, opacity"
+      });
+    }
 
-    gsap.set(logoRef.current, {
-      opacity: 0,
-      scale: 0.8,
-      rotation: -10,
-      willChange: "transform, opacity"
-    });
+    if (logoRef?.current) {
+      gsap.set(logoRef.current, {
+        opacity: 0,
+        scale: 0.8,
+        rotation: -10,
+        willChange: "transform, opacity"
+      });
+    }
 
     // Create staggered entrance timeline
     const entranceTimeline = gsap.timeline({ 
       delay: entranceConfig.delay,
       onComplete: () => {
         // Remove will-change after animation
-        gsap.set([...textElements, logoRef.current], { willChange: "auto" });
+        const allElements = [...textElements, logoRef?.current].filter(Boolean);
+        if (allElements.length > 0) {
+          gsap.set(allElements, { willChange: "auto" });
+        }
       }
     });
     
-    entranceTimeline
-      .to(textElements, {
+    if (textElements.length > 0) {
+      entranceTimeline.to(textElements, {
         opacity: 1,
         y: 0,
         scale: 1,
@@ -516,20 +535,25 @@ export const useAnimations = ({
           from: "start"
         },
         ease: entranceConfig.ease
-      })
-      .to(logoRef.current, {
+      });
+    }
+    
+    if (logoRef?.current) {
+      entranceTimeline.to(logoRef.current, {
         opacity: 1,
         scale: 1,
         rotation: 0,
         duration: entranceConfig.duration,
         ease: "elastic.out(1, 0.5)"
       }, "-=0.4");
+    }
 
     // Touch-aware scroll animations
-    if (!reducedMotion && scrollTriggerConfig) {
+    if (!reducedMotion && scrollTriggerConfig && (heroRef?.current || sectionRef?.current)) {
+      const triggerElement = heroRef?.current || sectionRef?.current;
       const scrollTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: heroRef.current,
+          trigger: triggerElement,
           start: scrollTriggerConfig.start,
           end: scrollTriggerConfig.end,
           scrub: quality === 'reduced' ? 2 : 1,
@@ -549,22 +573,26 @@ export const useAnimations = ({
       });
 
       // Optimized scroll animations
-      scrollTimeline
-        .to(textElements, {
+      if (textElements.length > 0) {
+        scrollTimeline.to(textElements, {
           opacity: 0,
           y: -50,
           scale: 0.9,
           duration: scrollConfig.fadeOut.duration,
           stagger: 0.05,
           ease: "power2.in"
-        }, 0)
-        .to(logoRef.current, {
+        }, 0);
+      }
+      
+      if (logoRef?.current) {
+        scrollTimeline.to(logoRef.current, {
           scale: 0.5,
           x: "-45vw",
           y: "-45vh",
           duration: scrollConfig.logoTransform.duration,
           ease: "power3.inOut"
         }, 0.1);
+      }
 
       // Progressive enhancement for sections
       if (sectionRefs.length > 0 && performanceLevel !== 'low') {
@@ -578,6 +606,35 @@ export const useAnimations = ({
               ease: "power2.out"
             }, 0.5 + (index * 0.1));
           }
+        });
+      }
+      
+      // Animate additional refs (sectionRef, statsRef, valuesRef, teamRef)
+      const additionalRefs = [sectionRef, statsRef, valuesRef, teamRef].filter(ref => ref?.current);
+      additionalRefs.forEach((ref, index) => {
+        if (ref?.current) {
+          gsap.set(ref.current, { opacity: 0, y: 30 });
+          scrollTimeline.to(ref.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+          }, 0.3 + (index * 0.15));
+        }
+      });
+      
+      // Animate elements with gsap-animation class
+      if (sectionRef?.current) {
+        const animatedElements = sectionRef.current.querySelectorAll('.gsap-animation');
+        animatedElements.forEach((element, index) => {
+          gsap.set(element, { opacity: 0, y: 20, scale: 0.95 });
+          scrollTimeline.to(element, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: "power2.out"
+          }, 0.6 + (index * 0.1));
         });
       }
     }
@@ -600,7 +657,7 @@ export const useAnimations = ({
         
         // Swipe up detection with timing validation
         if (Math.abs(difference) > 50 && touchDuration < 500) {
-          if (difference > 0) {
+          if (difference > 0 && logoRef?.current) {
             // Trigger subtle bounce animation
             gsap.to(logoRef.current, {
               y: "-=10",

@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react"
 
-const LoadingSpinner = () => {
+const LoadingSpinner: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [fadeOut, setFadeOut] = useState(false)
 
   useEffect(() => {
-    let loadTimeout: NodeJS.Timeout
+    // Ensure we're in the browser environment
+    if (typeof window === 'undefined') return
+    
+    let loadTimeout: NodeJS.Timeout | undefined
     const fallbackTimeout: NodeJS.Timeout = setTimeout(() => {
       console.log('⚠️ LOADING: Fallback timeout reached, forcing spinner to hide')
       setFadeOut(true)
@@ -15,27 +18,41 @@ const LoadingSpinner = () => {
     }, 6000) // 6 second maximum loading time
     
     const handleLoad = () => {
-      // Clear fallback timeout if load completes normally
-      if (fallbackTimeout) clearTimeout(fallbackTimeout)
-      
-      // Wait for fonts, images, and scripts to load
-      loadTimeout = setTimeout(() => {
-        setFadeOut(true)
-        setTimeout(() => setIsLoading(false), 500) // Allow fade out animation
-      }, 1000) // Minimum loading time for better UX
+      try {
+        // Clear fallback timeout if load completes normally
+        if (fallbackTimeout) clearTimeout(fallbackTimeout)
+        
+        // Wait for fonts, images, and scripts to load
+        loadTimeout = setTimeout(() => {
+          setFadeOut(true)
+          setTimeout(() => setIsLoading(false), 500) // Allow fade out animation
+        }, 1000) // Minimum loading time for better UX
+      } catch (error) {
+        console.warn('LoadingSpinner handleLoad error:', error)
+        setIsLoading(false)
+      }
     }
 
-    // Check if page is already loaded
-    if (document.readyState === 'complete') {
-      handleLoad()
-    } else {
-      window.addEventListener('load', handleLoad)
+    try {
+      // Check if page is already loaded
+      if (document.readyState === 'complete') {
+        handleLoad()
+      } else {
+        window.addEventListener('load', handleLoad)
+      }
+    } catch (error) {
+      console.warn('LoadingSpinner setup error:', error)
+      setIsLoading(false)
     }
     
     return () => {
-      window.removeEventListener('load', handleLoad)
-      if (loadTimeout) clearTimeout(loadTimeout)
-      if (fallbackTimeout) clearTimeout(fallbackTimeout)
+      try {
+        window.removeEventListener('load', handleLoad)
+        if (loadTimeout) clearTimeout(loadTimeout)
+        if (fallbackTimeout) clearTimeout(fallbackTimeout)
+      } catch (error) {
+        console.warn('LoadingSpinner cleanup error:', error)
+      }
     }
   }, [])
 

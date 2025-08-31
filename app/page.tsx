@@ -39,11 +39,11 @@ export default function HomePage() {
                 </p>
               </div>
               
-              <div className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-16">
-                <div className="w-full max-w-sm flex justify-center">
+              <div className="flex flex-col lg:flex-row justify-center items-stretch gap-8 lg:gap-16">
+                <div className="w-full max-w-sm mx-auto flex justify-center">
                   <RabelaniProfileCard />
                 </div>
-                <div className="w-full max-w-sm flex justify-center">
+                <div className="w-full max-w-sm mx-auto flex justify-center">
                   <TshephishoProfileCard />
                 </div>
               </div>

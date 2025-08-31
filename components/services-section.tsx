@@ -252,7 +252,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
           // Cleanup scroll triggers
           if (typeof window !== 'undefined' && window.ScrollTrigger) {
             window.ScrollTrigger.getAll().forEach((trigger: { trigger?: HTMLElement; kill: () => void }) => {
-              if (trigger.trigger && currentCards.includes(trigger.trigger)) {
+               if (trigger.trigger && currentCards.includes(trigger.trigger as HTMLDivElement)) {
                 trigger.kill()
               }
             })

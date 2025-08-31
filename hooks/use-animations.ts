@@ -1141,7 +1141,7 @@ export const useAnimations = ({
     }, 100);
     
     // Setup keyboard navigation for accessibility
-    if (heroRef.current) {
+    if (heroRef?.current) {
       keyboardCleanupRef.current = setupKeyboardNavigation(heroRef.current);
     }
     

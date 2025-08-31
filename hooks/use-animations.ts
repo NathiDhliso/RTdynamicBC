@@ -961,7 +961,7 @@ export const useAnimations = ({
       };
 
       // Throttle mouse move for better performance
-      const throttledMouseMove = debounce(handleMouseMove, 16); // ~60fps
+      const throttledMouseMove = debounce(handleMouseMove as (...args: unknown[]) => unknown, 16); // ~60fps
       document.addEventListener('mousemove', throttledMouseMove);
       
       animationRefs.current.cleanup.push(() => {

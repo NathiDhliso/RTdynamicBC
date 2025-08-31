@@ -22,7 +22,7 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     // Fix Next.js 16 compatibility warning for image qualities
-    qualities: [75, 90, 100],
+    qualities: [75, 85, 90, 100],
   },
   // Enable experimental features for better performance
   experimental: {

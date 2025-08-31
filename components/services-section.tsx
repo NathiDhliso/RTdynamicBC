@@ -218,11 +218,11 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                   data-service={service.id}
                   className={`service-card group relative overflow-hidden border ${isClient ? 'border-primary/20 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all duration-300' : 'border-border shadow-lg'} gsap-animation h-full flex flex-col`}
                   style={isClient ? {
-                    background: service.id === 'taxation-services' ? `linear-gradient(to bottom right, var(--accent) / 0.05, var(--accent) / 0.1)` :
-                               service.id === 'auditing-assurance' ? `linear-gradient(to bottom right, var(--primary) / 0.08, var(--primary) / 0.15)` :
-                               service.id === 'payroll-services' ? `linear-gradient(to bottom right, var(--accent) / 0.08, var(--accent) / 0.15)` :
-                               service.id === 'finance-other-services' ? `linear-gradient(to bottom right, var(--primary) / 0.1, var(--primary) / 0.2)` :
-                               `linear-gradient(to bottom right, var(--primary) / 0.05, var(--primary) / 0.1)`
+                    background: service.id === 'taxation-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--accent) 5%, transparent), color-mix(in srgb, var(--accent) 10%, transparent))` :
+                               service.id === 'auditing-assurance' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 8%, transparent), color-mix(in srgb, var(--primary) 15%, transparent))` :
+                               service.id === 'payroll-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--accent) 8%, transparent), color-mix(in srgb, var(--accent) 15%, transparent))` :
+                               service.id === 'finance-other-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 10%, transparent), color-mix(in srgb, var(--primary) 20%, transparent))` :
+                               `linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 5%, transparent), color-mix(in srgb, var(--primary) 10%, transparent))`
                   } : {}}
                 >
                   <CardHeader className={`text-center pb-fluid-md ${isClient ? 'relative z-10' : ''}`}>

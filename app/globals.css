@@ -1137,6 +1137,16 @@ progress {
   accent-color: var(--primary);
 }
 
+/* Team card styling */
+.team-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
 @layer utilities {
   /* Custom font utilities */
   .font-poppins {

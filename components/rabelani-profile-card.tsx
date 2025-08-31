@@ -5,10 +5,11 @@ import { useState, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Mail, Phone, Linkedin, Award, GraduationCap } from "lucide-react"
-import { useAnimations } from "@/hooks/use-animations"
 
 const RabelaniProfileCard = () => {
   const [isFlipped, setIsFlipped] = useState(false)
+  
+  // Component is working properly
   
   // Refs for centralized animation system
   const cardRef = useRef<HTMLDivElement>(null)
@@ -16,24 +17,6 @@ const RabelaniProfileCard = () => {
   const subtitleRef = useRef<HTMLParagraphElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
-  
-  // Initialize centralized animations for entrance effects
-  useAnimations({
-    heroRef: cardRef,
-    titleRef,
-    subtitleRef,
-    ctaRef,
-    logoRef,
-    options: {
-      enableParallax: false,
-      enableMorphing: false,
-      enableTextEffects: false,
-      enableLazyLoad: true,
-      enableDebugMode: false
-    }
-  })
-
-  // Removed auto-flip - card only flips when clicked
 
   const frontSkills = [
     "Statutory Audits",
@@ -68,7 +51,7 @@ const RabelaniProfileCard = () => {
   return (
     <div ref={cardRef} className="gsap-animation">
       <motion.div 
-        className="relative w-full max-w-sm mx-auto h-[28rem] cursor-pointer" // Fixed: responsive width to prevent overflow
+        className="relative w-full max-w-sm mx-auto h-[28rem] cursor-pointer"
         style={{ perspective: "1000px" }}
         onClick={() => setIsFlipped(!isFlipped)}
         whileHover={{ y: -5 }}
@@ -78,13 +61,13 @@ const RabelaniProfileCard = () => {
           className="relative w-full h-full"
           style={{ 
             transformStyle: "preserve-3d",
-            backfaceVisibility: "hidden" // Fixed: prevent text rendering issues during flip
+            backfaceVisibility: "hidden"
           }}
           animate={{ rotateX: isFlipped ? 180 : 0 }}
           transition={{ 
-            duration: 0.6, // Fixed: reduced duration for smoother animation
-            ease: [0.4, 0, 0.2, 1], // Fixed: custom cubic-bezier for smoother motion
-            type: "tween" // Fixed: changed from spring to tween for more predictable animation
+            duration: 0.6,
+            ease: [0.4, 0, 0.2, 1],
+            type: "tween"
           }}
         >
           {/* Front of Card */}
@@ -215,8 +198,6 @@ const RabelaniProfileCard = () => {
             </Card>
           </motion.div>
         </motion.div>
-        
-        {/* Removed blur effect to prevent text jumbling during rotation */}
       </motion.div>
     </div>
   )

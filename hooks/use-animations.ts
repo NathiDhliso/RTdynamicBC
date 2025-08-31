@@ -268,10 +268,10 @@ export const useAnimations = ({
   // Fallback for non-GSAP environments
   const setElementsVisible = useCallback(() => {
     const elements = [
-      titleRef.current, 
-      subtitleRef.current, 
-      ctaRef.current, 
-      logoRef.current,
+      titleRef?.current, 
+      subtitleRef?.current, 
+      ctaRef?.current, 
+      logoRef?.current,
       ...sectionRefs.map(ref => ref.current),
       ...cardRefs.map(ref => ref.current),
       ...imageRefs.map(ref => ref.current)
@@ -729,20 +729,25 @@ export const useAnimations = ({
     const scrollTriggerConfig = getScrollTriggerConfig('desktop') as any;
 
     // Set initial states
-    gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
-      opacity: 1,
-      y: 0,
-      willChange: "transform"
-    });
+    const textElements = [titleRef?.current, subtitleRef?.current, ctaRef?.current].filter(Boolean);
+    if (textElements.length > 0) {
+      gsap.set(textElements, {
+        opacity: 1,
+        y: 0,
+        willChange: "transform"
+      });
+    }
 
-    gsap.set(logoRef.current, {
-      opacity: 1,
-      scale: 1,
-      willChange: "transform"
-    });
+    if (logoRef?.current) {
+      gsap.set(logoRef.current, {
+        opacity: 1,
+        scale: 1,
+        willChange: "transform"
+      });
+    }
 
     // Advanced continuous animations
-    if (!reducedMotion && performanceLevel !== 'low') {
+    if (!reducedMotion && performanceLevel !== 'low' && logoRef?.current) {
       // Complex glow effect
       const glowTimeline = gsap.timeline({ repeat: -1 });
       glowTimeline
@@ -790,10 +795,11 @@ export const useAnimations = ({
     }
 
     // Master scroll timeline with complex choreography
-    if (!reducedMotion && scrollTriggerConfig) {
+    if (!reducedMotion && scrollTriggerConfig && (heroRef?.current || sectionRef?.current)) {
+      const triggerElement = heroRef?.current || sectionRef?.current;
       const masterTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: heroRef.current,
+          trigger: triggerElement,
           start: scrollTriggerConfig.start,
           end: scrollTriggerConfig.end,
           scrub: 0.5,
@@ -811,33 +817,40 @@ export const useAnimations = ({
       });
 
       // Orchestrated fade-out sequence
-      masterTimeline
-        .to(titleRef.current, {
+      if (titleRef?.current) {
+        masterTimeline.to(titleRef.current, {
           opacity: 0,
           y: -100,
           scale: 0.8,
           filter: "blur(5px)",
           duration: 1.2,
           ease: "power3.in"
-        }, 0)
-        .to(subtitleRef.current, {
+        }, 0);
+      }
+      
+      if (subtitleRef?.current) {
+        masterTimeline.to(subtitleRef.current, {
           opacity: 0,
           y: -80,
           scale: 0.85,
           filter: "blur(3px)",
           duration: 1.1,
           ease: "power3.in"
-        }, 0.1)
-        .to(ctaRef.current, {
+        }, 0.1);
+      }
+      
+      if (ctaRef?.current) {
+        masterTimeline.to(ctaRef.current, {
           opacity: 0,
           y: -60,
           scale: 0.9,
           duration: 1.0,
           ease: "power3.in"
         }, 0.2);
+      }
 
       // Advanced logo transformation
-      if (performanceLevel === 'high') {
+      if (performanceLevel === 'high' && logoRef?.current) {
         masterTimeline.to(logoRef.current, {
           scale: 0.3,
           x: "-48vw",
@@ -854,7 +867,7 @@ export const useAnimations = ({
             });
           }
         }, 0.15);
-      } else {
+      } else if (logoRef?.current) {
         // Simplified version for normal performance
         masterTimeline.to(logoRef.current, {
           scale: 0.4,
@@ -1001,7 +1014,7 @@ export const useAnimations = ({
     animationRefs.current.cleanup.push(...hoverCleanups, ...focusCleanups);
 
     // Enhanced mouse parallax effect with accessibility considerations
-    if (performanceLevel === 'high' && animationOptions.enableParallax && !prefersReducedMotion()) {
+    if (performanceLevel === 'high' && animationOptions.enableParallax && !prefersReducedMotion() && logoRef?.current) {
       const handleMouseMove = (e: MouseEvent) => {
         const { clientX, clientY } = e;
         const centerX = window.innerWidth / 2;
@@ -1009,12 +1022,14 @@ export const useAnimations = ({
         const moveX = (clientX - centerX) / centerX;
         const moveY = (clientY - centerY) / centerY;
 
-        gsap.to(logoRef.current, {
-          x: moveX * 20,
-          y: moveY * 20,
-          duration: 0.5,
-          ease: "power2.out"
-        });
+        if (logoRef?.current) {
+          gsap.to(logoRef.current, {
+            x: moveX * 20,
+            y: moveY * 20,
+            duration: 0.5,
+            ease: "power2.out"
+          });
+        }
       };
 
       // Throttle mouse move for better performance

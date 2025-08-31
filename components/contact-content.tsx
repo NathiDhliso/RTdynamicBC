@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
 import { sendContactForm, type ContactFormData } from "@/lib/email"
+import { useAnimations } from "@/hooks/use-animations"
 
 
 
@@ -69,6 +70,13 @@ export default function ContactContent() {
   const heroRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
   const infoRef = useRef<HTMLDivElement>(null)
+
+  // Initialize animations
+  useAnimations({
+    heroRef,
+    sectionRef: formRef,
+    statsRef: infoRef
+  })
 
   // Animation handled by centralized system via data attributes
 

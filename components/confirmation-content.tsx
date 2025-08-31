@@ -18,6 +18,7 @@ import {
   Clock,
 } from "lucide-react"
 import Link from "next/link"
+import { useAnimations } from "@/hooks/use-animations"
 
 
 
@@ -95,6 +96,12 @@ export default function ConfirmationContent() {
   const formType = searchParams.get("type") || "questionnaire"
   const contentRef = useRef<HTMLDivElement>(null)
   const stepsRef = useRef<HTMLDivElement>(null)
+
+  // Initialize animations
+  useAnimations({
+    heroRef: contentRef,
+    sectionRef: stepsRef
+  })
 
   // Animation handled by centralized system via data attributes
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,6 +11,7 @@ import { RadioCardGroup, type RadioCardOption } from "@/components/ui/radio-card
 import { Building2, Users, FileCheck, Target, ArrowLeft, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { sendBusinessHealthCheck, type BusinessHealthCheckData } from "@/lib/email"
+import { useAnimations } from "@/hooks/use-animations"
 
 interface FormData {
   // Step 1: Company Information
@@ -90,6 +91,16 @@ const MultiStepQuestionnaire = () => {
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
+  
+  // Refs for animations
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const formRef = useRef<HTMLDivElement>(null)
+  
+  // Initialize animations
+  useAnimations({
+    sectionRef,
+    heroRef: formRef
+  })
   
   const shouldShowStep3 = formData.entityType === "Private Limited (Pty) Ltd"
 

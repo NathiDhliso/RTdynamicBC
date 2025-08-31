@@ -991,6 +991,16 @@
   animation: none !important;
 }
 
+/* EXCEPTION: Force team section and profile cards to be visible regardless of GSAP */
+.gsap-animation.team-card,
+.gsap-animation.team-card *,
+section[class*="py-fluid-2xl bg-gradient-to-b"] .gsap-animation,
+section[class*="py-fluid-2xl bg-gradient-to-b"] .gsap-animation * {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
 /* Specific protection for common interactive elements */
 .gsap-animation button,
 .gsap-animation a,
@@ -1145,6 +1155,39 @@ progress {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+}
+
+/* TEMPORARY DEBUG: Force team section and founders cards visibility */
+section[class*="py-fluid-2xl bg-gradient-to-b"],
+section[class*="py-fluid-2xl bg-gradient-to-b"] *,
+.team-card,
+.team-card *,
+div[class*="gsap-animation"],
+div[style*="opacity: 1"],
+div[style*="visibility: visible"] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Ensure profile cards are visible */
+div[class*="relative w-full max-w-sm"],
+div[class*="motion.div"],
+div[class*="Card"],
+div[class*="CardContent"],
+/* Target Framer Motion elements specifically */
+div[style*="perspective"],
+div[style*="transform-style"],
+div[style*="backface-visibility"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/* Force all Framer Motion elements in team section to be visible */
+section[class*="py-fluid-2xl bg-gradient-to-b"] div[style] {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 @layer utilities {

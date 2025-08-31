@@ -5,6 +5,12 @@ import { useEffect, useState } from "react"
 const LoadingSpinner: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [fadeOut, setFadeOut] = useState(false)
+  const [hasError, setHasError] = useState(false)
+
+  // Early return if error occurred
+  if (hasError) {
+    return null
+  }
 
   useEffect(() => {
     // Ensure we're in the browser environment
@@ -29,6 +35,7 @@ const LoadingSpinner: React.FC = () => {
         }, 1000) // Minimum loading time for better UX
       } catch (error) {
         console.warn('LoadingSpinner handleLoad error:', error)
+        setHasError(true)
         setIsLoading(false)
       }
     }
@@ -42,6 +49,7 @@ const LoadingSpinner: React.FC = () => {
       }
     } catch (error) {
       console.warn('LoadingSpinner setup error:', error)
+      setHasError(true)
       setIsLoading(false)
     }
     
@@ -58,37 +66,42 @@ const LoadingSpinner: React.FC = () => {
 
   if (!isLoading) return null
 
-  return (
-    <div 
-      className={`fixed inset-0 z-[9999] bg-gray-900 flex items-center justify-center transition-opacity duration-500 ${
-        fadeOut ? 'opacity-0' : 'opacity-100'
-      }`}
-      style={{
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)'
-      }}
-    >
-      <div className="text-center">
-        {/* Spinner */}
-        <div className="relative w-16 h-16 mx-auto mb-4">
-          <div className="absolute inset-0 border-4 border-white/20 rounded-full"></div>
-          <div className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
-        </div>
-        
-        {/* Loading text */}
-        <p className="text-white font-inter font-light text-lg animate-pulse">
-          Loading RT Dynamic Business Consulting...
-        </p>
-        
-        {/* Progress dots */}
-        <div className="flex justify-center space-x-1 mt-4">
-          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+  try {
+    return (
+      <div 
+        className={`fixed inset-0 z-[9999] bg-gray-900 flex items-center justify-center transition-opacity duration-500 ${
+          fadeOut ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={{
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)'
+        }}
+      >
+        <div className="text-center">
+          {/* Spinner */}
+          <div className="relative w-16 h-16 mx-auto mb-4">
+            <div className="absolute inset-0 border-4 border-white/20 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
+          </div>
+          
+          {/* Loading text */}
+          <p className="text-white font-inter font-light text-lg animate-pulse">
+            Loading RT Dynamic Business Consulting...
+          </p>
+          
+          {/* Progress dots */}
+          <div className="flex justify-center space-x-1 mt-4">
+            <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  } catch (error) {
+    console.warn('LoadingSpinner render error:', error)
+    return null
+  }
 }
 
 export default LoadingSpinner

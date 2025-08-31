@@ -7,9 +7,12 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Mail, Phone, Linkedin, Award, GraduationCap } from "lucide-react"
 
 const RabelaniProfileCard = () => {
+  console.log("🔍 RabelaniProfileCard: Component rendering");
+  
   const [isFlipped, setIsFlipped] = useState(false)
   
   // Component is working properly
+  console.log("🔍 RabelaniProfileCard: State initialized, isFlipped:", isFlipped);
   
   // Refs for centralized animation system
   const cardRef = useRef<HTMLDivElement>(null)
@@ -49,10 +52,10 @@ const RabelaniProfileCard = () => {
   }
 
   return (
-    <div ref={cardRef} className="gsap-animation">
+    <div ref={cardRef} className="gsap-animation" style={{ opacity: 1, visibility: "visible", display: "block" }}>
       <motion.div 
         className="relative w-full max-w-sm mx-auto h-[28rem] cursor-pointer"
-        style={{ perspective: "1000px" }}
+        style={{ perspective: "1000px", opacity: 1, visibility: "visible" }}
         onClick={() => setIsFlipped(!isFlipped)}
         whileHover={{ y: -5 }}
         transition={{ duration: 0.3, ease: "easeOut" }}

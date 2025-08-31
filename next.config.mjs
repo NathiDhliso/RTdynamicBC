@@ -6,8 +6,6 @@ const __dirname = dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Fix workspace root detection warning
-  outputFileTracingRoot: __dirname,
   eslint: {
     ignoreDuringBuilds: true,
   },

@@ -66,10 +66,19 @@ const affiliations = [
 ]
 
 export default function AboutContent() {
+  console.log("🔍 AboutContent: Component rendering");
+  
   const heroRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
   const teamRef = useRef<HTMLDivElement>(null)
+
+  console.log("🔍 AboutContent: About to call useAnimations with refs:", {
+    heroRef: heroRef.current,
+    statsRef: statsRef.current,
+    valuesRef: valuesRef.current,
+    teamRef: teamRef.current
+  });
 
   // Initialize animations
   useAnimations({
@@ -78,6 +87,8 @@ export default function AboutContent() {
     valuesRef,
     teamRef
   })
+
+  console.log("🔍 AboutContent: useAnimations called");
 
   useEffect(() => {
   }, [])
@@ -205,9 +216,11 @@ export default function AboutContent() {
           </div>
           <div className="flex flex-col lg:flex-row justify-center items-center gap-fluid-xl lg:gap-fluid-2xl" suppressHydrationWarning>
             <div className="team-card">
+              {console.log("🔍 AboutContent: Rendering Rabelani card")}
               <RabelaniProfileCard />
             </div>
             <div className="team-card">
+              {console.log("🔍 AboutContent: Rendering Tshephisho card")}
               <TshephishoProfileCard />
             </div>
           </div>

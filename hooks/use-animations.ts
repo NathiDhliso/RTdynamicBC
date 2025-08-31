@@ -609,34 +609,44 @@ export const useAnimations = ({
         });
       }
       
-      // Animate additional refs (sectionRef, statsRef, valuesRef, teamRef)
-      const additionalRefs = [sectionRef, statsRef, valuesRef, teamRef].filter(ref => ref?.current);
-      additionalRefs.forEach((ref, index) => {
+      // Independent ScrollTriggers for About page sections (mobile)
+      const independentRefs = [sectionRef, statsRef, valuesRef, teamRef].filter(ref => ref?.current);
+      independentRefs.forEach((ref, index) => {
         if (ref?.current) {
-          gsap.set(ref.current, { opacity: 0, y: 30 });
-          scrollTimeline.to(ref.current, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out"
-          }, 0.3 + (index * 0.15));
+          // Debug logging
+          console.log(`🔍 MOBILE: Setting up ScrollTrigger for section ${index}:`, ref.current);
+          
+          // Force immediate visibility for team section to prevent hiding
+          if (ref === teamRef) {
+            console.log(`🔍 MOBILE: Forcing team section visibility`);
+            gsap.set(ref.current, { opacity: 1, y: 0, visibility: "visible" });
+            gsap.set(ref.current.querySelectorAll('*'), { opacity: 1, visibility: "visible" });
+            return; // Skip animation for team section
+          }
+          
+          gsap.fromTo(ref.current,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: ref.current,
+                start: "top 85%",
+                once: true,
+                onEnter: () => console.log(`📱 MOBILE: Section ${index} animated in`),
+                onLeave: () => console.log(`📱 MOBILE: Section ${index} left viewport`)
+              }
+            }
+          );
         }
       });
       
       // Animate elements with gsap-animation class
-      if (sectionRef?.current) {
-        const animatedElements = sectionRef.current.querySelectorAll('.gsap-animation');
-        animatedElements.forEach((element, index) => {
-          gsap.set(element, { opacity: 0, y: 20, scale: 0.95 });
-          scrollTimeline.to(element, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: "power2.out"
-          }, 0.6 + (index * 0.1));
-        });
-      }
+      // REMOVED: This was setting About page .gsap-animation elements to opacity 0
+      // and trying to animate them on the hero timeline, which doesn't reach About sections
+      // The independent ScrollTriggers above handle section visibility properly
     }
 
     // Enhanced touch gesture support with accessibility
@@ -941,6 +951,40 @@ export const useAnimations = ({
         });
       }
     }
+
+    // Independent ScrollTriggers for About page sections (desktop)
+    const independentRefs = [sectionRef, statsRef, valuesRef, teamRef].filter(ref => ref?.current);
+    independentRefs.forEach((ref, index) => {
+      if (ref?.current) {
+        // Debug logging
+        console.log(`🔍 DESKTOP: Setting up ScrollTrigger for section ${index}:`, ref.current);
+        
+        // Force immediate visibility for team section to prevent hiding
+        if (ref === teamRef) {
+          console.log(`🔍 DESKTOP: Forcing team section visibility`);
+          gsap.set(ref.current, { opacity: 1, y: 0, visibility: "visible" });
+          gsap.set(ref.current.querySelectorAll('*'), { opacity: 1, visibility: "visible" });
+          return; // Skip animation for team section
+        }
+        
+        gsap.fromTo(ref.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ref.current,
+              start: "top 80%",
+              once: true,
+              onEnter: () => console.log(`💻 DESKTOP: Section ${index} animated in`),
+              onLeave: () => console.log(`💻 DESKTOP: Section ${index} left viewport`)
+            }
+          }
+        );
+      }
+    });
 
     // Text splitting and animation (if TextPlugin available)
     if (gsapInstanceRef.current?.TextPlugin && animationOptions.enableTextEffects) {

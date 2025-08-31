@@ -1,16 +1,6 @@
-import dynamic from "next/dynamic"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-
-// Dynamic import for lazy loading
-const AboutContent = dynamic(() => import("@/components/about-content"), {
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse text-white">Loading content...</div>
-    </div>
-  ),
-  ssr: true
-})
+import AboutContent from "@/components/about-content"
 
 export default function AboutPage() {
   return (

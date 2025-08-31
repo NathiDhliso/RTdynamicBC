@@ -50,7 +50,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
       </head>
       <body className="font-outfit antialiased bg-[color:var(--background)] text-[color:var(--foreground)] font-light" suppressHydrationWarning>
-        <LoadingSpinner />
+        {/* <LoadingSpinner /> - Temporarily disabled due to React DevTools error */}
         <PagePreloader />
         {/* <PerformanceMonitor /> - Temporarily disabled due to webpack module loading issue */}
         {/* Optimized GSAP loading - load early for animations */}

@@ -1,13 +1,37 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Mail, Phone, Linkedin, Award, GraduationCap } from "lucide-react"
+import { useAnimations } from "@/hooks/use-animations"
 
 const RabelaniProfileCard = () => {
   const [isFlipped, setIsFlipped] = useState(false)
+  
+  // Refs for centralized animation system
+  const cardRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const logoRef = useRef<HTMLDivElement>(null)
+  
+  // Initialize centralized animations for entrance effects
+  useAnimations({
+    heroRef: cardRef,
+    titleRef,
+    subtitleRef,
+    ctaRef,
+    logoRef,
+    options: {
+      enableParallax: false,
+      enableMorphing: false,
+      enableTextEffects: false,
+      enableLazyLoad: true,
+      enableDebugMode: false
+    }
+  })
 
   // Removed auto-flip - card only flips when clicked
 
@@ -42,6 +66,7 @@ const RabelaniProfileCard = () => {
   }
 
   return (
+    <div ref={cardRef} className="gsap-animation">
       <motion.div 
         className="relative w-96 h-[28rem] cursor-pointer"
         style={{ perspective: "1000px" }}
@@ -77,17 +102,17 @@ const RabelaniProfileCard = () => {
                 
                 <div className="relative z-10">
                   <div className="text-center mb-6">
-                    <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                    <div ref={logoRef} className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm gsap-animation">
                       <Award className="h-10 w-10 text-white" />
                     </div>
-                    <h3 className="font-poppins font-bold text-xl mb-1">Rabelani Neluheni</h3>
-                    <p className="font-inter text-white/90 text-sm">Chartered Accountant (SA)</p>
+                    <h3 ref={titleRef} className="font-poppins font-bold text-xl mb-1 gsap-animation">Rabelani Neluheni</h3>
+                    <p ref={subtitleRef} className="font-inter text-white/90 text-sm gsap-animation">Chartered Accountant (SA)</p>
                     <Badge variant="secondary" className="mt-2 bg-white/20 text-white border-white/30">
                       CA(SA)
                     </Badge>
                   </div>
                   
-                  <div>
+                  <div ref={ctaRef} className="gsap-animation">
                     <h4 className="font-poppins font-semibold text-lg mb-3 text-center">Core Skills</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {frontSkills.map((skill, index) => (
@@ -204,6 +229,7 @@ const RabelaniProfileCard = () => {
           }}
         />
       </motion.div>
+    </div>
   )
 }
 

@@ -6,14 +6,26 @@ import {
   ANIMATION_CONFIGS, 
   SCROLL_TRIGGER_CONFIGS, 
   ANIMATION_STYLES,
+  ANIMATION_PRESETS,
+  ERROR_CONFIGS,
+  ACCESSIBILITY_CONFIGS,
+  PERFORMANCE_THRESHOLDS,
   getAnimationConfig,
   getContinuousAnimationConfig,
   getScrollTriggerConfig,
   getAnimationStyle,
   getDeviceType,
   getAnimationDeviceType,
+  getHydrationSafeDeviceType,
   prefersReducedMotion,
-  applyHoverAnimations
+  applyHoverAnimations,
+  applyFocusAnimation,
+  setupKeyboardNavigation,
+  debounce,
+  applyCSSFallback,
+  announceToScreenReader,
+  createOrientationChangeHandler,
+  createPerformanceMonitor
 } from '@/lib/animations';
 
 // Types
@@ -69,46 +81,57 @@ interface AnimationState {
   activeAnimations: Set<string>;
 }
 
-// Performance monitoring
+// Enhanced Performance monitoring with proper cleanup
 class PerformanceMonitor {
-  private frameCount = 0;
-  private lastTime = performance.now();
-  private fps = 60;
-  private threshold: number;
+  private monitor: ReturnType<typeof createPerformanceMonitor>;
+  private isRunning = false;
 
-  constructor(threshold = 30) {
-    this.threshold = threshold;
+  constructor() {
+    this.monitor = createPerformanceMonitor();
+  }
+
+  start(): void {
+    if (!this.isRunning) {
+      this.monitor.start();
+      this.isRunning = true;
+    }
+  }
+
+  stop(): void {
+    if (this.isRunning) {
+      this.monitor.stop();
+      this.isRunning = false;
+    }
   }
 
   measureFPS(): number {
-    const currentTime = performance.now();
-    this.frameCount++;
-    
-    if (currentTime >= this.lastTime + 1000) {
-      this.fps = Math.round((this.frameCount * 1000) / (currentTime - this.lastTime));
-      this.frameCount = 0;
-      this.lastTime = currentTime;
-    }
-    
-    return this.fps;
+    return this.monitor.getFPS();
   }
 
   isPerformanceOptimal(): boolean {
-    return this.fps >= this.threshold;
+    return this.monitor.getFPS() >= PERFORMANCE_THRESHOLDS.fps.normal;
   }
 
   getPerformanceLevel(): 'low' | 'normal' | 'high' {
-    if (this.fps < 30) return 'low';
-    if (this.fps < 50) return 'normal';
-    return 'high';
+    return this.monitor.getPerformanceLevel();
+  }
+
+  cleanup(): void {
+    this.stop();
   }
 }
 
-// Animation Queue Manager
+// Enhanced Animation Queue Manager with frame budget management
 class AnimationQueue {
   private queue: Array<() => void> = [];
   private isProcessing = false;
-  private batchSize = 3;
+  private batchSize: number;
+  private frameStartTime = 0;
+  private rafId: number | null = null;
+
+  constructor() {
+    this.batchSize = PERFORMANCE_THRESHOLDS.animationBatchSize;
+  }
 
   add(animation: () => void): void {
     this.queue.push(animation);
@@ -124,27 +147,58 @@ class AnimationQueue {
     }
 
     this.isProcessing = true;
-    const batch = this.queue.splice(0, this.batchSize);
+    this.frameStartTime = performance.now();
     
-    await Promise.all(batch.map(anim => {
-      return new Promise(resolve => {
-        requestAnimationFrame(() => {
-          anim();
-          resolve(void 0);
+    // Process animations within frame budget
+    const processWithBudget = () => {
+      let processed = 0;
+      const maxProcessTime = PERFORMANCE_THRESHOLDS.frameBudget * 0.8; // Use 80% of frame budget
+      
+      while (this.queue.length > 0 && processed < this.batchSize) {
+        const currentTime = performance.now();
+        const elapsedTime = currentTime - this.frameStartTime;
+        
+        // Check if we're approaching frame budget limit
+        if (elapsedTime > maxProcessTime) {
+          break;
+        }
+        
+        const animation = this.queue.shift();
+        if (animation) {
+          animation();
+          processed++;
+        }
+      }
+      
+      // Continue processing in next frame if queue not empty
+      if (this.queue.length > 0) {
+        this.rafId = requestAnimationFrame(() => {
+          this.frameStartTime = performance.now();
+          processWithBudget();
         });
-      });
-    }));
-
-    if (this.queue.length > 0) {
-      requestAnimationFrame(() => this.process());
-    } else {
-      this.isProcessing = false;
-    }
+      } else {
+        this.isProcessing = false;
+        this.rafId = null;
+      }
+    };
+    
+    this.rafId = requestAnimationFrame(() => {
+      this.frameStartTime = performance.now();
+      processWithBudget();
+    });
   }
 
   clear(): void {
     this.queue = [];
     this.isProcessing = false;
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
+
+  cleanup(): void {
+    this.clear();
   }
 }
 
@@ -182,6 +236,9 @@ export const useAnimations = ({
   const performanceMonitor = useRef<PerformanceMonitor>(new PerformanceMonitor());
   const animationQueue = useRef<AnimationQueue>(new AnimationQueue());
   const gsapInstanceRef = useRef<GSAPInstance | null>(null);
+  const orientationCleanupRef = useRef<(() => void) | null>(null);
+  const keyboardCleanupRef = useRef<(() => void) | null>(null);
+  const retryCountRef = useRef<number>(0);
 
   // Memoized options
   const animationOptions = useMemo(() => ({
@@ -221,80 +278,127 @@ export const useAnimations = ({
     });
   }, [titleRef, subtitleRef, ctaRef, logoRef, sectionRefs, cardRefs, imageRefs]);
 
-  // Enhanced GSAP loader with plugin support
+  // Enhanced GSAP loader with retry logic and error boundaries
   const loadGSAP = useCallback(async (): Promise<GSAPInstance | null> => {
-    try {
-      if (animationOptions.enableDebugMode) {
-        console.log('🔄 GSAP: Loading GSAP with enhanced features');
-      }
-      
-      // Check for existing GSAP
-      if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
-        const instance = { 
-          gsap: window.gsap, 
-          ScrollTrigger: window.ScrollTrigger,
-          TextPlugin: window.TextPlugin,
-          DrawSVGPlugin: window.DrawSVGPlugin,
-          MorphSVGPlugin: window.MorphSVGPlugin,
-          CustomEase: window.CustomEase
-        };
+    const maxRetries = ERROR_CONFIGS.maxRetries;
+    const retryDelay = ERROR_CONFIGS.retryDelay;
+    
+    const attemptLoad = async (attempt: number): Promise<GSAPInstance | null> => {
+      try {
+        if (animationOptions.enableDebugMode) {
+          console.log(`🔄 GSAP: Loading attempt ${attempt}/${maxRetries}`);
+        }
+        
+        // Check for existing GSAP
+        if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
+          const instance = { 
+            gsap: window.gsap, 
+            ScrollTrigger: window.ScrollTrigger,
+            TextPlugin: window.TextPlugin,
+            DrawSVGPlugin: window.DrawSVGPlugin,
+            MorphSVGPlugin: window.MorphSVGPlugin,
+            CustomEase: window.CustomEase
+          };
+          gsapInstanceRef.current = instance;
+          retryCountRef.current = 0;
+          return instance;
+        }
+        
+        // Set loading timeout
+        const loadTimeout = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('GSAP load timeout')), ERROR_CONFIGS.gsapLoadTimeout);
+        });
+        
+        // Dynamic imports with progress tracking
+        setAnimationState(prev => ({ ...prev, progress: 20 + (attempt - 1) * 10 }));
+        
+        const imports: Promise<any>[] = [
+          import('gsap'),
+          import('gsap/ScrollTrigger')
+        ];
+
+        // Optional plugin imports with fallback
+        if (animationOptions.enableTextEffects) {
+          imports.push(import('gsap/TextPlugin').catch(() => ({ default: null })));
+        }
+
+        const modules = await Promise.race([Promise.all(imports), loadTimeout]);
+        
+        setAnimationState(prev => ({ ...prev, progress: 60 + (attempt - 1) * 10 }));
+        
+        const gsap = (modules[0] as any).gsap || (modules[0] as any).default;
+        const ScrollTrigger = (modules[1] as any).ScrollTrigger || (modules[1] as any).default;
+        const TextPlugin = (modules[2] as any)?.TextPlugin || (modules[2] as any)?.default;
+        
+        if (!gsap || !ScrollTrigger) {
+          throw new Error('Failed to load required GSAP modules');
+        }
+        
+        // Register plugins
+        gsap.registerPlugin(ScrollTrigger);
+        if (TextPlugin) gsap.registerPlugin(TextPlugin);
+        
+        // Configure GSAP defaults
+        gsap.config({
+          nullTargetWarn: animationOptions.enableDebugMode,
+          force3D: true,
+          units: { rotation: "deg" }
+        });
+
+        // Set default ease
+        gsap.defaults({ ease: "power2.inOut" });
+        
+        const instance = { gsap, ScrollTrigger, TextPlugin };
         gsapInstanceRef.current = instance;
+        retryCountRef.current = 0;
+        
+        setAnimationState(prev => ({ ...prev, progress: 100, isLoading: false, isReady: true }));
+        
         return instance;
+      } catch (error) {
+        console.error(`💥 GSAP load attempt ${attempt} failed:`, error);
+        
+        if (attempt < maxRetries) {
+          retryCountRef.current = attempt;
+          setAnimationState(prev => ({ 
+            ...prev, 
+            errorMessage: `Loading attempt ${attempt}/${maxRetries} failed, retrying...`,
+            progress: 0
+          }));
+          
+          // Wait before retry
+          await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+          return attemptLoad(attempt + 1);
+        } else {
+          // All retries exhausted, apply CSS fallbacks
+          console.warn('🔄 GSAP loading failed, applying CSS fallbacks');
+          setAnimationState(prev => ({ 
+            ...prev, 
+            hasError: true, 
+            errorMessage: 'Failed to load animations, using fallbacks',
+            isLoading: false 
+          }));
+          
+          // Apply CSS fallbacks for critical elements
+          const elements = [
+            titleRef.current, 
+            subtitleRef.current, 
+            ctaRef.current, 
+            logoRef.current
+          ].filter(Boolean) as HTMLElement[];
+          
+          elements.forEach(element => {
+            applyCSSFallback(element, 'fadeInUp');
+          });
+          
+          setElementsVisible();
+          return null;
+        }
       }
-      
-      // Dynamic imports with progress tracking
-      setAnimationState(prev => ({ ...prev, progress: 20 }));
-      
-      const imports = [
-        import('gsap'),
-        import('gsap/ScrollTrigger')
-      ];
-
-      // Optional plugin imports
-      if (animationOptions.enableTextEffects) {
-        imports.push(import('gsap/TextPlugin').catch(() => null));
-      }
-
-      const modules = await Promise.all(imports);
-      
-      setAnimationState(prev => ({ ...prev, progress: 60 }));
-      
-      const gsap = modules[0].gsap || modules[0].default;
-      const ScrollTrigger = modules[1].ScrollTrigger || modules[1].default;
-      const TextPlugin = modules[2]?.TextPlugin || modules[2]?.default;
-      
-      // Register plugins
-      gsap.registerPlugin(ScrollTrigger);
-      if (TextPlugin) gsap.registerPlugin(TextPlugin);
-      
-      // Configure GSAP defaults
-      gsap.config({
-        nullTargetWarn: animationOptions.enableDebugMode,
-        force3D: true,
-        units: { rotation: "deg" }
-      });
-
-      // Set default ease
-      gsap.defaults({ ease: "power2.inOut" });
-      
-      const instance = { gsap, ScrollTrigger, TextPlugin };
-      gsapInstanceRef.current = instance;
-      
-      setAnimationState(prev => ({ ...prev, progress: 100, isLoading: false, isReady: true }));
-      
-      return instance;
-    } catch (error) {
-      console.error('💥 Animation setup failed:', error);
-      setAnimationState(prev => ({ 
-        ...prev, 
-        hasError: true, 
-        errorMessage: 'Failed to initialize animations',
-        isLoading: false 
-      }));
-      setElementsVisible();
-      return null;
-    }
-  }, [animationOptions, setElementsVisible]);
+    };
+    
+    return attemptLoad(1);
+  }, [animationOptions, setElementsVisible, titleRef, subtitleRef, ctaRef, logoRef]);
 
   // Intersection Observer for lazy loading animations
   const setupIntersectionObserver = useCallback((gsap: any) => {
@@ -366,9 +470,9 @@ export const useAnimations = ({
     const quality = performanceLevel === 'low' ? 'reduced' : 'normal';
     
     // Get adaptive configurations
-    const entranceConfig = getAnimationConfig('entrance', 'mobile', 'text');
-    const scrollConfig = getAnimationConfig('scroll', 'mobile');
-    const scrollTriggerConfig = getScrollTriggerConfig('mobile');
+    const entranceConfig = getAnimationConfig('entrance', 'mobile', 'text') as any;
+    const scrollConfig = getAnimationConfig('scroll', 'mobile') as any;
+    const scrollTriggerConfig = getScrollTriggerConfig('mobile') as any;
     
     // Adjust for performance
     if (quality === 'reduced') {
@@ -433,7 +537,7 @@ export const useAnimations = ({
           pinSpacing: scrollTriggerConfig.pinSpacing,
           fastScrollEnd: true,
           preventOverlaps: true,
-          onUpdate: (self) => {
+          onUpdate: (self: any) => {
             // Monitor performance during scroll
             const fps = performanceMonitor.current.measureFPS();
             if (fps < 20 && quality !== 'reduced') {
@@ -478,21 +582,24 @@ export const useAnimations = ({
       }
     }
 
-    // Touch gesture support
+    // Enhanced touch gesture support with accessibility
     if ('ontouchstart' in window) {
       let touchStartY = 0;
       let touchEndY = 0;
+      let touchStartTime = 0;
 
       const handleTouchStart = (e: TouchEvent) => {
         touchStartY = e.changedTouches[0].screenY;
+        touchStartTime = Date.now();
       };
 
       const handleTouchEnd = (e: TouchEvent) => {
         touchEndY = e.changedTouches[0].screenY;
         const difference = touchStartY - touchEndY;
+        const touchDuration = Date.now() - touchStartTime;
         
-        // Swipe up detection
-        if (Math.abs(difference) > 50) {
+        // Swipe up detection with timing validation
+        if (Math.abs(difference) > 50 && touchDuration < 500) {
           if (difference > 0) {
             // Trigger subtle bounce animation
             gsap.to(logoRef.current, {
@@ -500,14 +607,19 @@ export const useAnimations = ({
               duration: 0.2,
               yoyo: true,
               repeat: 1,
-              ease: "power2.inOut"
+              ease: "power2.inOut",
+              onComplete: () => {
+                // Announce gesture completion
+                announceToScreenReader('Swipe gesture detected', 'polite');
+              }
             });
           }
         }
       };
 
-      document.addEventListener('touchstart', handleTouchStart);
-      document.addEventListener('touchend', handleTouchEnd);
+      // Use passive listeners for better performance
+      document.addEventListener('touchstart', handleTouchStart, { passive: true });
+      document.addEventListener('touchend', handleTouchEnd, { passive: true });
       
       animationRefs.current.cleanup.push(() => {
         document.removeEventListener('touchstart', handleTouchStart);
@@ -515,14 +627,32 @@ export const useAnimations = ({
       });
     }
 
-    // Setup hover animations with touch fallback
+    // Enhanced hover animations with accessibility
     const hoverCleanups = [
       ...applyHoverAnimations('.btn-primary', 'button'),
       ...applyHoverAnimations('.service-card', 'serviceCard'),
       ...applyHoverAnimations('nav a', 'navLink')
     ];
     
-    animationRefs.current.cleanup.push(...hoverCleanups);
+    // Setup focus animations for accessibility
+    const focusableElements = document.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ) as NodeListOf<HTMLElement>;
+    
+    const focusCleanups: (() => void)[] = [];
+    focusableElements.forEach(element => {
+      const cleanup = applyFocusAnimation(element);
+      if (cleanup) focusCleanups.push(cleanup);
+    });
+    
+    animationRefs.current.cleanup.push(...hoverCleanups, ...focusCleanups);
+    
+    // Announce animation completion for screen readers
+    if (entranceTimeline) {
+      entranceTimeline.eventCallback('onComplete', () => {
+        announceToScreenReader('Page animations completed', 'polite');
+      });
+    }
     
   }, [heroRef, titleRef, subtitleRef, ctaRef, logoRef, sectionRefs, animationOptions]);
 
@@ -536,10 +666,10 @@ export const useAnimations = ({
     }
 
     // Desktop-specific configurations
-    const styles = getAnimationStyle('glow', 'desktop');
-    const transforms = getAnimationStyle('transforms', 'desktop');
-    const scrollConfig = getAnimationConfig('scroll', 'desktop');
-    const scrollTriggerConfig = getScrollTriggerConfig('desktop');
+    const styles = getAnimationStyle('glow', 'desktop') as any;
+    const transforms = getAnimationStyle('transforms', 'desktop') as any;
+    const scrollConfig = getAnimationConfig('scroll', 'desktop') as any;
+    const scrollTriggerConfig = getScrollTriggerConfig('desktop') as any;
 
     // Set initial states
     gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
@@ -613,7 +743,7 @@ export const useAnimations = ({
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
-          onUpdate: (self) => {
+          onUpdate: (self: any) => {
             // Dynamic performance adjustment
             const fps = performanceMonitor.current.measureFPS();
             if (fps < 30) {
@@ -766,7 +896,7 @@ export const useAnimations = ({
       });
     }
 
-    // Advanced hover animations
+    // Enhanced hover animations with accessibility
     const hoverCleanups = [
       ...applyHoverAnimations('.btn-primary', 'button'),
       ...applyHoverAnimations('.service-card', 'serviceCard'),
@@ -777,10 +907,44 @@ export const useAnimations = ({
       ...applyHoverAnimations('.value-card', 'serviceCard')
     ];
     
-    animationRefs.current.cleanup.push(...hoverCleanups);
+    // Setup comprehensive focus animations for accessibility
+    const focusableElements = document.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ) as NodeListOf<HTMLElement>;
+    
+    const focusCleanups: (() => void)[] = [];
+    focusableElements.forEach(element => {
+      const cleanup = applyFocusAnimation(element);
+      if (cleanup) focusCleanups.push(cleanup);
+    });
+    
+    // Setup loading state animations for dynamic content
+    const loadingElements = document.querySelectorAll('[data-loading="true"]') as NodeListOf<HTMLElement>;
+    loadingElements.forEach(element => {
+      const loadingConfig = getAnimationConfig('loading', 'desktop', 'skeleton');
+      if (loadingConfig) {
+        const loadingAnimation = gsap.to(element, {
+          ...loadingConfig,
+          repeat: -1
+        });
+        animationRefs.current.animations.set(`loading-${element.id || Math.random()}`, loadingAnimation);
+      }
+    });
+    
+    // Setup error state animations
+    const errorElements = document.querySelectorAll('[data-error="true"]') as NodeListOf<HTMLElement>;
+    errorElements.forEach(element => {
+      const errorConfig = getAnimationConfig('feedback', 'desktop', 'error');
+      if (errorConfig) {
+        const errorAnimation = gsap.to(element, errorConfig);
+        animationRefs.current.animations.set(`error-${element.id || Math.random()}`, errorAnimation);
+      }
+    });
+    
+    animationRefs.current.cleanup.push(...hoverCleanups, ...focusCleanups);
 
-    // Mouse parallax effect
-    if (performanceLevel === 'high' && animationOptions.enableParallax) {
+    // Enhanced mouse parallax effect with accessibility considerations
+    if (performanceLevel === 'high' && animationOptions.enableParallax && !prefersReducedMotion()) {
       const handleMouseMove = (e: MouseEvent) => {
         const { clientX, clientY } = e;
         const centerX = window.innerWidth / 2;
@@ -796,11 +960,19 @@ export const useAnimations = ({
         });
       };
 
-      document.addEventListener('mousemove', handleMouseMove);
+      // Throttle mouse move for better performance
+      const throttledMouseMove = debounce(handleMouseMove, 16); // ~60fps
+      document.addEventListener('mousemove', throttledMouseMove);
+      
       animationRefs.current.cleanup.push(() => {
-        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mousemove', throttledMouseMove);
       });
     }
+    
+    // Announce desktop animations completion
+    setTimeout(() => {
+      announceToScreenReader('Desktop animations initialized', 'polite');
+    }, 100);
 
   }, [heroRef, titleRef, subtitleRef, ctaRef, logoRef, sectionRefs, cardRefs, animationOptions]);
 
@@ -900,7 +1072,7 @@ export const useAnimations = ({
     }
   }, [animationState.isReady, loadGSAP, setupResponsiveAnimations, setElementsVisible, animationOptions]);
 
-  // Initialize animations on mount
+  // Initialize animations on mount with enhanced setup
   useEffect(() => {
     if (!isClient) return;
     
@@ -911,21 +1083,46 @@ export const useAnimations = ({
       });
     }, 100);
     
-    return () => clearTimeout(initTimeout);
-  }, [isClient, setupAnimations, setElementsVisible]);
+    // Setup keyboard navigation for accessibility
+    if (heroRef.current) {
+      keyboardCleanupRef.current = setupKeyboardNavigation(heroRef.current);
+    }
+    
+    // Start performance monitoring
+    performanceMonitor.current.start();
+    
+    return () => {
+      clearTimeout(initTimeout);
+      if (keyboardCleanupRef.current) {
+        keyboardCleanupRef.current();
+        keyboardCleanupRef.current = null;
+      }
+    };
+  }, [isClient, animationOptions.enableDebugMode]);
 
-  // Cleanup on unmount
+  // Enhanced cleanup on unmount
   useEffect(() => {
     return () => {
-      // Clear animation queue
-      animationQueue.current.clear();
+      // Stop performance monitoring
+      performanceMonitor.current.cleanup();
+      
+      // Clear animation queue with proper cleanup
+      animationQueue.current.cleanup();
+      
+      // Cleanup orientation and keyboard handlers
+      if (orientationCleanupRef.current) {
+        orientationCleanupRef.current();
+      }
+      if (keyboardCleanupRef.current) {
+        keyboardCleanupRef.current();
+      }
       
       // Revert matchMedia
       if (animationRefs.current.matchMedia) {
         animationRefs.current.matchMedia.revert();
       }
       
-      // Clear all animations
+      // Clear all animations with proper disposal
       animationRefs.current.animations.forEach(animation => {
         if (animation && animation.kill) {
           animation.kill();
@@ -937,19 +1134,31 @@ export const useAnimations = ({
       animationRefs.current.observers.forEach(observer => {
         observer.disconnect();
       });
+      animationRefs.current.observers = [];
       
-      // Cancel RAF
+      // Cancel RAF with proper tracking
       animationRefs.current.rafIds.forEach(id => {
         cancelAnimationFrame(id);
       });
+      animationRefs.current.rafIds = [];
       
       // Run cleanup functions
-      animationRefs.current.cleanup.forEach(cleanup => cleanup());
+      animationRefs.current.cleanup.forEach(cleanup => {
+        try {
+          cleanup();
+        } catch (error) {
+          console.warn('Cleanup function failed:', error);
+        }
+      });
+      animationRefs.current.cleanup = [];
       
       // Kill all ScrollTriggers
       if (gsapInstanceRef.current?.ScrollTrigger) {
         gsapInstanceRef.current.ScrollTrigger.getAll().forEach((st: any) => st.kill());
       }
+      
+      // Clear GSAP instance
+      gsapInstanceRef.current = null;
     };
   }, []);
 
@@ -998,17 +1207,76 @@ export const useAnimations = ({
     }
   }, []);
 
+  // Debounced ScrollTrigger refresh to prevent performance issues
+  const debouncedRefreshScrollTrigger = useMemo(
+    () => debounce(() => {
+      if (gsapInstanceRef.current?.ScrollTrigger) {
+        gsapInstanceRef.current.ScrollTrigger.refresh();
+        if (animationOptions.enableDebugMode) {
+          console.log('🔄 ScrollTrigger refreshed');
+        }
+      }
+    }, PERFORMANCE_THRESHOLDS.debounceDelay),
+    [animationOptions.enableDebugMode]
+  );
+  
   const refreshScrollTrigger = useCallback(() => {
-    if (gsapInstanceRef.current?.ScrollTrigger) {
-      gsapInstanceRef.current.ScrollTrigger.refresh();
-    }
-  }, []);
+    debouncedRefreshScrollTrigger();
+  }, [debouncedRefreshScrollTrigger]);
 
   const updateScrollTrigger = useCallback(() => {
     if (gsapInstanceRef.current?.ScrollTrigger) {
       gsapInstanceRef.current.ScrollTrigger.update();
     }
   }, []);
+  
+  // Global animation controls
+  const pauseAll = useCallback(() => {
+    if (gsapInstanceRef.current?.gsap) {
+      gsapInstanceRef.current.gsap.globalTimeline.pause();
+      announceToScreenReader('All animations paused', 'polite');
+    }
+  }, []);
+
+  const resumeAll = useCallback(() => {
+    if (gsapInstanceRef.current?.gsap) {
+      gsapInstanceRef.current.gsap.globalTimeline.resume();
+      announceToScreenReader('All animations resumed', 'polite');
+    }
+  }, []);
+  
+  const killAllAnimations = useCallback(() => {
+    if (gsapInstanceRef.current?.gsap) {
+      gsapInstanceRef.current.gsap.killTweensOf('*');
+      animationRefs.current.animations.clear();
+      setAnimationState(prev => ({ ...prev, activeAnimations: new Set() }));
+      announceToScreenReader('All animations stopped', 'polite');
+    }
+  }, []);
+  
+  // Setup orientation change handling after refreshScrollTrigger is defined
+  useEffect(() => {
+    if (!isClient) return;
+    
+    orientationCleanupRef.current = createOrientationChangeHandler((orientation) => {
+      if (animationOptions.enableDebugMode) {
+        console.log(`📱 Orientation changed to: ${orientation}`);
+      }
+      // Refresh ScrollTrigger on orientation change using GSAP instance directly
+      setTimeout(() => {
+        if (gsapInstanceRef.current?.ScrollTrigger) {
+          gsapInstanceRef.current.ScrollTrigger.refresh();
+        }
+      }, 150);
+    });
+    
+    return () => {
+      if (orientationCleanupRef.current) {
+        orientationCleanupRef.current();
+        orientationCleanupRef.current = null;
+      }
+    };
+  }, [isClient, animationOptions.enableDebugMode]);
 
   const getAnimationProgress = useCallback((animationId: string): number => {
     const animation = animationRefs.current.animations.get(animationId);
@@ -1050,6 +1318,116 @@ export const useAnimations = ({
     if (!gsapInstanceRef.current) return null;
     return gsapInstanceRef.current.gsap.timeline(vars);
   }, []);
+  
+  // Animation preset utilities
+  const createPageTransition = useCallback((element: HTMLElement, direction: 'in' | 'out' = 'in') => {
+    if (!gsapInstanceRef.current) return null;
+    
+    const preset = ANIMATION_PRESETS.pageTransition;
+    const gsap = gsapInstanceRef.current.gsap;
+    
+    if (direction === 'in') {
+      return gsap.fromTo(element, 
+        { opacity: preset.opacity[0], y: preset.y[0] },
+        { 
+          opacity: preset.opacity[1], 
+          y: preset.y[1], 
+          duration: preset.duration,
+          ease: preset.ease,
+          onComplete: () => {
+            announceToScreenReader('Page transition completed', 'polite');
+          }
+        }
+      );
+    } else {
+      return gsap.to(element, {
+        opacity: preset.opacity[0],
+        y: preset.y[0],
+        duration: preset.duration,
+        ease: preset.ease
+      });
+    }
+  }, []);
+  
+  const createLoadingAnimation = useCallback((element: HTMLElement, type: 'spinner' | 'skeleton' = 'spinner') => {
+    if (!gsapInstanceRef.current) return null;
+    
+    const gsap = gsapInstanceRef.current.gsap;
+    const deviceType = getAnimationDeviceType();
+    
+    if (type === 'spinner') {
+      const config = getAnimationConfig('loading', deviceType, 'spinner') as any;
+      return gsap.to(element, {
+        rotation: config.rotation,
+        duration: config.duration,
+        ease: config.ease,
+        repeat: config.repeat
+      });
+    } else {
+      const config = getAnimationConfig('loading', deviceType, 'skeleton') as any;
+      return gsap.to(element, {
+        opacity: config.opacity,
+        duration: config.duration,
+        ease: config.ease,
+        repeat: config.repeat,
+        yoyo: true
+      });
+    }
+  }, []);
+  
+  const createErrorAnimation = useCallback((element: HTMLElement) => {
+    if (!gsapInstanceRef.current) return null;
+    
+    const gsap = gsapInstanceRef.current.gsap;
+    const deviceType = getAnimationDeviceType();
+    const config = getAnimationConfig('feedback', deviceType, 'error') as any;
+    
+    const animation = gsap.to(element, {
+      x: config.x,
+      duration: config.duration,
+      ease: config.ease,
+      onComplete: () => {
+        announceToScreenReader('Error animation completed', 'assertive');
+      }
+    });
+    
+    return animation;
+  }, []);
+  
+  const createSuccessAnimation = useCallback((element: HTMLElement) => {
+    if (!gsapInstanceRef.current) return null;
+    
+    const gsap = gsapInstanceRef.current.gsap;
+    const deviceType = getAnimationDeviceType();
+    const config = getAnimationConfig('feedback', deviceType, 'success') as any;
+    
+    const animation = gsap.to(element, {
+      scale: config.scale,
+      duration: config.duration,
+      ease: config.ease,
+      onComplete: () => {
+        announceToScreenReader('Success animation completed', 'polite');
+      }
+    });
+    
+    return animation;
+  }, []);
+  
+  // Accessibility utilities
+  const setFocusableElements = useCallback((container: HTMLElement) => {
+    if (!container) return () => {};
+    
+    return setupKeyboardNavigation(container);
+  }, []);
+  
+  const announceAnimationState = useCallback((state: 'started' | 'paused' | 'resumed' | 'completed', animationName?: string) => {
+    const message = animationName 
+      ? `${animationName} animation ${state}`
+      : `Animation ${state}`;
+    
+    const priority = state === 'started' || state === 'completed' ? 'polite' : 'assertive';
+    announceToScreenReader(message, priority);
+  }, []);
 
   // Performance monitoring API
   const getPerformanceMetrics = useCallback(() => {
@@ -1082,6 +1460,36 @@ export const useAnimations = ({
       const currentDebug = gsapInstanceRef.current.gsap.config().nullTargetWarn;
       gsapInstanceRef.current.gsap.config({ nullTargetWarn: !currentDebug });
       console.log(`Debug mode: ${!currentDebug ? 'ON' : 'OFF'}`);
+      announceToScreenReader(`Debug mode ${!currentDebug ? 'enabled' : 'disabled'}`, 'polite');
+    }
+  }, []);
+  
+  // Animation state persistence
+  const saveAnimationState = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    
+    const state = {
+      activeAnimations: Array.from(animationState.activeAnimations),
+      isReady: animationState.isReady,
+      progress: animationState.progress
+    };
+    
+    try {
+      localStorage.setItem('animation-state', JSON.stringify(state));
+    } catch (error) {
+      console.warn('Failed to save animation state:', error);
+    }
+  }, [animationState]);
+  
+  const loadAnimationState = useCallback(() => {
+    if (typeof window === 'undefined') return null;
+    
+    try {
+      const saved = localStorage.getItem('animation-state');
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.warn('Failed to load animation state:', error);
+      return null;
     }
   }, []);
 
@@ -1094,6 +1502,7 @@ export const useAnimations = ({
     progress: animationState.progress,
     activeAnimations: Array.from(animationState.activeAnimations),
     isClient,
+    retryCount: retryCountRef.current,
     
     // Control methods
     pauseAnimation,
@@ -1108,11 +1517,33 @@ export const useAnimations = ({
     createTimeline,
     batchUpdate,
     
+    // Global controls
+    pauseAll,
+    resumeAll,
+    killAllAnimations,
+    
+    // Animation presets
+    createPageTransition,
+    createLoadingAnimation,
+    createErrorAnimation,
+    createSuccessAnimation,
+    
     // Performance
     getPerformanceMetrics,
     
     // Debug
     toggleDebugMode,
+    
+    // State persistence
+    saveAnimationState,
+    loadAnimationState,
+    
+    // Accessibility
+    announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => {
+      announceToScreenReader(message, priority);
+    },
+    announceAnimationState,
+    setFocusableElements,
     
     // Manual setup (if needed)
     setupAnimations

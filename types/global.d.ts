@@ -55,10 +55,22 @@ declare global {
     }
     google: {
       maps: {
-        Map: new (element: HTMLElement, options: unknown) => unknown
+        Map: new (element: HTMLElement, options: {
+          center: { lat: number; lng: number };
+          zoom: number;
+        }) => unknown;
+        Marker: new (options: {
+          position: { lat: number; lng: number };
+          map: unknown;
+          title: string;
+        }) => unknown;
       }
     }
     initMap: () => void
+    TextPlugin?: unknown
+    DrawSVGPlugin?: unknown
+    MorphSVGPlugin?: unknown
+    CustomEase?: unknown
   }
 }
 

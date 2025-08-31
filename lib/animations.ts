@@ -1,6 +1,82 @@
 // Centralized Animation Configuration
 // Single source of truth for all GSAP animations and styling
 
+// Breakpoint system for responsive animations
+export const BREAKPOINTS = {
+  mobile: 768,
+  tablet: 1024,
+  desktop: 1440,
+  wide: 1920
+} as const;
+
+// Animation presets for common patterns
+export const ANIMATION_PRESETS = {
+  pageTransition: {
+    duration: 0.5,
+    ease: "power2.inOut",
+    opacity: [0, 1],
+    y: [20, 0]
+  },
+  skeleton: {
+    duration: 1.5,
+    ease: "linear",
+    repeat: -1,
+    opacity: [0.4, 0.8, 0.4]
+  },
+  errorShake: {
+    duration: 0.5,
+    ease: "elastic.out(1, 0.5)",
+    x: [-10, 10, -10, 10, 0]
+  },
+  successPulse: {
+    duration: 0.6,
+    ease: "back.out(1.7)",
+    scale: [1, 1.1, 1]
+  },
+  loadingSpinner: {
+    duration: 1,
+    ease: "none",
+    repeat: -1,
+    rotation: 360
+  },
+  fadeInUp: {
+    duration: 0.8,
+    ease: "power2.out",
+    opacity: [0, 1],
+    y: [30, 0]
+  },
+  slideInLeft: {
+    duration: 0.6,
+    ease: "power2.out",
+    opacity: [0, 1],
+    x: [-50, 0]
+  },
+  bounceIn: {
+    duration: 0.8,
+    ease: "back.out(1.7)",
+    opacity: [0, 1],
+    scale: [0.3, 1]
+  }
+} as const;
+
+// Error handling and fallback configurations
+export const ERROR_CONFIGS = {
+  gsapLoadTimeout: 5000,
+  maxRetries: 3,
+  retryDelay: 1000,
+  fallbackDuration: 0.3,
+  fallbackEase: "ease-out"
+} as const;
+
+// Accessibility configurations
+export const ACCESSIBILITY_CONFIGS = {
+  focusOutlineWidth: '2px',
+  focusOutlineColor: '#3b82f6',
+  focusOutlineOffset: '2px',
+  announceDelay: 100,
+  keyboardNavigationDelay: 150
+} as const;
+
 // Common Animation Constants
 export const ANIMATION_CONSTANTS = {
   durations: {
@@ -37,6 +113,18 @@ export const ANIMATION_CONSTANTS = {
   }
 } as const;
 
+// Performance monitoring thresholds
+export const PERFORMANCE_THRESHOLDS = {
+  fps: {
+    low: 20,
+    normal: 30,
+    high: 50
+  },
+  frameBudget: 16.67, // 60fps = 16.67ms per frame
+  animationBatchSize: 3,
+  debounceDelay: 300
+} as const;
+
 export interface AnimationConfig {
   duration: number;
   ease: string;
@@ -63,6 +151,33 @@ export interface HoverAnimationConfig {
   y?: number;
   opacity?: number;
   boxShadow?: string;
+}
+
+export interface AnimationPreset {
+  duration: number;
+  ease: string;
+  opacity?: readonly number[] | number[];
+  x?: readonly number[] | number[];
+  y?: readonly number[] | number[];
+  scale?: readonly number[] | number[];
+  rotation?: number;
+  repeat?: number;
+}
+
+export interface ErrorConfig {
+  gsapLoadTimeout: number;
+  maxRetries: number;
+  retryDelay: number;
+  fallbackDuration: number;
+  fallbackEase: string;
+}
+
+export interface AccessibilityConfig {
+  focusOutlineWidth: string;
+  focusOutlineColor: string;
+  focusOutlineOffset: string;
+  announceDelay: number;
+  keyboardNavigationDelay: number;
 }
 
 // Animation Configurations
@@ -234,6 +349,100 @@ export const ANIMATION_CONFIGS = {
         opacity: 1
       }
     }
+  },
+
+  // Page transition animations
+  pageTransition: {
+    mobile: {
+      duration: 0.4,
+      ease: "power2.inOut",
+      opacity: [0, 1],
+      y: [20, 0]
+    },
+    desktop: {
+      duration: 0.5,
+      ease: "power2.inOut",
+      opacity: [0, 1],
+      y: [30, 0]
+    }
+  },
+
+  // Loading state animations
+  loading: {
+    spinner: {
+      mobile: {
+        duration: 1,
+        ease: "none",
+        repeat: -1,
+        rotation: 360
+      },
+      desktop: {
+        duration: 0.8,
+        ease: "none",
+        repeat: -1,
+        rotation: 360
+      }
+    },
+    skeleton: {
+      mobile: {
+        duration: 1.5,
+        ease: "linear",
+        repeat: -1,
+        opacity: [0.4, 0.8, 0.4]
+      },
+      desktop: {
+        duration: 1.2,
+        ease: "linear",
+        repeat: -1,
+        opacity: [0.3, 0.7, 0.3]
+      }
+    }
+  },
+
+  // Error and feedback animations
+  feedback: {
+    error: {
+      mobile: {
+        duration: 0.5,
+        ease: "elastic.out(1, 0.5)",
+        x: [-8, 8, -8, 8, 0]
+      },
+      desktop: {
+        duration: 0.5,
+        ease: "elastic.out(1, 0.5)",
+        x: [-10, 10, -10, 10, 0]
+      }
+    },
+    success: {
+      mobile: {
+        duration: 0.6,
+        ease: "back.out(1.7)",
+        scale: [1, 1.08, 1]
+      },
+      desktop: {
+        duration: 0.6,
+        ease: "back.out(1.7)",
+        scale: [1, 1.1, 1]
+      }
+    }
+  },
+
+  // Focus and accessibility animations
+  focus: {
+    mobile: {
+      duration: 0.2,
+      ease: "power2.out",
+      scale: 1.02,
+      outline: "2px solid #3b82f6",
+      outlineOffset: "2px"
+    },
+    desktop: {
+      duration: 0.2,
+      ease: "power2.out",
+      scale: 1.03,
+      outline: "2px solid #3b82f6",
+      outlineOffset: "2px"
+    }
   }
 };
 
@@ -309,28 +518,118 @@ export const ANIMATION_CLASSES = {
 };
 
 // Utility Functions
+
+// Get animation preset by name
+export const getAnimationPreset = (presetName: keyof typeof ANIMATION_PRESETS): AnimationPreset => {
+  return ANIMATION_PRESETS[presetName];
+};
+
+// Enhanced device detection with orientation support
+export const getDeviceInfo = () => {
+  if (typeof window === 'undefined') {
+    return {
+      type: 'desktop' as const,
+      orientation: 'landscape' as const,
+      width: 1920,
+      height: 1080
+    };
+  }
+  
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const orientation = width > height ? 'landscape' : 'portrait';
+  
+  let type: 'mobile' | 'tablet' | 'desktop';
+  if (width <= BREAKPOINTS.mobile) {
+    type = 'mobile';
+  } else if (width <= BREAKPOINTS.tablet) {
+    type = 'tablet';
+  } else {
+    type = 'desktop';
+  }
+  
+  return { type, orientation, width, height };
+};
+
+// Debounced function utility
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): ((...args: Parameters<T>) => void) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
+
+// CSS fallback animation utility
+export const applyCSSFallback = (element: HTMLElement, preset: keyof typeof ANIMATION_PRESETS) => {
+  const config = ANIMATION_PRESETS[preset] as AnimationPreset;
+  const duration = config.duration;
+  const ease = ERROR_CONFIGS.fallbackEase;
+  
+  element.style.transition = `all ${duration}s ${ease}`;
+  
+  if (config.opacity && Array.isArray(config.opacity)) {
+    element.style.opacity = String(config.opacity[config.opacity.length - 1]);
+  }
+  if (config.x && Array.isArray(config.x)) {
+    element.style.transform = `translateX(${config.x[config.x.length - 1]}px)`;
+  }
+  if (config.y && Array.isArray(config.y)) {
+    element.style.transform += ` translateY(${config.y[config.y.length - 1]}px)`;
+  }
+  if (config.scale && Array.isArray(config.scale)) {
+    element.style.transform += ` scale(${config.scale[config.scale.length - 1]})`;
+  }
+};
+
+// Screen reader announcement utility
+export const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+  if (typeof window === 'undefined') return;
+  
+  const announcement = document.createElement('div');
+  announcement.setAttribute('aria-live', priority);
+  announcement.setAttribute('aria-atomic', 'true');
+  announcement.style.position = 'absolute';
+  announcement.style.left = '-10000px';
+  announcement.style.width = '1px';
+  announcement.style.height = '1px';
+  announcement.style.overflow = 'hidden';
+  
+  document.body.appendChild(announcement);
+  
+  setTimeout(() => {
+    announcement.textContent = message;
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  }, ACCESSIBILITY_CONFIGS.announceDelay);
+};
+
 export const getAnimationConfig = (type: keyof typeof ANIMATION_CONFIGS, device?: 'mobile' | 'desktop', element?: string) => {
   // Check for reduced motion preference
   if (prefersReducedMotion() && type === 'entrance' && ANIMATION_CONFIGS[type].reducedMotion) {
-    const config = ANIMATION_CONFIGS[type].reducedMotion as any;
+    const config = ANIMATION_CONFIGS[type].reducedMotion as Record<string, unknown>;
     return element ? config[element] : config;
   }
   
   // Use effective device type (tablets = desktop)
   const effectiveDevice = device || getAnimationDeviceType();
-  const config = (ANIMATION_CONFIGS[type] as any)[effectiveDevice];
-  return element ? config[element] : config;
+  const config = (ANIMATION_CONFIGS[type] as Record<string, unknown>)[effectiveDevice];
+  return element ? (config as Record<string, unknown>)[element] : config;
 };
 
 export const getContinuousAnimationConfig = (element: 'logoPulse' | 'logoRotation', device?: 'mobile' | 'desktop') => {
   // Check for reduced motion preference
   if (prefersReducedMotion() && ANIMATION_CONFIGS.continuous.reducedMotion) {
-    return ANIMATION_CONFIGS.continuous.reducedMotion[element] as any;
+    return ANIMATION_CONFIGS.continuous.reducedMotion[element] as Record<string, unknown>;
   }
   
   // Use effective device type (tablets = desktop)
   const effectiveDevice = device || getAnimationDeviceType();
-  return (ANIMATION_CONFIGS.continuous[element] as any)[effectiveDevice];
+  return (ANIMATION_CONFIGS.continuous[element] as Record<string, unknown>)[effectiveDevice];
 };
 
 export const getScrollTriggerConfig = (device?: 'mobile' | 'desktop', section: string = 'hero') => {
@@ -340,13 +639,13 @@ export const getScrollTriggerConfig = (device?: 'mobile' | 'desktop', section: s
   }
   
   const effectiveDevice = device || getAnimationDeviceType();
-  return (SCROLL_TRIGGER_CONFIGS[effectiveDevice] as any)[section];
+  return (SCROLL_TRIGGER_CONFIGS[effectiveDevice] as Record<string, unknown>)[section];
 };
 
 export const getAnimationStyle = (type: keyof typeof ANIMATION_STYLES, device?: 'mobile' | 'desktop', variant?: string) => {
   const effectiveDevice = device || getAnimationDeviceType();
-  const style = ANIMATION_STYLES[type][effectiveDevice] as any;
-  return variant ? (style as any)[variant] : style;
+  const style = ANIMATION_STYLES[type][effectiveDevice] as Record<string, unknown>;
+  return variant ? (style as Record<string, unknown>)[variant] : style;
 };
 
 // Device Detection Utility
@@ -380,7 +679,85 @@ export const getAnimationDeviceType = (): 'mobile' | 'desktop' => {
   return deviceType === 'mobile' ? 'mobile' : 'desktop';
 };
 
-// Hover Animation Utilities
+// Enhanced device detection with hydration safety
+export const getHydrationSafeDeviceType = (): 'mobile' | 'desktop' => {
+  // Always return desktop during SSR to prevent hydration mismatches
+  if (typeof window === 'undefined') return 'desktop';
+  
+  // Use a flag to detect if we're in the initial hydration phase
+  const isHydrating = !window.document.body.hasAttribute('data-hydrated');
+  if (isHydrating) {
+    // Mark as hydrated and return desktop for consistency
+    window.document.body.setAttribute('data-hydrated', 'true');
+    return 'desktop';
+  }
+  
+  return getAnimationDeviceType();
+};
+
+// Orientation change handler
+export const createOrientationChangeHandler = (callback: (orientation: 'portrait' | 'landscape') => void) => {
+  if (typeof window === 'undefined') return () => {};
+  
+  const handleOrientationChange = () => {
+    const { orientation } = getDeviceInfo();
+    if (orientation === 'portrait' || orientation === 'landscape') {
+      callback(orientation);
+    }
+  };
+  
+  // Listen for both resize and orientation change events
+  window.addEventListener('resize', debounce(handleOrientationChange, 150));
+  window.addEventListener('orientationchange', handleOrientationChange);
+  
+  return () => {
+    window.removeEventListener('resize', handleOrientationChange);
+    window.removeEventListener('orientationchange', handleOrientationChange);
+  };
+};
+
+// Performance monitoring utility
+export const createPerformanceMonitor = () => {
+  let frameCount = 0;
+  let lastTime = performance.now();
+  let fps = 60;
+  let rafId: number;
+  
+  const measure = () => {
+    const currentTime = performance.now();
+    frameCount++;
+    
+    if (currentTime >= lastTime + 1000) {
+      fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+      frameCount = 0;
+      lastTime = currentTime;
+    }
+    
+    rafId = requestAnimationFrame(measure);
+  };
+  
+  const start = () => {
+    rafId = requestAnimationFrame(measure);
+  };
+  
+  const stop = () => {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+  };
+  
+  const getFPS = () => fps;
+  
+  const getPerformanceLevel = (): 'low' | 'normal' | 'high' => {
+    if (fps < PERFORMANCE_THRESHOLDS.fps.low) return 'low';
+    if (fps < PERFORMANCE_THRESHOLDS.fps.normal) return 'normal';
+    return 'high';
+  };
+  
+  return { start, stop, getFPS, getPerformanceLevel };
+};
+
+// Enhanced Hover Animation Utilities with Accessibility
 export const applyHoverAnimation = (element: HTMLElement, type: keyof typeof ANIMATION_CONFIGS.hover) => {
   if (typeof window === 'undefined' || !window.gsap) return;
   
@@ -391,8 +768,9 @@ export const applyHoverAnimation = (element: HTMLElement, type: keyof typeof ANI
   
   const deviceType = getAnimationDeviceType();
   const config = ANIMATION_CONFIGS.hover[type][deviceType];
+  const focusConfig = ANIMATION_CONFIGS.focus[deviceType];
   
-  const handleMouseEnter = () => {
+  const animateIn = () => {
     window.gsap.to(element, {
       ...config,
       duration: config.duration,
@@ -400,7 +778,7 @@ export const applyHoverAnimation = (element: HTMLElement, type: keyof typeof ANI
     });
   };
   
-  const handleMouseLeave = () => {
+  const animateOut = () => {
     window.gsap.to(element, {
       scale: 1,
       y: 0,
@@ -410,13 +788,144 @@ export const applyHoverAnimation = (element: HTMLElement, type: keyof typeof ANI
     });
   };
   
-  element.addEventListener('mouseenter', handleMouseEnter);
-  element.addEventListener('mouseleave', handleMouseLeave);
+  const animateFocus = () => {
+    window.gsap.to(element, {
+      scale: focusConfig.scale,
+      duration: focusConfig.duration,
+      ease: focusConfig.ease
+    });
+    
+    // Apply focus outline
+    element.style.outline = focusConfig.outline;
+    element.style.outlineOffset = focusConfig.outlineOffset;
+  };
+  
+  const animateBlur = () => {
+    window.gsap.to(element, {
+      scale: 1,
+      duration: focusConfig.duration,
+      ease: focusConfig.ease
+    });
+    
+    // Remove focus outline
+    element.style.outline = 'none';
+    element.style.outlineOffset = '0';
+  };
+  
+  // Mouse events
+  element.addEventListener('mouseenter', animateIn);
+  element.addEventListener('mouseleave', animateOut);
+  
+  // Keyboard accessibility events
+  element.addEventListener('focus', animateFocus);
+  element.addEventListener('blur', animateBlur);
+  
+  // Touch events for mobile
+  element.addEventListener('touchstart', animateIn, { passive: true });
+  element.addEventListener('touchend', animateOut, { passive: true });
   
   // Return cleanup function
   return () => {
-    element.removeEventListener('mouseenter', handleMouseEnter);
-    element.removeEventListener('mouseleave', handleMouseLeave);
+    element.removeEventListener('mouseenter', animateIn);
+    element.removeEventListener('mouseleave', animateOut);
+    element.removeEventListener('focus', animateFocus);
+    element.removeEventListener('blur', animateBlur);
+    element.removeEventListener('touchstart', animateIn);
+    element.removeEventListener('touchend', animateOut);
+  };
+};
+
+// Apply focus animations for keyboard navigation
+export const applyFocusAnimation = (element: HTMLElement) => {
+  if (typeof window === 'undefined' || !window.gsap) return;
+  
+  if (prefersReducedMotion()) {
+    // Apply static focus styles for reduced motion
+    const handleFocus = () => {
+      element.style.outline = ACCESSIBILITY_CONFIGS.focusOutlineWidth + ' solid ' + ACCESSIBILITY_CONFIGS.focusOutlineColor;
+      element.style.outlineOffset = ACCESSIBILITY_CONFIGS.focusOutlineOffset;
+    };
+    
+    const handleBlur = () => {
+      element.style.outline = 'none';
+      element.style.outlineOffset = '0';
+    };
+    
+    element.addEventListener('focus', handleFocus);
+    element.addEventListener('blur', handleBlur);
+    
+    return () => {
+      element.removeEventListener('focus', handleFocus);
+      element.removeEventListener('blur', handleBlur);
+    };
+  }
+  
+  const deviceType = getAnimationDeviceType();
+  const config = ANIMATION_CONFIGS.focus[deviceType];
+  
+  const handleFocus = () => {
+    window.gsap.to(element, {
+      scale: config.scale,
+      duration: config.duration,
+      ease: config.ease
+    });
+    
+    element.style.outline = config.outline;
+    element.style.outlineOffset = config.outlineOffset;
+  };
+  
+  const handleBlur = () => {
+    window.gsap.to(element, {
+      scale: 1,
+      duration: config.duration,
+      ease: config.ease
+    });
+    
+    element.style.outline = 'none';
+    element.style.outlineOffset = '0';
+  };
+  
+  element.addEventListener('focus', handleFocus);
+  element.addEventListener('blur', handleBlur);
+  
+  return () => {
+    element.removeEventListener('focus', handleFocus);
+    element.removeEventListener('blur', handleBlur);
+  };
+};
+
+// Enhanced keyboard navigation support
+export const setupKeyboardNavigation = (container: HTMLElement) => {
+  if (typeof window === 'undefined') return () => {};
+  
+  const focusableElements = container.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  ) as NodeListOf<HTMLElement>;
+  
+  const cleanupFunctions: (() => void)[] = [];
+  
+  focusableElements.forEach(element => {
+    const cleanup = applyFocusAnimation(element);
+    if (cleanup) cleanupFunctions.push(cleanup);
+  });
+  
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      // Announce navigation to screen readers
+      setTimeout(() => {
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement && activeElement.getAttribute('aria-label')) {
+          announceToScreenReader(`Focused on ${activeElement.getAttribute('aria-label')}`);
+        }
+      }, ACCESSIBILITY_CONFIGS.keyboardNavigationDelay);
+    }
+  };
+  
+  container.addEventListener('keydown', handleKeyDown);
+  cleanupFunctions.push(() => container.removeEventListener('keydown', handleKeyDown));
+  
+  return () => {
+    cleanupFunctions.forEach(cleanup => cleanup());
   };
 };
 

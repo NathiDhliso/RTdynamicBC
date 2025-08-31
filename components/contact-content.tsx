@@ -3,6 +3,8 @@
 import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
+
+// Google Maps API types are defined in types/global.d.ts
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -76,11 +78,11 @@ export default function ContactContent() {
     window.initMap = () => {
       const mapElement = document.getElementById("map")
       if (mapElement) {
-        const map = new (window as any).google.maps.Map(mapElement, {
+        const map = new window.google.maps.Map(mapElement, {
           center: { lat: -25.993459, lng: 28.131355 }, // Coordinates for 1 Diagonal Street, Midrand
           zoom: 15,
         })
-        new (window as any).google.maps.Marker({
+        new window.google.maps.Marker({
           position: { lat: -25.993459, lng: 28.131355 },
           map: map,
           title: "RT Dynamic Business Consulting",

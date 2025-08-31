@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, Target, Award, TrendingUp, CheckCircle } from "lucide-react"
@@ -69,10 +69,8 @@ export default function AboutContent() {
   const statsRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
   const teamRef = useRef<HTMLDivElement>(null)
-  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
   }, [])
 
   // Animation handled by centralized system via data attributes

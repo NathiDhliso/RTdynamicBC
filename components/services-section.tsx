@@ -35,7 +35,7 @@ const servicesData: Service[] = [
       "Streamlined bank reconciliation processes",
       "Comprehensive budgeting and forecasting support"
     ],
-    color: "from-gray-500 to-gray-600",
+    color: "from-primary/5 to-primary/10",
     pricing: "",
     duration: "",
     process: [
@@ -66,7 +66,7 @@ const servicesData: Service[] = [
       "Timely provisional tax submissions",
       "Expert guidance on complex tax matters"
     ],
-    color: "from-gray-600 to-gray-700",
+    color: "from-accent/5 to-accent/10",
     pricing: "",
     duration: "",
     process: [
@@ -97,7 +97,7 @@ const servicesData: Service[] = [
       "Compliance with regulatory audit requirements",
       "Professional audit opinions and recommendations"
     ],
-    color: "from-gray-700 to-gray-800",
+    color: "from-primary/8 to-primary/15",
     pricing: "",
     duration: "",
     process: [
@@ -128,7 +128,7 @@ const servicesData: Service[] = [
       "Automated tax submissions and filings",
       "Peace of mind with expert payroll management"
     ],
-    color: "from-gray-500 to-gray-600",
+    color: "from-accent/8 to-accent/15",
     pricing: "",
     duration: "",
     process: [
@@ -160,7 +160,7 @@ const servicesData: Service[] = [
       "Expert financial valuations and analysis",
       "Professional asset management services"
     ],
-    color: "from-gray-600 to-gray-700",
+    color: "from-primary/10 to-primary/20",
     pricing: "",
     duration: "",
     process: [
@@ -209,22 +209,22 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                 <Card
                   key={service.id}
                   data-service={service.id}
-                  className="service-card group relative overflow-hidden border border-border shadow-lg gsap-animation bg-card h-full flex flex-col"
+                  className={`service-card group relative overflow-hidden border border-primary/20 shadow-xl gsap-animation bg-gradient-to-br ${service.color} backdrop-blur-sm h-full flex flex-col hover:shadow-2xl hover:border-primary/30 transition-all duration-300`}
                 >
-                  <CardHeader className="text-center pb-fluid-md">
-                    <div className="w-16 h-16 mx-auto mb-fluid-md bg-primary/10 rounded-full flex items-center justify-center">
+                  <CardHeader className="text-center pb-fluid-md relative z-10">
+                    <div className="w-16 h-16 mx-auto mb-fluid-md bg-primary/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-primary/30">
                       <IconComponent className="w-8 h-8 text-primary" />
                     </div>
                     <CardTitle className="text-fluid-xl font-light text-foreground leading-fluid-relaxed dynamic-text-spacing">{service.title}</CardTitle>
                   </CardHeader>
 
-                  <CardContent className="text-center flex-grow px-fluid-md">
-                    <p className="text-muted-foreground mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing">{service.description}</p>
-                    <ul className="space-y-fluid-sm text-sm text-muted-foreground">
+                  <CardContent className="text-center flex-grow px-fluid-md relative z-10">
+                    <p className="text-foreground/80 mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing font-light">{service.description}</p>
+                    <ul className="space-y-fluid-sm text-sm text-foreground/70">
                       {service.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-center justify-center">
-                          <span className="w-1.5 h-1.5 bg-primary rounded-full mr-fluid-lg"></span>
-                          {feature}
+                          <span className="w-2 h-2 bg-primary rounded-full mr-fluid-lg shadow-sm"></span>
+                          <span className="font-light">{feature}</span>
                         </li>
                       ))}
                     </ul>

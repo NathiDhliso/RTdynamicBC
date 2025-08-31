@@ -948,6 +948,15 @@
   
   /* Note: GSAP animations are handled in JavaScript via matchMedia check */
   /* CSS animations and transitions are disabled above */
+
+/* Animation delays for page loader */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
 }
 
 /* COMPREHENSIVE GSAP PROTECTION RULES */

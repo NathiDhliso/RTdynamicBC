@@ -4,6 +4,7 @@ import { Poppins, Inter, Outfit } from "next/font/google"
 import Script from "next/script"
 import LoadingSpinner from "@/components/loading-spinner"
 import PagePreloader from "@/components/page-preloader"
+import PageTransition from "@/components/page-transition"
 
 import "./globals.css"
 
@@ -69,7 +70,9 @@ export default function RootLayout({
             }
           `}
         </Script>
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
         
         {/* Google Maps Script - only load when needed */}
         <Script

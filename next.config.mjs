@@ -30,6 +30,10 @@ const nextConfig = {
   },
   // Enable compression for smaller bundle sizes
   compress: true,
+  // Optimize page switching performance
+  poweredByHeader: false,
+  // Enable faster page transitions
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   // Configure caching headers for better performance
   async headers() {
     return [

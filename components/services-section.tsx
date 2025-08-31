@@ -229,16 +229,16 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                     <div className={`w-16 h-16 mx-auto mb-fluid-md ${isClient ? 'bg-primary/20 backdrop-blur-sm shadow-lg border border-primary/30' : 'bg-primary/10'} rounded-full flex items-center justify-center`}>
                       <IconComponent className="w-8 h-8 text-primary" />
                     </div>
-                    <CardTitle className="text-fluid-xl font-light text-foreground leading-fluid-relaxed dynamic-text-spacing">{service.title}</CardTitle>
+                    <CardTitle className="text-fluid-xl font-light text-white leading-fluid-relaxed dynamic-text-spacing">{service.title}</CardTitle>
                   </CardHeader>
 
                   <CardContent className={`text-center flex-grow px-fluid-md ${isClient ? 'relative z-10' : ''}`}>
-                    <p className={`${isClient ? 'text-foreground/80 font-light' : 'text-muted-foreground'} mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing`}>{service.description}</p>
-                    <ul className={`space-y-fluid-sm text-sm ${isClient ? 'text-foreground/70' : 'text-muted-foreground'}`}>
+                    <p className="text-white/90 font-light mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing">{service.description}</p>
+                    <ul className="space-y-fluid-sm text-sm text-white/80">
                       {service.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-center justify-center">
-                          <span className={`${isClient ? 'w-2 h-2 shadow-sm' : 'w-1.5 h-1.5'} bg-primary rounded-full mr-fluid-lg`}></span>
-                          {isClient ? <span className="font-light">{feature}</span> : feature}
+                          <span className={`${isClient ? 'w-2 h-2 shadow-sm' : 'w-1.5 h-1.5'} bg-white rounded-full mr-fluid-lg`}></span>
+                          <span className="font-light">{feature}</span>
                         </li>
                       ))}
                     </ul>

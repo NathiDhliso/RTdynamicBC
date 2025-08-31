@@ -460,8 +460,8 @@ export const useAnimations = ({
       });
     }, observerOptions);
 
-    // Observe all lazy-load elements
-    const lazyElements = document.querySelectorAll('[data-lazy-animate="true"]');
+    // Observe all lazy-load elements (support data-attribute or class)
+    const lazyElements = document.querySelectorAll('[data-lazy-animate="true"], .lazy-animate');
     lazyElements.forEach(el => observer.observe(el));
     
     animationRefs.current.observers.push(observer);
@@ -804,24 +804,34 @@ export const useAnimations = ({
       });
     }
 
-    // Master scroll timeline with complex choreography (fixed scrolling)
-    if (!reducedMotion && scrollTriggerConfig && (heroRef?.current || sectionRef?.current)) {
-      const triggerElement = heroRef?.current || sectionRef?.current;
+    // Master scroll timeline with complex choreography (enabled pinning and zoom out)
+    if (!reducedMotion && scrollTriggerConfig && heroRef?.current) {
+      const triggerElement = heroRef.current;
+      const servicesSection = document.querySelector('.services-section');
+      
       const masterTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: triggerElement,
-          start: scrollTriggerConfig.start,
-          end: scrollTriggerConfig.end,
+          start: 'top top',
+          end: '+=100%',
           scrub: 0.5,
-          pin: false, // Fixed: disabled pinning to allow normal scrolling
-          pinSpacing: false, // Fixed: disabled pin spacing
-          anticipatePin: 0, // Fixed: disabled anticipate pin
+          pin: true, // Re-enabled pinning for proper zoom out effect
+          pinSpacing: false,
+          anticipatePin: 1,
           onUpdate: (self: any) => {
             // Dynamic performance adjustment
             const fps = performanceMonitor.current.measureFPS();
             if (fps < 30) {
-              self.vars.scrub = 2; // Increase scrub for smoother performance
+              self.vars.scrub = 2;
             }
+            
+            // Zoom out effect on the entire hero section
+            const progress = self.progress;
+            const scale = 1 - (progress * 0.3); // Zoom out to 70%
+            gsap.set(triggerElement, {
+              scale: scale,
+              transformOrigin: 'center center'
+            });
           }
         }
       });
@@ -859,14 +869,23 @@ export const useAnimations = ({
         }, 0.2);
       }
 
-      // Advanced logo transformation (fixed rotation and mobile overflow)
-      if (performanceLevel === 'high' && logoRef?.current) {
+      // Advanced logo transformation with rotation
+      if (logoRef?.current) {
         const isMobile = window.innerWidth < 768;
+        
+        // Continuous rotation animation
+        gsap.to(logoRef.current, {
+          rotation: 360,
+          duration: 20,
+          ease: "none",
+          repeat: -1
+        });
+        
+        // Scroll-triggered transformation
         masterTimeline.to(logoRef.current, {
           scale: 0.3,
-          x: isMobile ? "-20vw" : "-48vw", // Fixed: reduced movement on mobile to prevent overflow
-          y: isMobile ? "-20vh" : "-48vh", // Fixed: reduced movement on mobile
-          rotation: 0, // Fixed: removed excessive rotation
+          x: isMobile ? "-20vw" : "-40vw",
+          y: isMobile ? "-20vh" : "-40vh",
           duration: 1.5,
           ease: "power4.inOut",
           onUpdate: function() {
@@ -880,17 +899,31 @@ export const useAnimations = ({
             }
           }
         }, 0.15);
-      } else if (logoRef?.current) {
-        // Simplified version for normal performance
-        const isMobile = window.innerWidth < 768;
-        masterTimeline.to(logoRef.current, {
-          scale: 0.4,
-          x: isMobile ? "-20vw" : "-48vw", // Fixed: reduced movement on mobile
-          y: isMobile ? "-20vh" : "-48vh", // Fixed: reduced movement on mobile
-          rotation: 0, // Fixed: removed rotation
-          duration: 1.3,
-          ease: "power3.inOut"
-        }, 0.15);
+      }
+      
+      // Cascading services cards animation
+      if (servicesSection) {
+        const serviceCards = servicesSection.querySelectorAll('.service-card');
+        if (serviceCards.length > 0) {
+          // Set initial state for service cards
+          gsap.set(serviceCards, {
+            opacity: 0,
+            y: 100,
+            scale: 0.8,
+            rotationX: -15
+          });
+          
+          // Animate cards in cascade
+          masterTimeline.to(serviceCards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            rotationX: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            stagger: 0.1 // Cascade effect
+          }, 0.6);
+        }
       }
 
       // Staggered section animations

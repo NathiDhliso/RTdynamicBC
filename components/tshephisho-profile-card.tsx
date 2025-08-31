@@ -41,7 +41,12 @@ const TshephishoProfileCard = () => {
       "Strategic Tax Planning",
       "Business Process Optimization",
       "Financial Risk Management",
-      "Corporate Finance Advisory"
+      "Corporate Finance Advisory",
+      "Budgeting & Forecasting",
+      "Cash Flow Modeling",
+      "Performance Reporting",
+      "Cost Optimization",
+      "Stakeholder Communication"
     ],
     education: "Bachelor of Accounting Sciences, Post Graduate Diploma in Accountancy (CTA)",
     contact: {
@@ -59,6 +64,7 @@ const TshephishoProfileCard = () => {
         onClick={() => setIsFlipped(!isFlipped)}
         whileHover={{ y: -5 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
+        initial={false}
       >
         <motion.div
           className="relative w-full h-full"
@@ -67,6 +73,7 @@ const TshephishoProfileCard = () => {
             backfaceVisibility: "hidden"
           }}
           animate={{ rotateX: isFlipped ? 180 : 0 }}
+          initial={false}
           transition={{ 
             duration: 0.6,
             ease: [0.4, 0, 0.2, 1],
@@ -147,56 +154,44 @@ const TshephishoProfileCard = () => {
                 
                 <div className="relative z-10 flex flex-col h-full">
                   {/* Header Section */}
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <GraduationCap className="h-8 w-8 text-primary" />
+                  <div className="text-center mb-4">
+                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <GraduationCap className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="font-poppins font-bold text-lg mb-1">{backDetails.name}</h3>
-                    <p className="font-inter text-gray-300 text-sm mb-1">{backDetails.title}</p>
+                    <h3 className="font-poppins font-bold text-base mb-1">{backDetails.name}</h3>
+                    <p className="font-inter text-gray-300 text-xs mb-1">{backDetails.title}</p>
                     <p className="font-inter text-primary text-xs">{backDetails.credentials}</p>
                   </div>
                   
-                  {/* Content Grid */}
-                  <div className="flex-1 grid grid-cols-2 gap-6 text-left">
-                    {/* Left Column */}
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="font-poppins font-semibold text-sm mb-2 text-primary">Experience</h4>
-                        <p className="font-inter text-xs text-gray-300">{backDetails.experience} in professional accounting</p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-poppins font-semibold text-sm mb-2 text-primary">Education</h4>
-                        <p className="font-inter text-xs text-gray-300 leading-relaxed">{backDetails.education}</p>
-                      </div>
+                  {/* Single Column Content */}
+                  <div className="flex-1 space-y-3 text-center">
+                    <div>
+                      <h4 className="font-poppins font-semibold text-xs mb-1 text-primary">Experience</h4>
+                      <p className="font-inter text-xs text-gray-300">{backDetails.experience}</p>
                     </div>
                     
-                    {/* Right Column */}
                     <div>
-                      <h4 className="font-poppins font-semibold text-sm mb-3 text-primary">Specializations</h4>
-                      <div className="space-y-2">
-                        {backDetails.specializations.slice(0, 6).map((spec, index) => (
-                          <div key={index} className="text-xs text-gray-300 flex items-start">
-                            <div className="w-1 h-1 bg-primary rounded-full mr-2 mt-1.5 flex-shrink-0" />
-                            <span className="leading-relaxed">{spec}</span>
+                      <h4 className="font-poppins font-semibold text-xs mb-1 text-primary">Key Specializations</h4>
+                      <div className="grid grid-cols-2 gap-1 text-xs text-gray-300 text-center">
+                        {backDetails.specializations.map((spec, index) => (
+                          <div key={index} className="text-xs">
+                            {spec}
                           </div>
                         ))}
                       </div>
                     </div>
+                    
+                    <div>
+                      <h4 className="font-poppins font-semibold text-xs mb-1 text-primary">Contact</h4>
+                      <div className="flex justify-center space-x-3 text-gray-400">
+                        <Mail className="h-3 w-3" />
+                        <Phone className="h-3 w-3" />
+                        <MapPin className="h-3 w-3" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="relative z-10">
-                  <div className="flex justify-center space-x-4 text-gray-400">
-                    <Mail className="h-4 w-4" />
-                    <Phone className="h-4 w-4" />
-                    <MapPin className="h-4 w-4" />
-                    <Linkedin className="h-4 w-4" />
-                  </div>
-                  <div className="text-center text-gray-500 text-xs font-inter mt-2">
-                    Strategic Financial Leadership Since 2018
-                  </div>
-                </div>
+
               </CardContent>
             </Card>
           </motion.div>

@@ -172,7 +172,7 @@ export default function ConfirmationContent() {
             <div className="inline-flex items-center glassmorphism rounded-full px-fluid-lg py-fluid-sm mb-fluid-2xl shadow-lg">
               <FileText className="h-6 w-6 text-primary mr-3" />
               <span className="font-inter text-fluid-base text-gray-700">
-                Reference ID: <span className="font-light text-primary">RTD-{Date.now().toString().slice(-6)}</span>
+                Reference ID: <span className="font-light text-primary">RTD-XXXXXX</span>
               </span>
             </div>
 

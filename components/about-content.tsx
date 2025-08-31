@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, Target, Award, TrendingUp, CheckCircle } from "lucide-react"
-import RabelaniProfileCard from "@/components/rabelani-profile-card"
-import TshephishoProfileCard from "@/components/tshephisho-profile-card"
+
 import { useAnimations } from "@/hooks/use-animations"
+import heroImage from "@/public/RTcompanyimage.png"
 
 
 
@@ -71,21 +71,18 @@ export default function AboutContent() {
   const heroRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
-  const teamRef = useRef<HTMLDivElement>(null)
 
   console.log("🔍 AboutContent: About to call useAnimations with refs:", {
     heroRef: heroRef.current,
     statsRef: statsRef.current,
-    valuesRef: valuesRef.current,
-    teamRef: teamRef.current
+    valuesRef: valuesRef.current
   });
 
   // Initialize animations
   useAnimations({
     heroRef,
     statsRef,
-    valuesRef,
-    teamRef
+    valuesRef
   })
 
   console.log("🔍 AboutContent: useAnimations called");
@@ -131,12 +128,13 @@ export default function AboutContent() {
             <div className="relative">
               <div className="w-full h-96 rounded-2xl shadow-2xl overflow-hidden">
                 <Image
-                  src="/RTcompanyimage.png"
+                  src={heroImage}
                   alt="RT Dynamic Business Consulting Office"
-                  width={600}
-                  height={384}
                   className="w-full h-full object-cover"
+                  placeholder="blur"
                   priority
+                  sizes="(min-width: 1024px) 600px, 100vw"
+                  quality={70}
                 />
               </div>
               {/* Uncomment and customize this badge when you add your image */}
@@ -205,27 +203,7 @@ export default function AboutContent() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section ref={teamRef} className="py-fluid-2xl bg-gradient-to-b from-gray-50 to-white">
-        <div className="container-mobile-safe">
-          <div className="text-center mb-fluid-xl">
-            <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">
-              Meet Our <span className="text-primary">Founders</span>
-            </h2>
-            
-          </div>
-          <div className="flex flex-col lg:flex-row justify-center items-center gap-fluid-xl lg:gap-fluid-2xl" suppressHydrationWarning>
-            <div className="team-card">
-              {console.log("🔍 AboutContent: Rendering Rabelani card")}
-              <RabelaniProfileCard />
-            </div>
-            <div className="team-card">
-              {console.log("🔍 AboutContent: Rendering Tshephisho card")}
-              <TshephishoProfileCard />
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Affiliations Section */}
       <section className="py-fluid-2xl bg-white">

@@ -194,71 +194,11 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
     setIsClient(true)
   }, [])
 
-  // Initialize animations with immediate scroll triggers for service cards
-  useAnimations({
-    sectionRef,
-    options: {
-      enableLazyLoad: false, // Disable lazy loading for immediate appearance
-      performanceMode: 'high'
-    }
-  })
+  // Ensure animations initialize on pages without the hero master timeline
+  useAnimations({ sectionRef })
 
-  // Setup immediate scroll trigger animations for service cards
-   useEffect(() => {
-     if (!isClient || typeof window === 'undefined') return
-
-     const currentCards = cardRefs.current
-
-     const loadGSAP = async () => {
-       try {
-         const gsap = (await import('gsap')).default
-         const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-         gsap.registerPlugin(ScrollTrigger)
-
-         // Animate service cards immediately when they come into view
-         currentCards.forEach((card, index) => {
-           if (card) {
-             gsap.set(card, {
-               opacity: 0,
-               y: 30,
-               scale: 0.95
-             })
-
-             gsap.to(card, {
-               opacity: 1,
-               y: 0,
-               scale: 1,
-               duration: 0.4,
-               ease: "power2.out",
-               scrollTrigger: {
-                 trigger: card,
-                 start: "top 85%", // Trigger when card is 85% in view
-                 end: "bottom 20%",
-                 toggleActions: "play none none reverse",
-                 once: false // Allow re-triggering
-               },
-               delay: index * 0.05 // Very small stagger for smooth effect
-             })
-           }
-         })
-       } catch (error) {
-         console.warn('GSAP not available for service cards animation:', error)
-       }
-     }
-
-     loadGSAP()
-
-     return () => {
-          // Cleanup scroll triggers
-          if (typeof window !== 'undefined' && window.ScrollTrigger) {
-            window.ScrollTrigger.getAll().forEach((trigger: { trigger?: HTMLElement; kill: () => void }) => {
-               if (trigger.trigger && currentCards.includes(trigger.trigger as HTMLDivElement)) {
-                trigger.kill()
-              }
-            })
-          }
-        }
-   }, [isClient])
+  // Note: Animations are now handled by the main scroll timeline in the hero section
+  // This ensures proper coordination between hero zoom out and services cascade
 
   if (!services || services.length === 0) {
     return null
@@ -290,6 +230,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                     }
                   }}
                   data-service={service.id}
+                  className={`lazy-animate service-card group relative overflow-hidden border ${isClient ? 'border-primary/20 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all duration-300' : 'border-border shadow-lg'} h-full flex flex-col`}
                   className={`service-card group relative overflow-hidden border ${isClient ? 'border-primary/20 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all duration-300' : 'border-border shadow-lg'} h-full flex flex-col`}
                   style={isClient ? {
                     background: service.id === 'taxation-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--accent) 5%, transparent), color-mix(in srgb, var(--accent) 10%, transparent))` :

@@ -890,6 +890,7 @@
     background-image: radial-gradient(circle at 10% 20%, oklch(100% 0 0 / 0.04), transparent 50%), 
                       radial-gradient(circle at 90% 80%, oklch(80% 0.05 200 / 0.04), transparent 60%);
     z-index: 1; /* Sits above the background but below content */
+    pointer-events: none; /* Allow clicks to pass through */
   }
 }
 
@@ -1157,38 +1158,7 @@ progress {
   margin: 0 auto;
 }
 
-/* TEMPORARY DEBUG: Force team section and founders cards visibility */
-section[class*="py-fluid-2xl bg-gradient-to-b"],
-section[class*="py-fluid-2xl bg-gradient-to-b"] *,
-.team-card,
-.team-card *,
-div[class*="gsap-animation"],
-div[style*="opacity: 1"],
-div[style*="visibility: visible"] {
-  opacity: 1 !important;
-  transform: none !important;
-  visibility: visible !important;
-}
-
-/* Ensure profile cards are visible */
-div[class*="relative w-full max-w-sm"],
-div[class*="motion.div"],
-div[class*="Card"],
-div[class*="CardContent"],
-/* Target Framer Motion elements specifically */
-div[style*="perspective"],
-div[style*="transform-style"],
-div[style*="backface-visibility"] {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
-}
-
-/* Force all Framer Motion elements in team section to be visible */
-section[class*="py-fluid-2xl bg-gradient-to-b"] div[style] {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
+/* Removed temporary debug rules that were overriding transforms and blocking card flips */
 
 @layer utilities {
   /* Custom font utilities */

@@ -13,20 +13,8 @@ interface GSAPTimeline {
 }
 
 interface GSAPInstance {
-  gsap: {
-    registerPlugin: (plugin: unknown) => void
-    set: (targets: unknown, vars: unknown) => void
-    to: (targets: unknown, vars: unknown) => unknown
-    timeline: (vars?: unknown) => GSAPTimeline
-    matchMedia: (config: unknown) => {
-      add: (query: string, func: () => void) => void
-      revert: () => void
-    }
-  }
-  ScrollTrigger: {
-    create: (vars: unknown) => unknown
-    refresh?: () => void
-  }
+  gsap: any
+  ScrollTrigger: any
 }
 
 interface AnimationRefs {
@@ -131,79 +119,34 @@ const HeroSection = () => {
     const mm = gsap.matchMedia()
     animationRefs.current.matchMedia = mm
 
-    // Mobile animations (max-width: 768px)
+    // Unified animations for all screen sizes
     mm.add("(max-width: 768px)", () => {
-      console.log('📱 MOBILE: Setting up mobile animations')
+      console.log('📱 MOBILE: Setting up unified animations (same as desktop)')
       
-      // Force hardware acceleration for better performance
-      gsap.set(elements, {
-        force3D: true,
-        transformOrigin: "center center",
-        backfaceVisibility: "hidden"
+      // Set initial visible state (same as desktop)
+      gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
+        opacity: 1,
+        y: 0
       })
-      
-      // Set initial states
-      gsap.set(elements, {
-        opacity: 0,
-        y: 40,
-        scale: 0.9
+
+      gsap.set(logoRef.current, {
+        opacity: 1,
+        scale: 1,
+        x: 0,
+        y: 0,
+        rotate: 0
       })
-      
-      // Create mobile timeline
-      const mobileTimeline: GSAPTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top 90%",
-          end: "bottom 10%",
-          toggleActions: "play none none reverse",
-          fastScrollEnd: true,
-          preventOverlaps: true,
-          onRefresh: () => {
-            if (window.scrollY < 50) {
-              gsap.set(elements, { opacity: 1, y: 0, scale: 1 })
-            }
-          }
-        }
-      })
-      
-      // Animate elements
-      mobileTimeline
-        .to([titleRef.current, subtitleRef.current, ctaRef.current], {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.2,
-          stagger: 0.25,
-          ease: "power2.out",
-          force3D: true
-        })
-        .to(logoRef.current, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.0,
-          ease: "back.out(1.7)",
-          force3D: true
-        }, "-=0.8")
-      
-      // Add gentle pulse effect for logo
+
+      // Gentle pulse effect for logo (same as desktop but lighter)
       gsap.to(logoRef.current, {
-        boxShadow: "0 0 15px rgba(255, 255, 255, 0.3)",
-        duration: 3,
+        boxShadow: "0 0 25px rgba(255, 255, 255, 0.4), 0 0 50px rgba(255, 255, 255, 0.25), 0 0 75px rgba(255, 255, 255, 0.15)",
+        duration: 8,
         ease: "power1.inOut",
         yoyo: true,
-        repeat: -1,
-        force3D: true
+        repeat: -1
       })
       
-      // Immediate visibility check for mobile
-      setTimeout(() => {
-        if (window.scrollY < 100) {
-          gsap.set(elements, { opacity: 1, y: 0, scale: 1, force3D: true })
-        }
-      }, 200)
-      
-      console.log('📱 MOBILE: Mobile animations setup completed')
+      console.log('📱 MOBILE: Unified animations setup completed')
     })
 
     // Desktop animations (min-width: 769px)
@@ -464,43 +407,29 @@ const HeroSection = () => {
       setElementsVisible()
       setAnimationsInitialized(true)
     }
-  }, [isMobile, animationsInitialized, waitForGSAP, prefersReducedMotion, setElementsVisible, setupMobileAnimations, setupDesktopAnimations])
+  }, [])
 
-  // Initialize animations on mount and when dependencies change
+  // Initialize animations on mount
   useEffect(() => {
     console.log('🎯 EFFECT: Main useEffect triggered')
-    console.log('🎯 EFFECT: Dependencies:', { animationsInitialized })
     
     setGsapReady(typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
-    console.log('🎯 EFFECT: GSAP ready state:', typeof window !== "undefined" && !!window.gsap && !!window.ScrollTrigger)
     
-    // Wait for mobile detection to complete before setting up animations
-    if (isMobile === undefined) {
-      console.log('🎯 EFFECT: Mobile detection not complete yet, waiting...')
-      return
-    }
-    
-    // Only run setup if animations haven't been initialized yet
+    // Simple direct animation setup
     if (!animationsInitialized) {
-      console.log('🎯 EFFECT: Setting up animations with extended timing (not initialized yet)')
-      console.log('🎯 EFFECT: Mobile device detected:', isMobile)
-      // Extended delay to be more permissive with DOM readiness
+      console.log('🎯 EFFECT: Setting up animations directly')
       const timeoutId = setTimeout(() => {
-        console.log('🎯 EFFECT: Extended timeout reached, calling setupAnimations')
-        setupAnimations()
-      }, 500)
+        console.log('🎯 EFFECT: Timeout reached, calling setupAnimations')
+        setupAnimations().catch(error => {
+          console.error('🎯 EFFECT: Setup failed:', error)
+          setElementsVisible()
+          setAnimationsInitialized(true)
+        })
+      }, 100) // Shorter timeout for faster initialization
       
-      return () => {
-        console.log('🧹 EFFECT: Cleanup called (timeout version)')
-        clearTimeout(timeoutId)
-      }
-    } else {
-      console.log('🎯 EFFECT: Animations already initialized, skipping setup')
-      return () => {
-        console.log('🧹 EFFECT: Cleanup called (no-op version)')
-      }
+      return () => clearTimeout(timeoutId)
     }
-  }, [animationsInitialized, setupAnimations])
+  }, []) // Remove dependencies to prevent re-runs
 
   // Cleanup function for matchMedia
   useEffect(() => {
@@ -585,25 +514,25 @@ const HeroSection = () => {
         <div className="container-mobile-safe">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-xl items-center">
             {/* Left column: headline + subtext + CTAs */}
-            <div>
+            <div className="pb-16 md:pb-0">
               <h1
                 ref={titleRef}
                 className="gsap-animation font-outfit font-extralight text-fluid-4xl md:text-fluid-6xl text-white leading-fluid-snug mb-fluid-lg dynamic-text-spacing-loose"
-                style={{ opacity: gsapReady && !prefersReducedMotion() ? undefined : 1 }} // Fallback visibility
+                suppressHydrationWarning
               >
-                Unlock Your Business&apos;s Financial Potential
+                Clarity in Complexity. Growth in Strategy.
               </h1>
               <p
                 ref={subtitleRef}
                 className="gsap-animation font-inter font-light text-fluid-lg md:text-fluid-2xl text-white/90 max-w-xl leading-fluid-loose mb-fluid-xl dynamic-text-spacing"
-                style={{ opacity: gsapReady && !prefersReducedMotion() ? undefined : 1 }} // Fallback visibility
+                suppressHydrationWarning
               >
-                Expert consulting to optimize cash flow, ensure compliance, and fuel sustainable growth.
+                We provide expert financial direction to navigate compliance, optimize cash flow, and unlock your business's true potential.
               </p>
               <div 
                 ref={ctaRef} 
                 className="gsap-animation flex flex-col sm:flex-row gap-fluid-lg"
-                style={{ opacity: gsapReady && !prefersReducedMotion() ? undefined : 1 }} // Fallback visibility
+                suppressHydrationWarning
               >
                 <Button asChild size="spacious" className="btn-primary font-inter font-light">
                   <Link href="/questionnaire">
@@ -623,9 +552,9 @@ const HeroSection = () => {
                 ref={logoRef} 
                 className="gsap-animation w-40 h-40 relative rounded-full flex items-center justify-center transition-all duration-500" 
                 style={{
-                  boxShadow: '0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.1)',
-                  opacity: gsapReady && !prefersReducedMotion() ? undefined : 1 // Fallback visibility
+                  boxShadow: '0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.1)'
                 }}
+                suppressHydrationWarning
               >
                 <Image
                   src="/Logo.png"

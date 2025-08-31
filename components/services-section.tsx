@@ -33,7 +33,7 @@ const servicesData: Service[] = [
   {
     id: "accounting-services",
     title: "Accounting Services",
-    description: "We offer a full range of accounting services designed to support businesses in managing their financial health and ensuring long-term success.",
+    description: "From meticulous monthly bookkeeping to board-ready annual statements, our accounting services provide the financial clarity you need to make confident, strategic decisions.",
     detailedDescription: "At RT Dynamic Business Consulting, we offer a full range of Accounting Services designed to support businesses in managing their financial health and ensuring long-term success. Our team of qualified Chartered Accountants delivers accurate, timely, and reliable financial information, helping you make informed decisions and stay compliant with regulations.",
     icon: Calculator,
     features: ["Annual Financial Statements", "Management Accounts", "Bank Reconciliations", "Monthly Bookkeeping", "Budgeting & Forecasting", "Financial Analysis & Reporting"],
@@ -64,7 +64,7 @@ const servicesData: Service[] = [
   {
     id: "taxation-services",
     title: "Taxation Services",
-    description: "We offer comprehensive taxation services to help businesses and individuals navigate tax complexities, minimize liabilities, and ensure full compliance.",
+    description: "Navigate South African tax law with confidence. Our strategic approach ensures full compliance while enhancing tax efficiency to protect your bottom line.",
     detailedDescription: "At RT Dynamic Business Consulting, we offer comprehensive Taxation Services to help businesses and individuals navigate the complexities of tax laws, minimize liabilities, and ensure full compliance with all regulations. Our team of qualified Chartered Accountants provides personalized solutions tailored to your unique financial situation, maximizing tax efficiency and minimizing risks.",
     icon: TrendingUp,
     features: ["Income Tax", "Provisional Income Tax", "Bank Reconciliations", "Audit Facilitation with SARS"],

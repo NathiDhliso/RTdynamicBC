@@ -12,26 +12,26 @@ const TshephishoProfileCard = () => {
   // Removed auto-flip - card only flips when clicked
 
   const frontSkills = [
-    "Statutory Audits",
-    "Financial Reporting",
-    "Tax Compliance",
-    "Risk Assessment",
-    "Team Leadership",
-    "IFRS Standards"
+    "Financial Analysis",
+    "Management Accounting",
+    "Tax Planning",
+    "Business Strategy",
+    "Financial Modeling",
+    "Process Optimization"
   ]
 
   const backDetails = {
     name: "Tshephisho Ntsoane",
-    title: "Co-Founder",
+    title: "Co-Founder & Financial Strategist",
     credentials: "CA(SA), SAICA Member",
     experience: "6+ Years",
     specializations: [
-      "Statutory Audits",
-      "Financial Reporting (IFRS)",
-      "Tax Compliance & Returns",
-      "Risk Assessment",
-      "Group Consolidations",
-      "Public Sector Auditing"
+      "Financial Analysis & Modeling",
+      "Management Accounting",
+      "Strategic Tax Planning",
+      "Business Process Optimization",
+      "Financial Risk Management",
+      "Corporate Finance Advisory"
     ],
     education: "Bachelor of Accounting Sciences, Post Graduate Diploma in Accountancy (CTA)",
     contact: {
@@ -81,7 +81,7 @@ const TshephishoProfileCard = () => {
                       <Award className="h-10 w-10 text-white" />
                     </div>
                     <h3 className="font-poppins font-bold text-xl mb-1">Tshephisho Ntsoane</h3>
-                    <p className="font-inter text-white/90 text-sm">Co-Founder</p>
+                    <p className="font-inter text-white/90 text-sm">Co-Founder & Financial Strategist</p>
                     <Badge variant="secondary" className="mt-2 bg-white/20 text-white border-white/30">
                       CA(SA)
                     </Badge>
@@ -182,7 +182,7 @@ const TshephishoProfileCard = () => {
                     <Linkedin className="h-4 w-4" />
                   </div>
                   <div className="text-center text-gray-500 text-xs font-inter mt-2">
-                    Professional Excellence Since 2018
+                    Strategic Financial Leadership Since 2018
                   </div>
                 </div>
               </CardContent>

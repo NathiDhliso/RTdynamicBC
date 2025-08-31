@@ -49,7 +49,7 @@ export default function RootLayout({
       <body className="font-outfit antialiased bg-[color:var(--background)] text-[color:var(--foreground)] font-light" suppressHydrationWarning>
         <LoadingSpinner />
         <PagePreloader />
-        <PerformanceMonitor />
+        {/* <PerformanceMonitor /> - Temporarily disabled due to webpack module loading issue */}
         {/* Optimized GSAP loading - load with lower priority */}
         <Script
           src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"

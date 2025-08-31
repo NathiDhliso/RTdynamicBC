@@ -526,7 +526,7 @@ const MultiStepQuestionnaire = () => {
           </h1>
           <p className="font-inter text-fluid-xl text-gray-600 description-center-dynamic leading-fluid-relaxed text-spacing-comfortable">
 -            Help us understand your business so we can provide you with a customized consultation and estimate.
-+            Help us understand your business so we can provide you with a customized consultation and next steps.
++            Answer a few questions about your business to receive a customized consultation and a clear path forward.
           </p>
         </div>
 

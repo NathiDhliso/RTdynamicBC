@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, Target, Award, TrendingUp, CheckCircle } from "lucide-react"
@@ -13,17 +13,17 @@ const values = [
   {
     icon: Target,
     title: "Client-Focused",
-    description: "Every decision we make is centered around our clients' best interests and long-term success.",
+    description: "Your success is our definitive metric. We align our expertise with your ambition, ensuring every strategy is tailored to your unique goals.",
   },
   {
     icon: Award,
     title: "Excellence",
-    description: "We maintain the highest standards of professional service and continuous improvement.",
+    description: "We uphold the highest standards of our profession, pursuing continuous improvement to deliver work that is not just accurate, but exceptional.",
   },
   {
     icon: Users,
     title: "Integrity",
-    description: "Transparency, honesty, and ethical practices form the foundation of all our relationships.",
+    description: "Our work is built on a foundation of transparency and ethics. We foster relationships grounded in trust and professional accountability.",
   },
   {
     icon: TrendingUp,
@@ -69,9 +69,14 @@ export default function AboutContent() {
   const statsRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
   const teamRef = useRef<HTMLDivElement>(null)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (isClient && typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
       const gsap = window.gsap
       const ScrollTrigger = window.ScrollTrigger
 
@@ -158,7 +163,7 @@ export default function AboutContent() {
         ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
       }
     }
-  }, [])
+  }, [isClient])
 
   return (
     <div className="bg-white">
@@ -172,13 +177,11 @@ export default function AboutContent() {
           
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-xl items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-2xl items-center" suppressHydrationWarning>
             <div>
               <h2 className="font-poppins font-light text-fluid-2xl md:text-fluid-3xl text-gray-900 mb-fluid-md leading-fluid-snug text-spacing-comfortable">Our Mission</h2>
-               <p className="font-inter text-fluid-base md:text-fluid-lg text-gray-700 leading-fluid-relaxed text-spacing-comfortable mb-fluid-md">
-                 To provide exceptional chartered accounting services that ensure our clients&apos; financial compliance,
-                 business growth, and operational excellence. We deliver professional accounting, auditing, taxation,
-                 and business consulting services with integrity, accuracy, and expertise.
+               <p className="font-inter text-fluid-base md:text-fluid-lg text-gray-700 leading-fluid-relaxed text-spacing-comfortable mb-fluid-md" suppressHydrationWarning>
+                 Our mission is to be the cornerstone of our clients' success, transforming complex financial challenges into opportunities for growth and stability. We deliver clarity and strategic direction with the integrity and precision that defines a Chartered Accountant.
                </p>
               <div className="space-y-fluid-sm">
                 {[
@@ -281,9 +284,13 @@ export default function AboutContent() {
             </h2>
             
           </div>
-          <div className="flex flex-col lg:flex-row justify-center items-center gap-8 max-w-6xl mx-auto">
-            <RabelaniProfileCard />
-            <TshephishoProfileCard />
+          <div className="flex flex-col lg:flex-row justify-center items-center gap-fluid-xl lg:gap-fluid-2xl" suppressHydrationWarning>
+            <div className="team-card">
+              <RabelaniProfileCard />
+            </div>
+            <div className="team-card">
+              <TshephishoProfileCard />
+            </div>
           </div>
         </div>
       </section>

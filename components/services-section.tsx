@@ -1,18 +1,9 @@
 "use client"
 
 import type React from "react"
-import dynamic from "next/dynamic"
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Shield, Calculator, Users } from "lucide-react"
-
-// Dynamic import for code splitting
-const ServiceDetailsModal = dynamic(() => import("@/components/service-details-modal"), {
-  loading: () => <div className="animate-pulse bg-gray-800/50 rounded-lg p-4">Loading...</div>,
-  ssr: false
-})
 
 interface Service {
   id: string
@@ -193,24 +184,11 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
-  const [selectedService, setSelectedService] = useState<Service | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   if (!services || services.length === 0) {
     return null
   }
 
   // Removed custom hover handlers - now using centralized GSAP animation system
-
-  const handleServiceSelect = (service: Service) => {
-    setSelectedService(service)
-    setIsModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedService(null)
-  }
 
   return (
     <>
@@ -231,8 +209,7 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                 <Card
                   key={service.id}
                   data-service={service.id}
-                  className="service-card group relative overflow-hidden border border-border shadow-lg gsap-animation bg-card cursor-pointer h-full flex flex-col"
-                  onClick={() => handleServiceSelect(service)}
+                  className="service-card group relative overflow-hidden border border-border shadow-lg gsap-animation bg-card h-full flex flex-col"
                 >
                   <CardHeader className="text-center pb-fluid-md">
                     <div className="w-16 h-16 mx-auto mb-fluid-md bg-primary/10 rounded-full flex items-center justify-center">
@@ -252,28 +229,12 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                       ))}
                     </ul>
                   </CardContent>
-
-                   <CardFooter className="pt-fluid-md mt-auto px-fluid-md">
-                    <Button
-                      variant="outline"
-                      size="comfortable"
-                       className="w-full gsap-animation bg-transparent"
-                    >
-                      Learn More
-                    </Button>
-                  </CardFooter>
                 </Card>
               )
             })}
           </div>
         </div>
       </section>
-      
-      <ServiceDetailsModal
-        service={selectedService}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
     </>
   )
 }

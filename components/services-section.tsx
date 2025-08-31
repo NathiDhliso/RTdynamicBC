@@ -209,7 +209,22 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
                 <Card
                   key={service.id}
                   data-service={service.id}
-                  className={`service-card group relative overflow-hidden border border-primary/20 shadow-xl gsap-animation bg-gradient-to-br ${service.color} backdrop-blur-sm h-full flex flex-col hover:shadow-2xl hover:border-primary/30 transition-all duration-300`}
+                  className={`service-card group relative overflow-hidden border border-primary/20 shadow-xl gsap-animation h-full flex flex-col hover:shadow-2xl hover:border-primary/30 transition-all duration-300`}
+                  style={{
+                    background: `linear-gradient(to bottom right, var(--primary) / 0.05, var(--primary) / 0.1)`,
+                    ...(service.id === 'taxation-services' || service.id === 'payroll-services' ? {
+                      background: `linear-gradient(to bottom right, var(--accent) / 0.05, var(--accent) / 0.1)`
+                    } : {}),
+                    ...(service.id === 'auditing-assurance' ? {
+                      background: `linear-gradient(to bottom right, var(--primary) / 0.08, var(--primary) / 0.15)`
+                    } : {}),
+                    ...(service.id === 'payroll-services' ? {
+                      background: `linear-gradient(to bottom right, var(--accent) / 0.08, var(--accent) / 0.15)`
+                    } : {}),
+                    ...(service.id === 'finance-other-services' ? {
+                      background: `linear-gradient(to bottom right, var(--primary) / 0.1, var(--primary) / 0.2)`
+                    } : {})
+                  }}
                 >
                   <CardHeader className="text-center pb-fluid-md relative z-10">
                     <div className="w-16 h-16 mx-auto mb-fluid-md bg-primary/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-primary/30">

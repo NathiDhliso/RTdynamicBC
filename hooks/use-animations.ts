@@ -548,7 +548,7 @@ export const useAnimations = ({
       }, "-=0.4");
     }
 
-    // Touch-aware scroll animations
+    // Touch-aware scroll animations (fixed scrolling)
     if (!reducedMotion && scrollTriggerConfig && (heroRef?.current || sectionRef?.current)) {
       const triggerElement = heroRef?.current || sectionRef?.current;
       const scrollTimeline = gsap.timeline({
@@ -557,8 +557,8 @@ export const useAnimations = ({
           start: scrollTriggerConfig.start,
           end: scrollTriggerConfig.end,
           scrub: quality === 'reduced' ? 2 : 1,
-          pin: scrollTriggerConfig.pin && performanceLevel !== 'low',
-          pinSpacing: scrollTriggerConfig.pinSpacing,
+          pin: false, // Fixed: disabled pinning to allow normal scrolling
+          pinSpacing: false, // Fixed: disabled pin spacing
           fastScrollEnd: true,
           preventOverlaps: true,
           onUpdate: (self: any) => {
@@ -794,7 +794,7 @@ export const useAnimations = ({
       });
     }
 
-    // Master scroll timeline with complex choreography
+    // Master scroll timeline with complex choreography (fixed scrolling)
     if (!reducedMotion && scrollTriggerConfig && (heroRef?.current || sectionRef?.current)) {
       const triggerElement = heroRef?.current || sectionRef?.current;
       const masterTimeline = gsap.timeline({
@@ -803,9 +803,9 @@ export const useAnimations = ({
           start: scrollTriggerConfig.start,
           end: scrollTriggerConfig.end,
           scrub: 0.5,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
+          pin: false, // Fixed: disabled pinning to allow normal scrolling
+          pinSpacing: false, // Fixed: disabled pin spacing
+          anticipatePin: 0, // Fixed: disabled anticipate pin
           onUpdate: (self: any) => {
             // Dynamic performance adjustment
             const fps = performanceMonitor.current.measureFPS();
@@ -849,22 +849,24 @@ export const useAnimations = ({
         }, 0.2);
       }
 
-      // Advanced logo transformation
+      // Advanced logo transformation (fixed rotation)
       if (performanceLevel === 'high' && logoRef?.current) {
         masterTimeline.to(logoRef.current, {
           scale: 0.3,
           x: "-48vw",
           y: "-48vh",
-          rotation: 720,
+          rotation: 0, // Fixed: removed excessive rotation
           duration: 1.5,
           ease: "power4.inOut",
           onUpdate: function() {
             // Dynamic glow based on progress
             const progress = this.progress();
             const glowIntensity = 60 * (1 - progress);
-            gsap.set(logoRef.current, {
-              boxShadow: `0 0 ${glowIntensity}px rgba(59, 130, 246, ${0.6 * (1 - progress)})`
-            });
+            if (logoRef?.current) {
+              gsap.set(logoRef.current, {
+                boxShadow: `0 0 ${glowIntensity}px rgba(59, 130, 246, ${0.6 * (1 - progress)})`
+              });
+            }
           }
         }, 0.15);
       } else if (logoRef?.current) {
@@ -873,6 +875,7 @@ export const useAnimations = ({
           scale: 0.4,
           x: "-48vw",
           y: "-48vh",
+          rotation: 0, // Fixed: removed rotation
           duration: 1.3,
           ease: "power3.inOut"
         }, 0.15);

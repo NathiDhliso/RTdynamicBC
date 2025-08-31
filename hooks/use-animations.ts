@@ -963,7 +963,7 @@ export const useAnimations = ({
             ease: "power2.out",
             scrollTrigger: {
               trigger: heading,
-              start: "top 90%",
+              start: "top 80%",
               once: true
             }
           }

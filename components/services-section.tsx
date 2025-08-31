@@ -188,15 +188,75 @@ interface ServicesSectionProps {
 const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
   const [isClient, setIsClient] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  // Initialize animations
+  // Initialize animations with immediate scroll triggers for service cards
   useAnimations({
-    sectionRef
+    sectionRef,
+    options: {
+      enableLazyLoad: false, // Disable lazy loading for immediate appearance
+      performanceMode: 'high'
+    }
   })
+
+  // Setup immediate scroll trigger animations for service cards
+  useEffect(() => {
+    if (!isClient || typeof window === 'undefined') return
+
+    const loadGSAP = async () => {
+      try {
+        const gsap = (await import('gsap')).default
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger')
+        gsap.registerPlugin(ScrollTrigger)
+
+        // Animate service cards immediately when they come into view
+        cardRefs.current.forEach((card, index) => {
+          if (card) {
+            gsap.set(card, {
+              opacity: 0,
+              y: 30,
+              scale: 0.95
+            })
+
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.4,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%", // Trigger when card is 85% in view
+                end: "bottom 20%",
+                toggleActions: "play none none reverse",
+                once: false // Allow re-triggering
+              },
+              delay: index * 0.05 // Very small stagger for smooth effect
+            })
+          }
+        })
+      } catch (error) {
+        console.warn('GSAP not available for service cards animation:', error)
+      }
+    }
+
+    loadGSAP()
+
+    return () => {
+      // Cleanup scroll triggers
+      if (typeof window !== 'undefined' && window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach((trigger: any) => {
+          if (trigger.trigger && cardRefs.current.includes(trigger.trigger)) {
+            trigger.kill()
+          }
+        })
+      }
+    }
+  }, [isClient])
 
   if (!services || services.length === 0) {
     return null
@@ -217,27 +277,39 @@ const ServicesSection = ({ services = servicesData }: ServicesSectionProps) => {
           </div>
 
           <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-fluid-lg md:gap-fluid-xl auto-rows-fr">
-            {services.map((service) => {
+            {services.map((service, index) => {
               const IconComponent = service.icon
               return (
                 <Card
                   key={service.id}
+                  ref={(el) => {
+                    if (cardRefs.current) {
+                      cardRefs.current[index] = el
+                    }
+                  }}
                   data-service={service.id}
-                  className={`service-card group relative overflow-hidden border ${isClient ? 'border-primary/20 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all duration-300 bg-card' : 'border-border shadow-lg bg-card'} gsap-animation h-full flex flex-col`}
+                  className={`service-card group relative overflow-hidden border ${isClient ? 'border-primary/20 shadow-xl hover:shadow-2xl hover:border-primary/30 transition-all duration-300' : 'border-border shadow-lg'} h-full flex flex-col`}
+                  style={isClient ? {
+                    background: service.id === 'taxation-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--accent) 5%, transparent), color-mix(in srgb, var(--accent) 10%, transparent))` :
+                               service.id === 'auditing-assurance' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 8%, transparent), color-mix(in srgb, var(--primary) 15%, transparent))` :
+                               service.id === 'payroll-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--accent) 8%, transparent), color-mix(in srgb, var(--accent) 15%, transparent))` :
+                               service.id === 'finance-other-services' ? `linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 10%, transparent), color-mix(in srgb, var(--primary) 20%, transparent))` :
+                               `linear-gradient(to bottom right, color-mix(in srgb, var(--primary) 5%, transparent), color-mix(in srgb, var(--primary) 10%, transparent))`
+                  } : {}}
                 >
                   <CardHeader className={`text-center pb-fluid-md ${isClient ? 'relative z-10' : ''}`}>
                     <div className={`w-16 h-16 mx-auto mb-fluid-md ${isClient ? 'bg-primary/20 backdrop-blur-sm shadow-lg border border-primary/30' : 'bg-primary/10'} rounded-full flex items-center justify-center`}>
                       <IconComponent className="w-8 h-8 text-primary" />
                     </div>
-                    <CardTitle className="text-fluid-xl font-light text-foreground leading-fluid-relaxed dynamic-text-spacing">{service.title}</CardTitle>
+                    <CardTitle className="text-fluid-xl font-light text-white leading-fluid-relaxed dynamic-text-spacing">{service.title}</CardTitle>
                   </CardHeader>
 
                   <CardContent className={`text-center flex-grow px-fluid-md ${isClient ? 'relative z-10' : ''}`}>
-                    <p className="text-foreground/90 font-light mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing">{service.description}</p>
-                    <ul className="space-y-fluid-sm text-sm text-foreground/80">
+                    <p className="text-white/90 font-light mb-fluid-lg leading-fluid-relaxed dynamic-text-spacing">{service.description}</p>
+                    <ul className="space-y-fluid-sm text-sm text-white/80">
                       {service.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-center justify-center">
-                          <span className={`${isClient ? 'w-2 h-2 shadow-sm' : 'w-1.5 h-1.5'} bg-primary rounded-full mr-fluid-lg`}></span>
+                          <span className={`${isClient ? 'w-2 h-2 shadow-sm' : 'w-1.5 h-1.5'} bg-white rounded-full mr-fluid-lg`}></span>
                           <span className="font-light">{feature}</span>
                         </li>
                       ))}

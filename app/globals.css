@@ -259,7 +259,23 @@
     letter-spacing: 0.01em;
     /* Ensure smooth scrolling for GSAP ScrollTrigger */
     overflow-x: hidden;
+    /* Enhanced mobile overflow prevention */
+    max-width: 100vw;
     /* scroll-behavior: smooth; - Removed to prevent conflicts with GSAP ScrollTrigger */
+  }
+  
+  /* Additional overflow prevention for mobile */
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  /* Ensure all main containers prevent horizontal overflow */
+  .unified-background-container,
+  main,
+  section {
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   /* Fluid typography classes */

@@ -587,8 +587,8 @@ export const useAnimations = ({
       if (logoRef?.current) {
         scrollTimeline.to(logoRef.current, {
           scale: 0.5,
-          x: "-45vw",
-          y: "-45vh",
+          x: "-20vw", // Fixed: reduced movement to prevent mobile horizontal overflow
+          y: "-20vh", // Fixed: reduced movement to prevent mobile overflow
           duration: scrollConfig.logoTransform.duration,
           ease: "power3.inOut"
         }, 0.1);
@@ -849,12 +849,13 @@ export const useAnimations = ({
         }, 0.2);
       }
 
-      // Advanced logo transformation (fixed rotation)
+      // Advanced logo transformation (fixed rotation and mobile overflow)
       if (performanceLevel === 'high' && logoRef?.current) {
+        const isMobile = window.innerWidth < 768;
         masterTimeline.to(logoRef.current, {
           scale: 0.3,
-          x: "-48vw",
-          y: "-48vh",
+          x: isMobile ? "-20vw" : "-48vw", // Fixed: reduced movement on mobile to prevent overflow
+          y: isMobile ? "-20vh" : "-48vh", // Fixed: reduced movement on mobile
           rotation: 0, // Fixed: removed excessive rotation
           duration: 1.5,
           ease: "power4.inOut",
@@ -871,10 +872,11 @@ export const useAnimations = ({
         }, 0.15);
       } else if (logoRef?.current) {
         // Simplified version for normal performance
+        const isMobile = window.innerWidth < 768;
         masterTimeline.to(logoRef.current, {
           scale: 0.4,
-          x: "-48vw",
-          y: "-48vh",
+          x: isMobile ? "-20vw" : "-48vw", // Fixed: reduced movement on mobile
+          y: isMobile ? "-20vh" : "-48vh", // Fixed: reduced movement on mobile
           rotation: 0, // Fixed: removed rotation
           duration: 1.3,
           ease: "power3.inOut"
